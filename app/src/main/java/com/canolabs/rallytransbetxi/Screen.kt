@@ -1,15 +1,13 @@
 package com.canolabs.rallytransbetxi
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.ui.graphics.vector.ImageVector
-
-sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
-    object Home : Screen("home", "Home", Icons.Default.Home)
-    object Search : Screen("search", "Search", Icons.Default.Search)
-    object Favorites : Screen("favorites", "Favorites", Icons.Default.Favorite)
-    object Profile : Screen("profile", "Profile", Icons.Default.Person)
+sealed class Screen(
+    val route: String,
+    val title: String,
+    val iconSelected: Int,
+    val iconUnselected: Int
+) {
+    object Home : Screen("home", "Etapas", R.drawable.map_filled, R.drawable.map_outlined)
+    object Search : Screen("search", "Resultados", R.drawable.sports_score, R.drawable.sports_score)
+    object Favorites : Screen("favorites", "Equipos", R.drawable.group_filled, R.drawable.group_outlined)
+    object Profile : Screen("profile", "Rally", R.drawable.campaign_filled, R.drawable.campaign_outlined)
 }
