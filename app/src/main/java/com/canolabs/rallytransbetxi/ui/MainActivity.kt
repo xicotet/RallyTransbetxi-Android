@@ -1,4 +1,4 @@
-package com.canolabs.rallytransbetxi
+package com.canolabs.rallytransbetxi.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.canolabs.rallytransbetxi.ui.navigation.Navigation
 import com.canolabs.rallytransbetxi.ui.theme.RallyTransbetxiTheme
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -34,10 +35,10 @@ class MainActivity : ComponentActivity() {
                         "TC4" to "Sagrat Cor - Rodaor"
                     )
 
-                    db.collection("stages").document("TCP").set(stages).addOnSuccessListener {
-                        Log.d(TAG, "DocumentSnapshot added")
+                    db.collection("stages").document("TCP").get().addOnSuccessListener {
+                        Log.d(TAG, "DocumentSnapshot added: ${it.data?.keys}")
                     }.addOnFailureListener {
-                        Log.w(TAG, "Error adding document", it)
+                        Log.w(TAG, "Error adding document")
                     }
                 }
             }

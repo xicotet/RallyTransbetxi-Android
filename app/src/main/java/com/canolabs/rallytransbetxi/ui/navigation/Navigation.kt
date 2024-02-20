@@ -1,6 +1,4 @@
-package com.canolabs.rallytransbetxi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+package com.canolabs.rallytransbetxi.ui.navigation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -19,55 +17,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-
-@Composable
-fun HomeScreen() {
-    Column(
-        horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "Home Screen")
-    }
-}
-
-@Composable
-fun SearchScreen() {
-    Column(
-        horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "Search Screen")
-    }
-}
-
-@Composable
-fun FavoritesScreen() {
-    Column(
-        horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "Favorites Screen")
-    }
-}
-
-@Composable
-fun ProfileScreen() {
-    Column(
-        horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "Profile Screen")
-    }
-}
+import com.canolabs.rallytransbetxi.ui.rally.RallyScreen
+import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
+import com.canolabs.rallytransbetxi.ui.stages.StagesScreen
+import com.canolabs.rallytransbetxi.ui.teams.TeamsScreen
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
     val screens = listOf(
-        Screen.Home,
-        Screen.Search,
-        Screen.Favorites,
-        Screen.Profile
+        Screens.Rally,
+        Screens.Stages,
+        Screens.Results,
+        Screens.Teams
     )
 
     Scaffold(
@@ -105,13 +67,13 @@ fun Navigation() {
     ) { innerPadding ->
         NavHost(
             navController,
-            startDestination = Screen.Home.route,
+            startDestination = Screens.Stages.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Home.route) { HomeScreen() }
-            composable(Screen.Search.route) { SearchScreen() }
-            composable(Screen.Favorites.route) { FavoritesScreen() }
-            composable(Screen.Profile.route) { ProfileScreen() }
+            composable(Screens.Rally.route) { RallyScreen() }
+            composable(Screens.Stages.route) { StagesScreen() }
+            composable(Screens.Results.route) { ResultsScreen() }
+            composable(Screens.Teams.route) { TeamsScreen() }
         }
     }
 }
