@@ -17,13 +17,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.canolabs.rallytransbetxi.ui.StagesViewModelFactory
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreen
 import com.canolabs.rallytransbetxi.ui.teams.TeamsScreen
 
 @Composable
-fun Navigation() {
+fun Navigation(
+    stagesViewModelFactory: StagesViewModelFactory
+) {
     val navController = rememberNavController()
     val screens = listOf(
         Screens.Rally,
@@ -43,7 +46,8 @@ fun Navigation() {
                 screens.forEach { screen ->
                     NavigationBarItem(
                         icon = {
-                            val iconResource = if (currentRoute == screen.route) screen.iconSelected else screen.iconUnselected
+                            val iconResource =
+                                if (currentRoute == screen.route) screen.iconSelected else screen.iconUnselected
                             Icon(painterResource(id = iconResource), contentDescription = null)
                         },
                         label = { Text(text = screen.title) },
@@ -71,7 +75,9 @@ fun Navigation() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screens.Rally.route) { RallyScreen() }
-            composable(Screens.Stages.route) { StagesScreen() }
+            composable(Screens.Stages.route) {
+                StagesScreen(stagesViewModelFactory = stagesViewModelFactory)
+            }
             composable(Screens.Results.route) { ResultsScreen() }
             composable(Screens.Teams.route) { TeamsScreen() }
         }

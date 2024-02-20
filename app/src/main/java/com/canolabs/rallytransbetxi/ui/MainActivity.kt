@@ -14,8 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.canolabs.rallytransbetxi.ui.navigation.Navigation
 import com.canolabs.rallytransbetxi.ui.theme.RallyTransbetxiTheme
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class MainActivity : ComponentActivity() {
+@AndroidEntryPoint
+class MainActivity @Inject constructor(
+    private val stagesViewModelFactory: StagesViewModelFactory
+) : ComponentActivity() {
 
     private val TAG = "FIREBASE_DATABASE"
     private val db = FirebaseFirestore.getInstance()
@@ -29,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation()
+                    Navigation(stagesViewModelFactory)
 
                     db.collection("stages").document("TCP").get().addOnSuccessListener {
                         Log.d(TAG, "DocumentSnapshot added: ${it.data?.keys}")
