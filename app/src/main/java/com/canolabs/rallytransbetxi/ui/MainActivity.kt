@@ -30,10 +30,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Navigation()
-                    val stages = hashMapOf(
-                        "TC3" to "La Mina",
-                        "TC4" to "Sagrat Cor - Rodaor"
-                    )
 
                     db.collection("stages").document("TCP").get().addOnSuccessListener {
                         Log.d(TAG, "DocumentSnapshot added: ${it.data?.keys}")
