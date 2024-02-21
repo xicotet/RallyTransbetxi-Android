@@ -14,13 +14,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
-import com.canolabs.rallytransbetxi.ui.StagesViewModelFactory
 
 @Composable
-fun StagesScreen(stagesViewModelFactory: StagesViewModelFactory) {
-    val viewModel: StagesScreenViewModel = viewModel(factory = stagesViewModelFactory)
+fun StagesScreen(viewModel: StagesScreenViewModel) {
 
     val state by viewModel.state.collectAsState()
 

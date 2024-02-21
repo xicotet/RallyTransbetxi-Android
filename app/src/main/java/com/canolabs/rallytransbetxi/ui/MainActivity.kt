@@ -1,7 +1,6 @@
 package com.canolabs.rallytransbetxi.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,19 +10,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.canolabs.rallytransbetxi.ui.navigation.Navigation
+import com.canolabs.rallytransbetxi.ui.stages.StagesScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.RallyTransbetxiTheme
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity @Inject constructor(
-    private val stagesViewModelFactory: StagesViewModelFactory
-) : ComponentActivity() {
+class MainActivity : ComponentActivity() {
 
-    private val TAG = "FIREBASE_DATABASE"
-    private val db = FirebaseFirestore.getInstance()
+    @Inject lateinit var viewModelFactory: MainActivityViewModelFactory
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,13 +31,16 @@ class MainActivity @Inject constructor(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation(stagesViewModelFactory)
+                    val stagesScreenViewModel: StagesScreenViewModel = viewModel(
+                        factory = viewModelFactory
+                    )
+                    Navigation(stagesScreenViewModel)
 
-                    db.collection("stages").document("TCP").get().addOnSuccessListener {
+                    /*db.collection("stages").document("TCP").get().addOnSuccessListener {
                         Log.d(TAG, "DocumentSnapshot added: ${it.data?.keys}")
                     }.addOnFailureListener {
                         Log.w(TAG, "Error adding document")
-                    }
+                    }*/
                 }
             }
         }
