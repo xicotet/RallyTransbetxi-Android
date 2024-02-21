@@ -18,6 +18,7 @@ class StagesServiceImpl @Inject constructor(
             val querySnapshot = firebaseFirestore.collection("stages").get().await()
             for (document in querySnapshot.documents) {
                 val stage = document.toObject(Stage::class.java)
+                    ?.copy(acronym = document.id)
                 stage?.let {
                     stagesList.add(it)
                 }

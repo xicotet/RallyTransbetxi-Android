@@ -5,6 +5,7 @@ import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.PropertyName
 
 data class Stage(
+    val acronym: String = "",
     @get: PropertyName("name") val name: String = "",
     @get: PropertyName("distance") val distance: String = "",
     @get: PropertyName("startTime") val startTime: Timestamp? = null,
