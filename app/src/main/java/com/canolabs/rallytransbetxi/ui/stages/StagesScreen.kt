@@ -44,12 +44,7 @@ fun StagesScreen(viewModel: StagesScreenViewModel) {
 fun StageList(stages: List<Stage>) {
     LazyColumn {
         items(stages) { stage ->
-            StageItem(stage)
+            StageCard(stage = stage)
         }
     }
-}
-
-@Composable
-fun StageItem(stage: Stage) {
-    Text(text = stage.name)
 }
