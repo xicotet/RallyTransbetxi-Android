@@ -47,6 +47,7 @@ fun StageCard(stage: Stage) {
                     text = stage.acronym,
                     style = MaterialTheme.typography.headlineMedium,
                     fontFamily = ezraFamily,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.padding(PaddingMedium)
                 )
                 Text(
