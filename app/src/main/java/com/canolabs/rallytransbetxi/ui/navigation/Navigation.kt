@@ -23,6 +23,7 @@ import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreen
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreenViewModel
 import com.canolabs.rallytransbetxi.ui.teams.TeamsScreen
+import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 
 @Composable
 fun Navigation(
@@ -51,7 +52,12 @@ fun Navigation(
                                 if (currentRoute == screen.route) screen.iconSelected else screen.iconUnselected
                             Icon(painterResource(id = iconResource), contentDescription = null)
                         },
-                        label = { Text(text = stringResource(id = screen.title)) },
+                        label = {
+                            Text(
+                                text = stringResource(id = screen.title),
+                                fontFamily = robotoFamily
+                            )
+                        },
                         selected = currentRoute == screen.route,
                         colors = NavigationBarItemDefaults.colors(
                             indicatorColor = MaterialTheme.colorScheme.inversePrimary,
