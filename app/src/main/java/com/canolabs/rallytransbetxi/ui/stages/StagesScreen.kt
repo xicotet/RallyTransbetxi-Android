@@ -31,8 +31,9 @@ fun StagesScreen(viewModel: StagesScreenViewModel) {
 
 @Composable
 fun StageList(stages: List<Stage>) {
+    val sortedStagesByStartTime = stages.sortedBy { it.startTime }
     LazyColumn {
-        items(stages) { stage ->
+        items(sortedStagesByStartTime) { stage ->
             StageCard(stage = stage)
         }
     }
