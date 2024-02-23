@@ -12,8 +12,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
+import com.canolabs.rallytransbetxi.ui.theme.PaddingHuge
+import com.canolabs.rallytransbetxi.ui.theme.PaddingLarge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
+import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 
@@ -44,13 +49,22 @@ fun StageList(stages: List<Stage>) {
     }
 
     LazyColumn {
+        item {
+            Text(
+                text = stringResource(id = R.string.stages),
+                style = MaterialTheme.typography.displayMedium,
+                fontFamily = ezraFamily,
+                modifier = Modifier.padding(top = PaddingHuge, start = PaddingRegular, end = PaddingHuge, bottom = PaddingLarge)
+            )
+        }
         groupedStagesByDate.entries.forEach { entry ->
             item {
                 Text(
                     text = entry.key ?: "",
                     style = MaterialTheme.typography.labelLarge,
                     fontFamily = robotoFamily,
-                    modifier = Modifier.padding(PaddingRegular)
+                    modifier = Modifier.padding(PaddingRegular),
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
             items(entry.value) { stage ->

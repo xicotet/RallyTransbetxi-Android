@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -50,7 +51,7 @@ fun Navigation(
                                 if (currentRoute == screen.route) screen.iconSelected else screen.iconUnselected
                             Icon(painterResource(id = iconResource), contentDescription = null)
                         },
-                        label = { Text(text = screen.title) },
+                        label = { Text(text = stringResource(id = screen.title)) },
                         selected = currentRoute == screen.route,
                         colors = NavigationBarItemDefaults.colors(
                             indicatorColor = MaterialTheme.colorScheme.inversePrimary,
