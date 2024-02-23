@@ -52,9 +52,14 @@ fun StageList(stages: List<Stage>) {
         item {
             Text(
                 text = stringResource(id = R.string.stages),
-                style = MaterialTheme.typography.displayMedium,
+                style = MaterialTheme.typography.displaySmall,
                 fontFamily = ezraFamily,
-                modifier = Modifier.padding(top = PaddingHuge, start = PaddingRegular, end = PaddingHuge, bottom = PaddingLarge)
+                modifier = Modifier.padding(
+                    top = PaddingHuge,
+                    start = PaddingRegular,
+                    end = PaddingHuge,
+                    bottom = PaddingLarge
+                )
             )
         }
         groupedStagesByDate.entries.forEach { entry ->
