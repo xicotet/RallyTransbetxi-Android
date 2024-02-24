@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.canolabs.rallytransbetxi.ui.navigation.Navigation
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreenViewModel
+import com.canolabs.rallytransbetxi.ui.teams.TeamsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.RallyTransbetxiTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -34,7 +35,12 @@ class MainActivity : ComponentActivity() {
                     val stagesScreenViewModel: StagesScreenViewModel = viewModel(
                         factory = viewModelFactory
                     )
-                    Navigation(stagesScreenViewModel)
+
+                    val teamsScreenViewModel: TeamsScreenViewModel = viewModel(
+                        factory = viewModelFactory
+                    )
+
+                    Navigation(stagesScreenViewModel, teamsScreenViewModel)
 
                     /*db.collection("stages").document("TCP").get().addOnSuccessListener {
                         Log.d(TAG, "DocumentSnapshot added: ${it.data?.keys}")

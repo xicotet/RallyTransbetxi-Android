@@ -1,7 +1,7 @@
 package com.canolabs.rallytransbetxi.data.sources.remote
 
-import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Category
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 interface CategoriesService {
     suspend fun fetchCategories(): List<Category>
-    suspend fun fetchCategoryOfATeam(teamId: String): Category
+    suspend fun fetchCategoryFromReference(documentReference: DocumentReference): Task<Category>
 }
 
 class CategoriesServiceImpl @Inject constructor(
@@ -33,28 +33,19 @@ class CategoriesServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchCategoryOfATeam(teamId: String): Category {
-        lateinit var category: Category
-        try {
-            val querySnapshot = firebaseFirestore.collection("teams").document(teamId).get().await()
-            querySnapshot.data?.let {
-                val documentReference = it["category"] as DocumentReference
-                documentReference.get()
-                    .addOnSuccessListener { documentSnapshot ->
-                        category = if (documentSnapshot != null) {
-                            Category(
-                                categoryId = documentSnapshot.id,
-                                name = documentSnapshot["name"] as String
-                            )
-                        } else Category()
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.d("CategoriesServiceImpl", "Error getting category of a team: ", exception)
-                    }
+    override suspend fun fetchCategoryFromReference(documentReference: DocumentReference): Task<Category> {
+        return documentReference.get().continueWith { task ->
+            if (task.isSuccessful) {
+                val documentSnapshot = task.result
+                if (documentSnapshot != null) {
+                    Category(
+                        categoryId = documentSnapshot.id,
+                        name = documentSnapshot["name"] as String
+                    )
+                } else Category()
+            } else {
+                throw task.exception ?: Exception("Unknown error")
             }
-            return category
-        } catch (e: Exception) {
-            return Category()
         }
     }
 }

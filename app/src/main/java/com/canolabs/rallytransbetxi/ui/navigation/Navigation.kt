@@ -22,11 +22,13 @@ import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreen
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreenViewModel
 import com.canolabs.rallytransbetxi.ui.teams.TeamsScreen
+import com.canolabs.rallytransbetxi.ui.teams.TeamsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 
 @Composable
 fun Navigation(
-    stagesScreenViewModel: StagesScreenViewModel
+    stagesScreenViewModel: StagesScreenViewModel,
+    teamsScreenViewModel: TeamsScreenViewModel
 ) {
     val navController = rememberNavController()
     val screens = listOf(
@@ -82,7 +84,9 @@ fun Navigation(
                 StagesScreen(viewModel = stagesScreenViewModel)
             }
             composable(Screens.Results.route) { ResultsScreen() }
-            composable(Screens.Teams.route) { TeamsScreen() }
+            composable(Screens.Teams.route) {
+                TeamsScreen(viewModel = teamsScreenViewModel)
+            }
         }
     }
 }
