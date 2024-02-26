@@ -85,22 +85,11 @@ fun ResultsScreen(
 fun GlobalResultsList(results: List<Result>) {
     LazyColumn {
         items(results) { result ->
-            GlobalResultItem(result = result)
+            ResultCard(result = result)
         }
     }
 }
 
-@Composable
-fun GlobalResultItem(result: Result) {
-    Column {
-        Text(
-            text = result.team.name,
-            style = MaterialTheme.typography.bodyLarge,
-            fontFamily = robotoFamily,
-            modifier = Modifier.padding(10.dp)
-        )
-    }
-}
 
 
 @Composable
