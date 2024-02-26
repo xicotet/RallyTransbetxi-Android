@@ -1,5 +1,7 @@
 package com.canolabs.rallytransbetxi.ui.results
 
+import android.util.Log
+import com.canolabs.rallytransbetxi.data.models.responses.Result
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -11,10 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,14 +31,22 @@ import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResultsScreen() {
+fun ResultsScreen(
+    viewModel: ResultsScreenViewModel
+) {
+    val state by viewModel.state.collectAsState()
+    val titles = listOf(R.string.global, R.string.stages)
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchGlobalResults()
+    }
+
+    Log.d("ResultsScreen", "Results: ${state.results}")
+
     Column(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
-        var state by remember { mutableIntStateOf(0) }
-        val titles = listOf("General", "Etapas")
-
         Text(
             text = stringResource(id = R.string.results),
             style = MaterialTheme.typography.displaySmall,
@@ -47,20 +58,57 @@ fun ResultsScreen() {
                 bottom = PaddingLarge
             )
         )
-        SecondaryTabRow(selectedTabIndex = state) {
+
+        SecondaryTabRow(selectedTabIndex = state.selectedTabIndex) {
             titles.forEachIndexed { index, title ->
                 ResultsTab(
-                    title = title,
-                    onClick = { state = index },
-                    selected = (index == state)
+                    title = stringResource(id = title),
+                    onClick = { viewModel.setSelectedTabIndex(index) },
+                    selected = (index == state.selectedTabIndex),
                 )
             }
+        }
+
+        if (state.selectedTabIndex == 0) {
+            RacingCategorySegmentedButton(
+                selectedTabIndex = state.selectedRacingCategory,
+                onSelectedTabIndexChange = { viewModel.setSelectedRacingCategory(it) }
+            )
+            GlobalResultsList(results = state.results)
+        } else {
+            //StagesResultsList()
         }
     }
 }
 
 @Composable
-fun ResultsTab(title: String, onClick: () -> Unit, selected: Boolean) {
+fun GlobalResultsList(results: List<Result>) {
+    LazyColumn {
+        items(results) { result ->
+            GlobalResultItem(result = result)
+        }
+    }
+}
+
+@Composable
+fun GlobalResultItem(result: Result) {
+    Column {
+        Text(
+            text = result.team.name,
+            style = MaterialTheme.typography.bodyLarge,
+            fontFamily = robotoFamily,
+            modifier = Modifier.padding(10.dp)
+        )
+    }
+}
+
+
+@Composable
+fun ResultsTab(
+    title: String,
+    onClick: () -> Unit,
+    selected: Boolean,
+) {
     Column(
         Modifier
             .clickable { onClick() }

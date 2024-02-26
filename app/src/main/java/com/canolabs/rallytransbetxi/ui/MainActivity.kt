@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.canolabs.rallytransbetxi.ui.miscellaneous.MainActivityViewModelFactory
 import com.canolabs.rallytransbetxi.ui.navigation.Navigation
+import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreenViewModel
 import com.canolabs.rallytransbetxi.ui.teams.TeamsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.RallyTransbetxiTheme
@@ -40,7 +42,15 @@ class MainActivity : ComponentActivity() {
                         factory = viewModelFactory
                     )
 
-                    Navigation(stagesScreenViewModel, teamsScreenViewModel)
+                    val resultsScreenViewModel: ResultsScreenViewModel = viewModel(
+                        factory = viewModelFactory
+                    )
+
+                    Navigation(
+                        stagesScreenViewModel = stagesScreenViewModel,
+                        teamsScreenViewModel = teamsScreenViewModel,
+                        resultsScreenViewModel = resultsScreenViewModel
+                    )
 
                     /*db.collection("stages").document("TCP").get().addOnSuccessListener {
                         Log.d(TAG, "DocumentSnapshot added: ${it.data?.keys}")

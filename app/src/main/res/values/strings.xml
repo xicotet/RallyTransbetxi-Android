@@ -6,4 +6,12 @@
     <string name="stages">Etapas</string>
     <string name="results">Resultados</string>
     <string name="teams">Equipos</string>
+
+    // Tabs inside Results fragment
+    <string name="global">General</string>
+
+    // Segmented button
+    <string name="agria">Agria</string>
+    <string name="prototype">Prototipos</string>
+    <string name="serie">Serie</string>
 </resources>

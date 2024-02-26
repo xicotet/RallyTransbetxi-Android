@@ -13,6 +13,7 @@ import javax.inject.Inject
 
 interface TeamsService {
     suspend fun fetchTeams(): List<Team>
+    suspend fun fetchTeamByReference(teamReference: DocumentReference): Team
 }
 
 class TeamsServiceImpl @Inject constructor(
@@ -26,7 +27,7 @@ class TeamsServiceImpl @Inject constructor(
             querySnapshot.documents.map { document ->
                 async {
                     try {
-                        fetchTeam(document, categoriesServiceImpl)
+                        fetchTeam(document)
                     } catch (e: Exception) {
                         Log.d("TeamsServiceImpl", "Error getting team ${document.id}: ", e)
                         null
@@ -42,7 +43,6 @@ class TeamsServiceImpl @Inject constructor(
 
     private suspend fun fetchTeam(
         document: DocumentSnapshot,
-        categoriesServiceImpl: CategoriesServiceImpl
     ): Team {
         val team = document.toObject(Team::class.java) ?: return Team()
         val category = categoriesServiceImpl.fetchCategoryFromReference(
@@ -50,5 +50,12 @@ class TeamsServiceImpl @Inject constructor(
         ).await()
         team.category = category
         return team
+    }
+
+    override suspend fun fetchTeamByReference(teamReference: DocumentReference): Team {
+        val documentSnapshot = teamReference.get().await()
+        return if (documentSnapshot != null) {
+            fetchTeam(documentSnapshot)
+        } else Team()
     }
 }
