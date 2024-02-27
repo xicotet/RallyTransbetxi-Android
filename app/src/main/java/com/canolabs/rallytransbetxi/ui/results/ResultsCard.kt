@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.results
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,6 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -20,6 +23,12 @@ import com.canolabs.rallytransbetxi.R
 import androidx.compose.material3.Icon
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
@@ -90,11 +99,20 @@ fun ResultCard(result: Result) {
                     )
                 }
             }
-
+            Log.d("ResultCard", "Image URL: ${result.team.driverImage}")
             // Image on the right side
-            Icon(
-                painterResource(id = R.drawable.group_filled),
-                contentDescription = null
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(result.team.driverImage)
+                    .crossfade(true)
+                    .build(),
+                placeholder = painterResource(R.drawable.person_pin_filled),
+                contentDescription = stringResource(R.string.app_name),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.clip(CircleShape).height(48.dp).width(48.dp),
+                onError = { error ->
+                    Log.d("ResultCard", "Error loading image: $error")
+                }
             )
         }
     }

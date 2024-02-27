@@ -6,5 +6,7 @@ data class Team(
     val number: String = "",
     val driver: String = "",
     val codriver: String = "",
+    val driverImage: String = "",
+    val codriverImage: String = "",
     var category: Category = Category()
 )
