@@ -73,6 +73,8 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.50") // Hilt
 
     implementation("io.coil-kt:coil-compose:2.6.0") // Coil
+    implementation("com.github.skydoves:landscapist-glide:1.3.7")
+    implementation("io.coil-kt:coil-compose:1.3.2")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
