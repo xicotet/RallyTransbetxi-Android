@@ -2,7 +2,9 @@ package com.canolabs.rallytransbetxi.ui.results
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +27,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
@@ -35,8 +40,7 @@ fun ResultCard(result: Result) {
     Card(
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxWidth()
-            .height(150.dp),
+            .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
         shape = RoundedCornerShape(8.dp)
     ) {
@@ -99,12 +103,64 @@ fun ResultCard(result: Result) {
                 }
             }
             Log.d("ResultCard", "Image URL: ${result.team.driverImage}")
-            // Image on the right side
-            Image( // The Image component to load the image with the Coil library
-                painter = rememberAsyncImagePainter(model = result.team.driverImage),
-                contentDescription = null,
-                modifier = Modifier.clip(CircleShape).height(48.dp).width(48.dp)
+
+            val driverPainter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(result.team.driverImage)
+                    .size(coil.size.Size.ORIGINAL)
+                    .build(),
             )
+
+            val codriverPainter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(result.team.codriverImage)
+                    .size(coil.size.Size.ORIGINAL)
+                    .build(),
+            )
+
+            if (driverPainter.state is AsyncImagePainter.State.Loading ||
+                codriverPainter.state is AsyncImagePainter.State.Loading) {
+                DriverImageShimmer { brush ->
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .height(96.dp)
+                            .width(96.dp)
+                            .background(brush = brush)
+                    )
+                }
+                DriverImageShimmer { brush ->
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .height(96.dp)
+                            .width(96.dp)
+                            .background(brush = brush)
+                    )
+                }
+            }  else {
+                Column {
+                    Image(
+                        painter = driverPainter,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .height(96.dp)
+                            .width(96.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Image(
+                        painter = codriverPainter,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .height(96.dp)
+                            .width(96.dp)
+                    )
+                }
+
+
+            }
         }
     }
 }
