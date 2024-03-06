@@ -1,6 +1,7 @@
 package com.canolabs.rallytransbetxi.ui.results
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,22 +22,34 @@ import com.canolabs.rallytransbetxi.R
 import androidx.compose.material3.Icon
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 
 @Composable
 fun ResultCard(result: Result) {
-
     Card(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         shape = RoundedCornerShape(8.dp)
     ) {
+
+        val gradient = Brush.linearGradient(
+            colors = listOf(
+                MaterialTheme.colorScheme.primaryContainer,
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
+            ),
+            start = Offset(0f, 0f), // Start at the top left corner
+            end = Offset(1000f, 1000f)
+        )
+
         Row(
             modifier = Modifier
+                .background(brush = gradient)
                 .fillMaxWidth()
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -46,6 +59,7 @@ fun ResultCard(result: Result) {
                 text = "1",
                 fontFamily = ezraFamily,
                 style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier
                     .weight(0.15f)
                     .padding(start = 8.dp)
