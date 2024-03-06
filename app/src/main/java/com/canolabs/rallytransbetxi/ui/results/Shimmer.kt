@@ -1,6 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.results
 
-import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -12,13 +12,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun DriverImageShimmer(content: @Composable (brush: Brush) -> Unit) {
+fun Shimmer(content: @Composable (brush: Brush) -> Unit) {
     val transition = rememberInfiniteTransition()
     val animation = transition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1000, easing = LinearEasing),
+            animation = tween(durationMillis = 1500, easing = FastOutLinearInEasing),
             repeatMode = RepeatMode.Restart
         ), label = ""
     )

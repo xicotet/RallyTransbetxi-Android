@@ -74,7 +74,7 @@ fun ResultsScreen(
                 selectedTabIndex = state.selectedRacingCategory,
                 onSelectedTabIndexChange = { viewModel.setSelectedRacingCategory(it) }
             )
-            GlobalResultsList(results = state.results)
+            GlobalResultsList(results = state.results, isLoading = state.isLoading)
         } else {
             //StagesResultsList()
         }
@@ -82,10 +82,14 @@ fun ResultsScreen(
 }
 
 @Composable
-fun GlobalResultsList(results: List<Result>) {
-    LazyColumn {
-        items(results) { result ->
-            ResultCard(result = result)
+fun GlobalResultsList(results: List<Result>, isLoading: Boolean) {
+    if (isLoading) {
+        ResultsCardShimmer()
+    } else {
+        LazyColumn {
+            items(results) { result ->
+                ResultCard(result = result)
+            }
         }
     }
 }

@@ -120,7 +120,7 @@ fun ResultCard(result: Result) {
 
             if (driverPainter.state is AsyncImagePainter.State.Loading ||
                 codriverPainter.state is AsyncImagePainter.State.Loading) {
-                DriverImageShimmer { brush ->
+                Shimmer { brush ->
                     Box(
                         modifier = Modifier
                             .clip(CircleShape)
@@ -129,7 +129,7 @@ fun ResultCard(result: Result) {
                             .background(brush = brush)
                     )
                 }
-                DriverImageShimmer { brush ->
+                Shimmer { brush ->
                     Box(
                         modifier = Modifier
                             .clip(CircleShape)
