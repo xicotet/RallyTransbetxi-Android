@@ -1,101 +1,261 @@
 package com.canolabs.rallytransbetxi.ui.rally
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.canolabs.rallytransbetxi.R
-import com.canolabs.rallytransbetxi.ui.theme.antaFamily
-import com.canolabs.rallytransbetxi.ui.theme.ruralColor
-import com.canolabs.rallytransbetxi.utils.DateTimeUtils
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
+import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 
 @Composable
 fun RallyScreen() {
-    Column(
+    LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.transbetxi_header),
-            contentDescription = null
-        )
-        CountdownTimer()
+        item {
+            Image(
+                painter = painterResource(id = R.drawable.transbetxi_header),
+                contentDescription = null
+            )
+            CountdownTimer()
+            BreakingNewsCard()
+            ListOfChampionsCard()
+            ActivityProgramCard()
+            WhereToEatCard()
+        }
     }
 }
 
 @Composable
-fun CountdownTimer() {
-    var timeLeft by remember { mutableLongStateOf(DateTimeUtils.secondUntilStartOfEvent()) }
-    val coroutineScope = rememberCoroutineScope()
-
-    Box(
+fun BreakingNewsCard() {
+    Card(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .background(MaterialTheme.colorScheme.surfaceContainer)
-            .border(2.dp, ruralColor, MaterialTheme.shapes.extraLarge),
-        contentAlignment = Alignment.Center
+            .fillMaxWidth()
+            .padding(vertical = 12.dp, horizontal = 16.dp),
+        shape = RoundedCornerShape(8.dp),
+        onClick = {},
+        elevation = CardDefaults.cardElevation(cardsElevation)
     ) {
-        val days = timeLeft / (60 * 60 * 24)
-        val hours = (timeLeft / (60 * 60)) % 24
-        val minutes = (timeLeft / 60) % 60
-        val seconds = timeLeft % 60
+        val gradient = Brush.linearGradient(
+            colors = listOf(
+                MaterialTheme.colorScheme.surface,
+                MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
+            ),
+            start = Offset(0f, 0f), // Start at the top left corner
+            end = Offset(1000f, 1000f)
+        )
 
-        AnimatedVisibility(visible = timeLeft > 0) {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Text(
-                    text = String.format("%02dd %02dh %02dm %02ds", days, hours, minutes, seconds),
-                    fontFamily = antaFamily,
-                    fontSize = 30.sp,
-                    color = if (isSystemInDarkTheme()) Color.White else ruralColor,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.ruralnostra),
-                    contentDescription = null
-                )
-            }
-
-        }
-
-        LaunchedEffect(key1 = Unit) {
-            coroutineScope.launch {
-                while (timeLeft > 0) {
-                    delay(1000L) // delay for 1 second
-                    timeLeft--
-                }
-            }
+        Row(
+            modifier = Modifier
+                .background(brush = gradient)
+                .padding(32.dp)
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(),
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.campaign_outlined),
+                modifier = Modifier
+                    .size(48.dp)
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                tint = MaterialTheme.colorScheme.onSurface,
+                contentDescription = null
+            )
+            Text(
+                text = stringResource(id = R.string.breaking_news),
+                style = MaterialTheme.typography.headlineLarge,
+                fontFamily = ezraFamily,
+                maxLines = 1,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .weight(5f)
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.arrow_forward_ios),
+                modifier = Modifier.align(Alignment.CenterVertically),
+                contentDescription = null
+            )
         }
     }
+}
 
-    if (timeLeft <= 0) {
-        Image(
-            painter = painterResource(id = R.drawable.ruralnostra),
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            contentDescription = null
+@Composable
+fun ListOfChampionsCard() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp, horizontal = 16.dp),
+        shape = RoundedCornerShape(8.dp),
+        onClick = {},
+        elevation = CardDefaults.cardElevation(cardsElevation)
+    ) {
+        val gradient = Brush.linearGradient(
+            colors = listOf(
+                MaterialTheme.colorScheme.surface,
+                MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
+            ),
+            start = Offset(0f, 0f), // Start at the top left corner
+            end = Offset(1000f, 1000f)
         )
+
+        Row(
+            modifier = Modifier
+                .background(brush = gradient)
+                .padding(32.dp)
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(),
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.trophy_outlined),
+                modifier = Modifier
+                    .size(48.dp)
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                tint = MaterialTheme.colorScheme.onSurface,
+                contentDescription = null
+            )
+            Text(
+                text = stringResource(id = R.string.list_of_champions),
+                style = MaterialTheme.typography.headlineLarge,
+                fontFamily = ezraFamily,
+                maxLines = 1,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .weight(5f)
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.arrow_forward_ios),
+                modifier = Modifier.align(Alignment.CenterVertically),
+                contentDescription = null
+            )
+        }
+    }
+}
+
+@Composable
+fun ActivityProgramCard() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp, horizontal = 16.dp),
+        shape = RoundedCornerShape(8.dp),
+        onClick = {},
+        elevation = CardDefaults.cardElevation(cardsElevation)
+    ) {
+        val gradient = Brush.linearGradient(
+            colors = listOf(
+                MaterialTheme.colorScheme.surface,
+                MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
+            ),
+            start = Offset(0f, 0f), // Start at the top left corner
+            end = Offset(1000f, 1000f)
+        )
+
+        Row(
+            modifier = Modifier
+                .background(brush = gradient)
+                .padding(32.dp)
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(),
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.explore_outlined),
+                modifier = Modifier
+                    .size(48.dp)
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                tint = MaterialTheme.colorScheme.onSurface,
+                contentDescription = null
+            )
+            Text(
+                text = stringResource(id = R.string.activity_program),
+                style = MaterialTheme.typography.headlineLarge,
+                fontFamily = ezraFamily,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .weight(5f)
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.arrow_forward_ios),
+                modifier = Modifier.align(Alignment.CenterVertically),
+                contentDescription = null
+            )
+        }
+    }
+}
+
+@Composable
+fun WhereToEatCard() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp, horizontal = 16.dp),
+        shape = RoundedCornerShape(8.dp),
+        onClick = {},
+        elevation = CardDefaults.cardElevation(cardsElevation)
+    ) {
+        val gradient = Brush.linearGradient(
+            colors = listOf(
+                MaterialTheme.colorScheme.surface,
+                MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
+            ),
+            start = Offset(0f, 0f), // Start at the top left corner
+            end = Offset(1000f, 1000f)
+        )
+
+        Row(
+            modifier = Modifier
+                .background(brush = gradient)
+                .padding(32.dp)
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(),
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.restaurant_outlined),
+                modifier = Modifier
+                    .size(48.dp)
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                tint = MaterialTheme.colorScheme.onSurface,
+                contentDescription = null
+            )
+            Text(
+                text = stringResource(id = R.string.where_to_eat),
+                style = MaterialTheme.typography.headlineLarge,
+                fontFamily = ezraFamily,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .weight(5f)
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.arrow_forward_ios),
+                modifier = Modifier.align(Alignment.CenterVertically),
+                contentDescription = null
+            )
+        }
     }
 }

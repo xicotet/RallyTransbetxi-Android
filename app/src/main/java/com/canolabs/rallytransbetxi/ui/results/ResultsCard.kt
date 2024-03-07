@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.ui.theme.antaFamily
+import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 
 @Composable
 fun ResultCard(
@@ -40,7 +41,7 @@ fun ResultCard(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 12.dp)
             .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = cardsElevation),
         shape = RoundedCornerShape(8.dp)
     ) {
 

@@ -39,5 +39,5 @@ val SizeZero = 0.dp
 val StrokeWidthProfileImage = 2.dp
 
 // ELEVATION
-val ElevationProfileCard = 12.dp
+val cardsElevation = 10.dp
 val ElevationHomeImageButton = 6.dp

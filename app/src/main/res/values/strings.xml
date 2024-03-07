@@ -7,6 +7,14 @@
     <string name="results">Resultados</string>
     <string name="teams">Equipos</string>
 
+    // Rally destination
+    <string name="breaking_news">Última hora</string>
+    <string name="list_of_champions">Palmarés</string>
+    <string name="activity_program">Programa de actividades</string>
+    <string name="sponsors">Patrocinadores</string>
+    <string name="where_to_eat">Dónde comer</string>
+    <string name="weather_forecast">Previsión metereológica</string>
+
     // Tabs inside Results fragment
     <string name="global">General</string>
 
