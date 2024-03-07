@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
-import com.canolabs.rallytransbetxi.ui.theme.PaddingHuge
+import com.canolabs.rallytransbetxi.ui.theme.PaddingLarge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
 import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
@@ -31,7 +31,7 @@ fun RacingCategorySegmentedButton(
     SingleChoiceSegmentedButtonRow(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = PaddingHuge, horizontal = PaddingMedium)
+            .padding(vertical = PaddingLarge, horizontal = PaddingMedium)
     ) {
         categories.forEachIndexed { index, title ->
             SegmentedButton(
