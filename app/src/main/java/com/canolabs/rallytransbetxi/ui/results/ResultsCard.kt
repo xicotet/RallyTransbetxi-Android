@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -24,9 +25,10 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import com.canolabs.rallytransbetxi.data.models.responses.Result
-import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
-import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
+import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 
 @Composable
 fun ResultCard(
@@ -60,7 +62,7 @@ fun ResultCard(
             // Place position number
             Text(
                 text = position.toString(),
-                fontFamily = ezraFamily,
+                fontFamily = antaFamily,
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier
@@ -79,14 +81,20 @@ fun ResultCard(
             ) {
                 Text(
                     text = result.team.driver.substringBeforeLast(" "),
-                    style = MaterialTheme.typography.bodyLarge
+                    fontFamily = antaFamily,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    style = MaterialTheme.typography.titleMedium
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
                     text = result.team.codriver.substringBeforeLast(" "),
-                    style = MaterialTheme.typography.bodyLarge
+                    fontFamily = antaFamily,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    style = MaterialTheme.typography.titleMedium
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -99,12 +107,16 @@ fun ResultCard(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
-                        painterResource(id = R.drawable.timelapse_outlined),
+                        painterResource(id = R.drawable.timer_outlined),
                         contentDescription = null
                     )
+
+                    Spacer(modifier = Modifier.width(4.dp))
+
                     Text(
                         text = result.time,
-                        fontFamily = robotoFamily,
+                        fontFamily = antaFamily,
+                        fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleLarge
                     )
                 }

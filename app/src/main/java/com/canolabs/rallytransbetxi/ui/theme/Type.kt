@@ -22,6 +22,10 @@ val robotoFamily = FontFamily(
     Font(R.font.roboto_bold, FontWeight.Bold)
 )
 
+val antaFamily = FontFamily(
+    Font(R.font.anta_regular, FontWeight.Normal),
+)
+
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
