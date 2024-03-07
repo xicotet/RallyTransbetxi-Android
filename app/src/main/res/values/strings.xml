@@ -14,4 +14,7 @@
     <string name="agria">Agria</string>
     <string name="prototype">Prototipo</string>
     <string name="serie">Serie</string>
+
+    // General
+    <string name="search">Buscar...</string>
 </resources>

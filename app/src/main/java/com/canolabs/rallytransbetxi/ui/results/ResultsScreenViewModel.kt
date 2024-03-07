@@ -32,4 +32,12 @@ class ResultsScreenViewModel @Inject constructor(
     fun setSelectedRacingCategory(selectedRacingCategory: Int) {
         _state.setSelectedRacingCategory(selectedRacingCategory)
     }
+
+    fun setSearchText(searchText: String) {
+        _state.setSearchText(searchText)
+    }
+
+    fun setIsSearchBarVisible(isSearchBarVisible: Boolean) {
+        _state.setIsSearchBarVisible(isSearchBarVisible)
+    }
 }

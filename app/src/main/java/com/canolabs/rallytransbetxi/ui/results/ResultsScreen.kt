@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.results
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,13 +24,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
-import com.canolabs.rallytransbetxi.ui.theme.PaddingHuge
-import com.canolabs.rallytransbetxi.ui.theme.PaddingLarge
-import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
-import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ResultsScreen(
     viewModel: ResultsScreenViewModel
@@ -46,17 +43,8 @@ fun ResultsScreen(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
-        Text(
-            text = stringResource(id = R.string.results),
-            style = MaterialTheme.typography.displaySmall,
-            fontFamily = ezraFamily,
-            modifier = Modifier.padding(
-                top = PaddingHuge,
-                start = PaddingRegular,
-                end = PaddingHuge,
-                bottom = PaddingLarge
-            )
-        )
+
+        ResultsScreenHeader(viewModel = viewModel)
 
         SecondaryTabRow(selectedTabIndex = state.selectedTabIndex) {
             titles.forEachIndexed { index, title ->
