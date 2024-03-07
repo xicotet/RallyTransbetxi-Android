@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import com.canolabs.rallytransbetxi.ui.theme.PaddingHuge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingLarge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
@@ -69,10 +70,14 @@ fun ResultsScreen(
 
         if (state.selectedTabIndex == 0) {
             RacingCategorySegmentedButton(
-                selectedTabIndex = state.selectedRacingCategory,
+                selectedTabIndex = state.selectedRacingCategory.getTabIndex(),
                 onSelectedTabIndexChange = { viewModel.setSelectedRacingCategory(it) }
             )
-            GlobalResultsList(results = state.results, isLoading = state.isLoading)
+            GlobalResultsList(
+                results = state.results,
+                isLoading = state.isLoading,
+                selectedRacingCategory = state.selectedRacingCategory
+            )
         } else {
             //StagesResultsList()
         }
@@ -80,11 +85,19 @@ fun ResultsScreen(
 }
 
 @Composable
-fun GlobalResultsList(results: List<Result>, isLoading: Boolean) {
+fun GlobalResultsList(
+    results: List<Result>,
+    isLoading: Boolean,
+    selectedRacingCategory: RacingCategory
+) {
     if (isLoading) {
         ResultsCardShimmer()
     } else {
-        val sortedResults = results.sortedBy { it.time }
+        val filteredResults = results.filter {
+            it.team.category.name == stringResource(id = selectedRacingCategory.getName())
+        }
+        val sortedResults = filteredResults.sortedBy { it.time }
+
         // We can not use LazyColumn here because we have set up
         // a vertical scrollable component in main function
         sortedResults.forEachIndexed { index, result ->

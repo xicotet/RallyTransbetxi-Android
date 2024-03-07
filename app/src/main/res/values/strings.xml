@@ -12,6 +12,6 @@
 
     // Segmented button
     <string name="agria">Agria</string>
-    <string name="prototype">Prototipos</string>
+    <string name="prototype">Prototipo</string>
     <string name="serie">Serie</string>
 </resources>

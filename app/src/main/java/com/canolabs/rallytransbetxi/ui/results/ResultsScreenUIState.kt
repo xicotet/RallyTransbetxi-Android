@@ -2,12 +2,13 @@ package com.canolabs.rallytransbetxi.ui.results
 
 import com.canolabs.rallytransbetxi.ui.miscellaneous.UIState
 import com.canolabs.rallytransbetxi.data.models.responses.Result
+import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import kotlinx.coroutines.flow.MutableStateFlow
 
 data class ResultsScreenUIState(
     val results: List<Result> = emptyList(),
     val selectedTabIndex: Int = 0,
-    val selectedRacingCategory: Int = 1,
+    val selectedRacingCategory: RacingCategory = RacingCategory.PROTOTYPE,
     override val isLoading: Boolean = false,
     override val loadingMessageId: Int? = null,
 ): UIState
@@ -25,7 +26,7 @@ fun MutableStateFlow<ResultsScreenUIState>.setSelectedTabIndex(selectedTabIndex:
 }
 
 fun MutableStateFlow<ResultsScreenUIState>.setSelectedRacingCategory(selectedRacingCategory: Int) {
-    value = value.copy(selectedRacingCategory = selectedRacingCategory)
+    value = value.copy(selectedRacingCategory = RacingCategory.entries[selectedRacingCategory])
 }
 
 
