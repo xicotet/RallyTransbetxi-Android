@@ -29,7 +29,10 @@ import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 
 @Composable
-fun ResultCard(result: Result) {
+fun ResultCard(
+    result: Result,
+    position: Int
+) {
     Card(
         modifier = Modifier
             .padding(16.dp)
@@ -54,9 +57,9 @@ fun ResultCard(result: Result) {
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Place number 1
+            // Place position number
             Text(
-                text = "1",
+                text = position.toString(),
                 fontFamily = ezraFamily,
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,

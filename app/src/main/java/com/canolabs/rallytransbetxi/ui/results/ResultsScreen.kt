@@ -1,6 +1,5 @@
 package com.canolabs.rallytransbetxi.ui.results
 
-import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,8 +39,6 @@ fun ResultsScreen(
     LaunchedEffect(Unit) {
         viewModel.fetchGlobalResults()
     }
-
-    Log.d("ResultsScreen", "Results: ${state.results}")
 
     Column(
         horizontalAlignment = Alignment.Start,
@@ -87,10 +84,11 @@ fun GlobalResultsList(results: List<Result>, isLoading: Boolean) {
     if (isLoading) {
         ResultsCardShimmer()
     } else {
+        val sortedResults = results.sortedBy { it.time }
         // We can not use LazyColumn here because we have set up
         // a vertical scrollable component in main function
-        for (result in results) {
-            ResultCard(result = result)
+        sortedResults.forEachIndexed { index, result ->
+            ResultCard(result = result, position = index + 1)
         }
     }
 }
