@@ -28,6 +28,15 @@ object DateTimeUtils {
         return dateString[0].uppercaseChar() + dateString.substring(1)
     }
 
+    fun secondUntilStartOfEvent(): Long {
+        val now = Calendar.getInstance()
+        val targetDate = Calendar.getInstance()
+        targetDate.set(Constants.BEGGINING_YEAR, Constants.BEGGINING_MONTH, Constants.BEGGINING_DAY, 0, 0, 0)
+        targetDate.set(Calendar.MILLISECOND, 0)
+        val diffMillis = targetDate.timeInMillis - now.timeInMillis
+        return diffMillis / 1000
+    }
+
     fun getCurrentDateTime(): String {
         val currentDateTime = Calendar.getInstance().time
         return dateFormatter.format(currentDateTime) + " " + timeFormatter.format(currentDateTime)
