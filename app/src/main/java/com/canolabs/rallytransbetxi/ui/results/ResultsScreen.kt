@@ -13,8 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,7 +45,8 @@ fun ResultsScreen(
 
     Column(
         horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         Text(
             text = stringResource(id = R.string.results),
@@ -86,15 +87,13 @@ fun GlobalResultsList(results: List<Result>, isLoading: Boolean) {
     if (isLoading) {
         ResultsCardShimmer()
     } else {
-        LazyColumn {
-            items(results) { result ->
-                ResultCard(result = result)
-            }
+        // We can not use LazyColumn here because we have set up
+        // a vertical scrollable component in main function
+        for (result in results) {
+            ResultCard(result = result)
         }
     }
 }
-
-
 
 @Composable
 fun ResultsTab(
