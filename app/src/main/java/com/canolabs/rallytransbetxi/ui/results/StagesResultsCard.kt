@@ -1,6 +1,5 @@
 package com.canolabs.rallytransbetxi.ui.results
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -52,8 +51,6 @@ fun StagesResultsCard(stage: Stage) {
             start = Offset(0f, 0f), // Start at the top left corner
             end = Offset(1000f, 1000f)
         )
-
-        Log.d("StagesResultsCard", "DATE: ${DateTimeUtils.secondsToDateInSpanishAbbreviated(stage.startTime?.seconds ?: 0   )}")
 
         Row(
             modifier = Modifier

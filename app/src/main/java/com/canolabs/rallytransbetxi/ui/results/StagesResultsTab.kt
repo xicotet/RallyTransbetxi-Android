@@ -12,11 +12,14 @@ fun StagesResultsTab(
     stages: List<Stage>,
     isLoading: Boolean
 ) {
-
     Spacer(modifier = Modifier.height(PaddingSmall))
 
-    val sortedStagesByStartTime = stages.sortedBy { it.startTime }
-    sortedStagesByStartTime.forEach{ stage ->
-        StagesResultsCard(stage)
+    if (isLoading) {
+        StagesResultsCardShimmer()
+    } else {
+        val sortedStagesByStartTime = stages.sortedBy { it.startTime }
+        sortedStagesByStartTime.forEach { stage ->
+            StagesResultsCard(stage)
+        }
     }
 }
