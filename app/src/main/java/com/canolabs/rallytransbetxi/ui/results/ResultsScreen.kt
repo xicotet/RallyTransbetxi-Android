@@ -50,7 +50,6 @@ fun ResultsScreen(
                 ResultsTab(
                     title = stringResource(id = title),
                     onClick = { viewModel.setSelectedTabIndex(index) },
-                    selected = (index == state.selectedTabIndex),
                 )
             }
         }
@@ -69,7 +68,8 @@ fun ResultsScreen(
         } else {
             StagesResultsTab(
                 stages = state.stages,
-                isLoading = state.isLoading
+                isLoading = state.isLoading,
+                state = state
             )
         }
     }
@@ -79,7 +79,6 @@ fun ResultsScreen(
 fun ResultsTab(
     title: String,
     onClick: () -> Unit,
-    selected: Boolean,
 ) {
     Column(
         Modifier

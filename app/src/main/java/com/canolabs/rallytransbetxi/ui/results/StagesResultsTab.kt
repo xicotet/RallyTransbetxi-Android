@@ -10,14 +10,24 @@ import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
 @Composable
 fun StagesResultsTab(
     stages: List<Stage>,
-    isLoading: Boolean
+    isLoading: Boolean,
+    state: ResultsScreenUIState
 ) {
     Spacer(modifier = Modifier.height(PaddingSmall))
 
     if (isLoading) {
         StagesResultsCardShimmer()
     } else {
-        val sortedStagesByStartTime = stages.sortedBy { it.startTime }
+        val filteredResultsBySearchBar = if (state.isSearchBarVisible) {
+            stages.filter { stage ->
+                stage.name.contains(state.searchText, ignoreCase = true) ||
+                    stage.acronym.contains(state.searchText, ignoreCase = true)
+            }
+        } else {
+            stages
+        }
+
+        val sortedStagesByStartTime = filteredResultsBySearchBar.sortedBy { it.startTime }
         sortedStagesByStartTime.forEach { stage ->
             StagesResultsCard(stage)
         }
