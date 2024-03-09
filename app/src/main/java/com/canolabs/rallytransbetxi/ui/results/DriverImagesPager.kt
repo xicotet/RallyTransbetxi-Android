@@ -28,6 +28,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
 import com.canolabs.rallytransbetxi.data.models.responses.Result
+import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

@@ -1,7 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.results
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import com.canolabs.rallytransbetxi.data.models.responses.Result
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -23,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
-import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -61,7 +59,7 @@ fun ResultsScreen(
                 selectedTabIndex = state.selectedRacingCategory.getTabIndex(),
                 onSelectedTabIndexChange = { viewModel.setSelectedRacingCategory(it) }
             )
-            GlobalResultsList(
+            GlobalResultsTab(
                 results = state.results,
                 isLoading = state.isLoading,
                 selectedRacingCategory = state.selectedRacingCategory,
@@ -69,41 +67,6 @@ fun ResultsScreen(
             )
         } else {
             //StagesResultsList()
-        }
-    }
-}
-
-@Composable
-fun GlobalResultsList(
-    results: List<Result>,
-    isLoading: Boolean,
-    selectedRacingCategory: RacingCategory,
-    state: ResultsScreenUIState
-) {
-    if (isLoading) {
-        ResultsCardShimmer()
-    } else {
-        val filteredResultsBySearchBar = if (state.isSearchBarVisible) {
-            results.filter { result ->
-                result.team.driver.contains(state.searchText, ignoreCase = true) ||
-                    result.team.codriver.contains(state.searchText, ignoreCase = true) ||
-                    result.team.name.contains(state.searchText, ignoreCase = true) ||
-                    result.time.contains(state.searchText, ignoreCase = true)
-            }
-        } else {
-            results
-        }
-
-        val filteredResultsByCategory = filteredResultsBySearchBar.filter {
-            it.team.category.name == stringResource(id = selectedRacingCategory.getName())
-        }
-
-        val sortedResults = filteredResultsByCategory.sortedBy { it.time }
-
-        // We can not use LazyColumn here because we have set up
-        // a vertical scrollable component in main function
-        sortedResults.forEachIndexed { index, result ->
-            ResultCard(result = result, position = index + 1)
         }
     }
 }

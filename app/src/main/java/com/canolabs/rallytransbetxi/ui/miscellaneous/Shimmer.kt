@@ -1,4 +1,4 @@
-package com.canolabs.rallytransbetxi.ui.results
+package com.canolabs.rallytransbetxi.ui.miscellaneous
 
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.RepeatMode
