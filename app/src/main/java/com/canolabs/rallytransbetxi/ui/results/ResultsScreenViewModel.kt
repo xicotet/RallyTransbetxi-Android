@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui.results
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ResultsScreenViewModel @Inject constructor(
-    private val getGlobalResultsUseCase: GetGlobalResultsUseCase
+    private val getGlobalResultsUseCase: GetGlobalResultsUseCase,
+    private val getStagesUseCase: GetStagesUseCase
 ): ViewModel() {
     private var _state = MutableStateFlow(ResultsScreenUIState())
     val state: StateFlow<ResultsScreenUIState> = _state.asStateFlow()
@@ -20,8 +22,14 @@ class ResultsScreenViewModel @Inject constructor(
     fun fetchGlobalResults() {
         viewModelScope.launch {
             _state.setIsLoading(true)
-            _state.setResults(getGlobalResultsUseCase.invoke())
+            _state.setGlobalResults(getGlobalResultsUseCase.invoke())
             _state.setIsLoading(false)
+        }
+    }
+
+    fun fetchStages() {
+        viewModelScope.launch {
+            _state.setStages(getStagesUseCase.invoke())
         }
     }
 

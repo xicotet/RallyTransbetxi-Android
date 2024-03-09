@@ -1,6 +1,5 @@
 package com.canolabs.rallytransbetxi.ui.stages
 
-import android.icu.util.Calendar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,8 +25,8 @@ import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
 import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
+import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StageCard(stage: Stage) {
     Card(
@@ -88,14 +86,9 @@ fun StageCard(stage: Stage) {
                         .size(24.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                val date = stage.startTime?.toDate()
-                val calendar = Calendar.getInstance().apply {
-                    time = date
-                }
-                val hour = calendar.get(Calendar.HOUR_OF_DAY)
-                val minute = String.format("%02d", calendar.get(Calendar.MINUTE))
+
                 Text(
-                    text = "$hour:$minute",
+                    text = DateTimeUtils.formatTimeFromSeconds(stage.startTime?.seconds ?: 0),
                     fontFamily = robotoFamily,
                     style = MaterialTheme.typography.titleMedium
                 )

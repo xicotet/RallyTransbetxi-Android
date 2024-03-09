@@ -2,11 +2,13 @@ package com.canolabs.rallytransbetxi.ui.results
 
 import com.canolabs.rallytransbetxi.ui.miscellaneous.UIState
 import com.canolabs.rallytransbetxi.data.models.responses.Result
+import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import kotlinx.coroutines.flow.MutableStateFlow
 
 data class ResultsScreenUIState(
-    val results: List<Result> = emptyList(),
+    val globalResults: List<Result> = emptyList(),
+    val stages: List<Stage> = emptyList(),
     val isSearchBarVisible: Boolean = false,
     val searchText: String = "",
     val selectedTabIndex: Int = 0,
@@ -19,8 +21,12 @@ fun MutableStateFlow<ResultsScreenUIState>.setIsLoading(isLoading: Boolean) {
     value = value.copy(isLoading = isLoading)
 }
 
-fun MutableStateFlow<ResultsScreenUIState>.setResults(results: List<Result>) {
-    value = value.copy(results = results)
+fun MutableStateFlow<ResultsScreenUIState>.setGlobalResults(results: List<Result>) {
+    value = value.copy(globalResults = results)
+}
+
+fun MutableStateFlow<ResultsScreenUIState>.setStages(stages: List<Stage>) {
+    value = value.copy(stages = stages)
 }
 
 fun MutableStateFlow<ResultsScreenUIState>.setSelectedTabIndex(selectedTabIndex: Int) {

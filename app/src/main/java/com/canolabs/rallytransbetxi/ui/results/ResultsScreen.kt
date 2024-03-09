@@ -34,6 +34,7 @@ fun ResultsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.fetchGlobalResults()
+        viewModel.fetchStages()
     }
 
     Column(
@@ -60,13 +61,16 @@ fun ResultsScreen(
                 onSelectedTabIndexChange = { viewModel.setSelectedRacingCategory(it) }
             )
             GlobalResultsTab(
-                results = state.results,
+                results = state.globalResults,
                 isLoading = state.isLoading,
                 selectedRacingCategory = state.selectedRacingCategory,
                 state = state
             )
         } else {
-            //StagesResultsList()
+            StagesResultsTab(
+                stages = state.stages,
+                isLoading = state.isLoading
+            )
         }
     }
 }

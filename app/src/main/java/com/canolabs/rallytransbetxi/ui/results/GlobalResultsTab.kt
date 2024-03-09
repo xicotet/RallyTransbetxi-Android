@@ -31,11 +31,11 @@ fun GlobalResultsTab(
             it.team.category.name == stringResource(id = selectedRacingCategory.getName())
         }
 
-        val sortedResults = filteredResultsByCategory.sortedBy { it.time }
+        val sortedResultsByTime = filteredResultsByCategory.sortedBy { it.time }
 
         // We can not use LazyColumn here because we have set up
         // a vertical scrollable component in main function
-        sortedResults.forEachIndexed { index, result ->
+        sortedResultsByTime.forEachIndexed { index, result ->
             ResultCard(result = result, position = index + 1)
         }
     }

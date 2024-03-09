@@ -6,7 +6,10 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Calendar
+import  java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 object DateTimeUtils {
 
@@ -26,6 +29,22 @@ object DateTimeUtils {
         val format = SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", Locale("es", "ES"))
         val dateString = format.format(date)
         return dateString[0].uppercaseChar() + dateString.substring(1)
+    }
+
+    fun secondsToDateInSpanishAbbreviated(seconds: Long): String {
+        val date = Date(seconds * 1000) // Convert seconds to milliseconds
+        val format = SimpleDateFormat("d MMM", Locale("es", "ES"))
+        return format.format(date).uppercase(Locale.getDefault())
+    }
+
+    fun formatTimeFromSeconds(seconds: Long): String {
+        val date = Date(seconds * 1000)
+        val calendar = Calendar.getInstance().apply {
+            time = date
+        }
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = String.format("%02d", calendar.get(Calendar.MINUTE))
+        return "$hour:$minute"
     }
 
     fun secondUntilStartOfEvent(): Long {

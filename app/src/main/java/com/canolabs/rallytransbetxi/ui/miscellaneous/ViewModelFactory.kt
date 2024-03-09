@@ -38,12 +38,13 @@ class TeamsViewModelFactory @Inject constructor(
 
 @Suppress("UNCHECKED_CAST")
 class ResultsViewModelFactory @Inject constructor(
-    private val getGlobalResultsUseCase: GetGlobalResultsUseCase
+    private val getGlobalResultsUseCase: GetGlobalResultsUseCase,
+    private val getStagesUseCase: GetStagesUseCase
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ResultsScreenViewModel::class.java)) {
-            return ResultsScreenViewModel(getGlobalResultsUseCase) as T
+            return ResultsScreenViewModel(getGlobalResultsUseCase, getStagesUseCase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
