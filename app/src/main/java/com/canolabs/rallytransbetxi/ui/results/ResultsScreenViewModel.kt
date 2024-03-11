@@ -2,6 +2,7 @@ package com.canolabs.rallytransbetxi.ui.results
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
@@ -29,11 +30,11 @@ class ResultsScreenViewModel @Inject constructor(
         }
     }
 
-    fun fetchStagesResults(stageId: String) {
+    fun fetchStagesResults(stage: Stage) {
         viewModelScope.launch {
-            _state.setIsLoading(true)
-            _state.setStageResults(getStagesResultsUseCase.invoke(stageId))
-            _state.setIsLoading(false)
+            _state.setIsBottomSheetLoading(true)
+            _state.setStageResults(getStagesResultsUseCase.invoke(stage.acronym))
+            _state.setIsBottomSheetLoading(false)
         }
     }
 
@@ -61,5 +62,9 @@ class ResultsScreenViewModel @Inject constructor(
 
     fun setIsBottomSheetVisible(isBottomSheetVisible: Boolean) {
         _state.setIsBottomSheetVisible(isBottomSheetVisible)
+    }
+
+    fun setSelectedStage(stageSelected: Stage) {
+        _state.setSelectedStage(stageSelected)
     }
 }

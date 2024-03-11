@@ -1,11 +1,9 @@
 package com.canolabs.rallytransbetxi.ui.results
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,6 +41,7 @@ fun StagesResultsTab(
         sortedStagesByStartTime.forEach { stage ->
             StagesResultsCard(stage, onClick = {stageSelected ->
                 coroutineScope.launch {
+                    viewModel.setSelectedStage(stageSelected)
                     viewModel.fetchStagesResults(stageSelected)
                     viewModel.setIsBottomSheetVisible(true)
                     bottomSheetState.show()
@@ -61,9 +60,10 @@ fun StagesResultsTab(
                 }
             },
         ) {
-            Box {
-                Text(text = "Bottom Sheet Content")
-            }
+            BottomSheetStageResults(
+                state = state,
+                viewModel = viewModel
+            )
         }
     }
 }

@@ -25,4 +25,5 @@
 
     // General
     <string name="search">Buscar...</string>
+    <string name="location">Localización</string>
 </resources>

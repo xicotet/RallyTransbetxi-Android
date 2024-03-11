@@ -10,8 +10,10 @@ data class ResultsScreenUIState(
     val globalResults: List<Result> = emptyList(),
     val stageResults: List<Result> = emptyList(),
     val stages: List<Stage> = emptyList(),
+    val stageSelected: Stage = Stage(),
     val isSearchBarVisible: Boolean = false,
     val isBottomSheetVisible: Boolean = false,
+    val isBottomSheetLoading: Boolean = false,
     val searchText: String = "",
     val selectedTabIndex: Int = 0,
     val selectedRacingCategory: RacingCategory = RacingCategory.PROTOTYPE,
@@ -53,4 +55,12 @@ fun MutableStateFlow<ResultsScreenUIState>.setIsBottomSheetVisible(isBottomSheet
 
 fun MutableStateFlow<ResultsScreenUIState>.setStageResults(stageResults: List<Result>) {
     value = value.copy(stageResults = stageResults)
+}
+
+fun MutableStateFlow<ResultsScreenUIState>.setSelectedStage(stageSelected: Stage) {
+    value = value.copy(stageSelected = stageSelected)
+}
+
+fun MutableStateFlow<ResultsScreenUIState>.setIsBottomSheetLoading(isBottomSheetLoading: Boolean) {
+    value = value.copy(isBottomSheetLoading = isBottomSheetLoading)
 }
