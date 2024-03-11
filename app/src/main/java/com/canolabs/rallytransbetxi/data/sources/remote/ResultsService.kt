@@ -12,6 +12,7 @@ import javax.inject.Inject
 
 interface ResultsService {
     suspend fun fetchGlobalResults(): List<Result>
+    suspend fun fetchStageResults(stageId: String): List<Result>
 }
 
 class ResultsServiceImpl @Inject constructor(
@@ -38,6 +39,19 @@ class ResultsServiceImpl @Inject constructor(
         }
         val endTime = System.currentTimeMillis()
         Log.d("ResultsServiceImpl", "Time: ${endTime - startupTime} ms")
+        return results
+    }
+
+    override suspend fun fetchStageResults(stageId: String): List<Result> {
+        val documentSnapshot = firebaseFirestore.collection("results/stage/$stageId").get().await()
+        val results = documentSnapshot.documents.mapNotNull {
+            val result = it.toObject(Result::class.java)
+            val teamReference = it["teamReference"] as DocumentReference
+            val team = teamsServiceImpl.fetchTeamByReference(teamReference)
+            result?.team = team
+            Log.d("ResultsServiceImpl", "Result: $result")
+            result
+        }
         return results
     }
 }

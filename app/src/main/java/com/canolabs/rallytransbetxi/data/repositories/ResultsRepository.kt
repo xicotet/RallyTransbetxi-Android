@@ -5,6 +5,7 @@ import javax.inject.Inject
 
 interface ResultsRepository {
     suspend fun getGlobalResults(): List<Result>
+    suspend fun getStageResults(stageId: String): List<Result>
 }
 
 class ResultsRepositoryImpl @Inject constructor(
@@ -12,5 +13,8 @@ class ResultsRepositoryImpl @Inject constructor(
 ): ResultsRepository {
     override suspend fun getGlobalResults(): List<Result> {
         return resultsServiceImpl.fetchGlobalResults()
+    }
+    override suspend fun getStageResults(stageId: String): List<Result> {
+        return resultsServiceImpl.fetchStageResults(stageId)
     }
 }

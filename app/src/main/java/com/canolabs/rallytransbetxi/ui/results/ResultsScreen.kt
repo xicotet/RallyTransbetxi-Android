@@ -69,7 +69,8 @@ fun ResultsScreen(
             StagesResultsTab(
                 stages = state.stages,
                 isLoading = state.isLoading,
-                state = state
+                state = state,
+                viewModel = viewModel
             )
         }
     }

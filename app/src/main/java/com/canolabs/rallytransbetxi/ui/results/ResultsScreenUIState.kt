@@ -8,8 +8,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 data class ResultsScreenUIState(
     val globalResults: List<Result> = emptyList(),
+    val stageResults: List<Result> = emptyList(),
     val stages: List<Stage> = emptyList(),
     val isSearchBarVisible: Boolean = false,
+    val isBottomSheetVisible: Boolean = false,
     val searchText: String = "",
     val selectedTabIndex: Int = 0,
     val selectedRacingCategory: RacingCategory = RacingCategory.PROTOTYPE,
@@ -45,3 +47,10 @@ fun MutableStateFlow<ResultsScreenUIState>.setIsSearchBarVisible(isSearchBarVisi
     value = value.copy(isSearchBarVisible = isSearchBarVisible)
 }
 
+fun MutableStateFlow<ResultsScreenUIState>.setIsBottomSheetVisible(isBottomSheetVisible: Boolean) {
+    value = value.copy(isBottomSheetVisible = isBottomSheetVisible)
+}
+
+fun MutableStateFlow<ResultsScreenUIState>.setStageResults(stageResults: List<Result>) {
+    value = value.copy(stageResults = stageResults)
+}

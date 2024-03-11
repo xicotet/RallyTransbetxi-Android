@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui.results
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ResultsScreenViewModel @Inject constructor(
     private val getGlobalResultsUseCase: GetGlobalResultsUseCase,
+    private val getStagesResultsUseCase: GetStagesResultsUseCase,
     private val getStagesUseCase: GetStagesUseCase
 ): ViewModel() {
     private var _state = MutableStateFlow(ResultsScreenUIState())
@@ -23,6 +25,14 @@ class ResultsScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _state.setIsLoading(true)
             _state.setGlobalResults(getGlobalResultsUseCase.invoke())
+            _state.setIsLoading(false)
+        }
+    }
+
+    fun fetchStagesResults(stageId: String) {
+        viewModelScope.launch {
+            _state.setIsLoading(true)
+            _state.setStageResults(getStagesResultsUseCase.invoke(stageId))
             _state.setIsLoading(false)
         }
     }
@@ -47,5 +57,9 @@ class ResultsScreenViewModel @Inject constructor(
 
     fun setIsSearchBarVisible(isSearchBarVisible: Boolean) {
         _state.setIsSearchBarVisible(isSearchBarVisible)
+    }
+
+    fun setIsBottomSheetVisible(isBottomSheetVisible: Boolean) {
+        _state.setIsBottomSheetVisible(isBottomSheetVisible)
     }
 }

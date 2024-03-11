@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui.miscellaneous
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetTeamsUseCase
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
@@ -39,12 +40,17 @@ class TeamsViewModelFactory @Inject constructor(
 @Suppress("UNCHECKED_CAST")
 class ResultsViewModelFactory @Inject constructor(
     private val getGlobalResultsUseCase: GetGlobalResultsUseCase,
+    private val getStagesResultsUseCase: GetStagesResultsUseCase,
     private val getStagesUseCase: GetStagesUseCase
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ResultsScreenViewModel::class.java)) {
-            return ResultsScreenViewModel(getGlobalResultsUseCase, getStagesUseCase) as T
+            return ResultsScreenViewModel(
+                getGlobalResultsUseCase,
+                getStagesResultsUseCase,
+                getStagesUseCase
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

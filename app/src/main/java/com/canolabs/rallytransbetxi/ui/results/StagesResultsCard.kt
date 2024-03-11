@@ -34,13 +34,17 @@ import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 
 @Composable
-fun StagesResultsCard(stage: Stage) {
+fun StagesResultsCard(
+    stage: Stage,
+    onClick: (String) -> Unit
+) {
     Card(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 12.dp)
             .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = cardsElevation),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        onClick = { onClick(stage.acronym) },
     ) {
 
         val gradient = Brush.linearGradient(
@@ -115,7 +119,9 @@ fun StagesResultsCard(stage: Stage) {
             }
 
             VerticalDivider(
-                modifier = Modifier.width(1.dp).fillMaxHeight(),
+                modifier = Modifier
+                    .width(1.dp)
+                    .fillMaxHeight(),
                 color = MaterialTheme.colorScheme.onSecondaryContainer
             )
 
