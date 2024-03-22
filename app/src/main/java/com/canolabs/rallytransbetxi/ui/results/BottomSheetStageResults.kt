@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -103,7 +104,13 @@ fun BottomSheetStageResults(
                 )
                 OutlinedButton(
                     shape = MaterialTheme.shapes.extraLarge,
-                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.secondary),
+                    colors = ButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = MaterialTheme.colorScheme.primary,
+                        disabledContentColor = MaterialTheme.colorScheme.primary
+                    ),
+                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.scrim),
                     onClick = { /*TODO*/ }
                 ) {
                     Icon(
