@@ -14,7 +14,9 @@ fun GlobalResultsTab(
     state: ResultsScreenUIState
 ) {
     if (isLoading) {
-        ResultsCardShimmer()
+        for (i in 0..3) {
+            ResultsCardShimmer()
+        }
     } else {
         val filteredResultsBySearchBar = if (state.isSearchBarVisible) {
             results.filter { result ->

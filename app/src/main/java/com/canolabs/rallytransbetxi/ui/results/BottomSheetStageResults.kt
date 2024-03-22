@@ -122,7 +122,9 @@ fun BottomSheetStageResults(
         )
 
         if (state.isBottomSheetLoading) {
-            ResultsCardShimmer()
+            for (i in 0..3) {
+                ResultsCardShimmer()
+            }
         } else {
             val sortedResultsByTime = state.stageResults.sortedBy { it.time }
 
