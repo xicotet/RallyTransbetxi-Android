@@ -14,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.canolabs.rallytransbetxi.R
-import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.canolabs.rallytransbetxi.ui.theme.PaddingHuge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingLarge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
@@ -35,13 +34,13 @@ fun StagesScreen(viewModel: StagesScreenViewModel) {
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        StageList(state.stages)
+        StageList(state)
     }
 }
 
 @Composable
-fun StageList(stages: List<Stage>) {
-    val sortedStagesByStartTime = stages.sortedBy { it.startTime }
+fun StageList(state: StagesScreenUIState) {
+    val sortedStagesByStartTime = state.stages.sortedBy { it.startTime }
     val groupedStagesByDate = sortedStagesByStartTime.groupBy {
         it.startTime?.let { timestamp ->
             DateTimeUtils.secondsToDateInSpanish(timestamp.seconds)
@@ -61,6 +60,11 @@ fun StageList(stages: List<Stage>) {
                     bottom = PaddingLarge
                 )
             )
+        }
+        if (state.isLoading) {
+            items(5) {
+                StageCardShimmer()
+            }
         }
         groupedStagesByDate.entries.forEach { entry ->
             item {
