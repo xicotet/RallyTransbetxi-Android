@@ -28,12 +28,15 @@ import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 
 @Composable
-fun StageCard(stage: Stage) {
+fun StageCard(
+    stage: Stage,
+    onStageCardClick: (Stage) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(PaddingSmall),
-        onClick = { /* Handle click event */ },
+        onClick = { onStageCardClick(stage) },
     ) {
         Column(
             modifier = Modifier.padding(16.dp)

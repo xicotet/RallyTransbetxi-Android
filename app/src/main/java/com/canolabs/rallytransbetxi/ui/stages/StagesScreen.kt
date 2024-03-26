@@ -13,7 +13,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.ui.navigation.Screens
 import com.canolabs.rallytransbetxi.ui.theme.PaddingHuge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingLarge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
@@ -22,7 +24,10 @@ import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 
 @Composable
-fun StagesScreen(viewModel: StagesScreenViewModel) {
+fun StagesScreen(
+    viewModel: StagesScreenViewModel,
+    navController: NavController
+) {
 
     val state by viewModel.state.collectAsState()
 
@@ -34,12 +39,12 @@ fun StagesScreen(viewModel: StagesScreenViewModel) {
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        StageList(state)
+        StageList(state, navController)
     }
 }
 
 @Composable
-fun StageList(state: StagesScreenUIState) {
+fun StageList(state: StagesScreenUIState, navController: NavController) {
     val sortedStagesByStartTime = state.stages.sortedBy { it.startTime }
     val groupedStagesByDate = sortedStagesByStartTime.groupBy {
         it.startTime?.let { timestamp ->
@@ -77,7 +82,12 @@ fun StageList(state: StagesScreenUIState) {
                 )
             }
             items(entry.value) { stage ->
-                StageCard(stage = stage)
+                StageCard(
+                    stage = stage,
+                    onStageCardClick = {
+                        navController.navigate("${Screens.StagesMap.route}/${stage.acronym}")
+                    }
+                )
             }
         }
     }

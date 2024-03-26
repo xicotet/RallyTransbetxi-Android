@@ -13,10 +13,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
@@ -42,22 +44,24 @@ fun Navigation(
 
     Scaffold(
         bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surface,
-                tonalElevation = 3.dp,
-            ) {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+
+            if (shouldDisplayNavigationBar(currentRoute)) {
+                NavigationBar(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    tonalElevation = 3.dp,
+                ) {
                 screens.forEach { screen ->
                     NavigationBarItem(
                         icon = {
                             val iconResource =
                                 if (currentRoute == screen.route) screen.iconSelected else screen.iconUnselected
-                            Icon(painterResource(id = iconResource), contentDescription = null)
+                            Icon(painterResource(id = iconResource!!), contentDescription = null)
                         },
                         label = {
                             Text(
-                                text = stringResource(id = screen.title),
+                                text = stringResource(id = screen.title!!),
                                 fontFamily = robotoFamily
                             )
                         },
@@ -74,6 +78,7 @@ fun Navigation(
                     )
                 }
             }
+            }
         }
     ) { innerPadding ->
         NavHost(
@@ -83,13 +88,22 @@ fun Navigation(
         ) {
             composable(Screens.Rally.route) { RallyScreen() }
             composable(Screens.Stages.route) {
-                StagesScreen(viewModel = stagesScreenViewModel)
+                StagesScreen(
+                    viewModel = stagesScreenViewModel,
+                    navController = navController
+                )
             }
             composable(Screens.Results.route) {
                 ResultsScreen(viewModel = resultsScreenViewModel)
             }
             composable(Screens.Teams.route) {
                 TeamsScreen(viewModel = teamsScreenViewModel)
+            }
+            composable(
+                route = "${Screens.StagesMap.route}/{stageAcronym}",
+                arguments = listOf(navArgument("stageAcronym") { type = NavType.StringType })
+            ) {
+                Text("Stage Map")
             }
         }
     }
