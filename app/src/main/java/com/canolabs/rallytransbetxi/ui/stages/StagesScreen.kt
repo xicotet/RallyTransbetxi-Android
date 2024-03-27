@@ -85,7 +85,7 @@ fun StageList(state: StagesScreenUIState, navController: NavController) {
                 StageCard(
                     stage = stage,
                     onStageCardClick = {
-                        navController.navigate("${Screens.StagesMap.route}/${stage.acronym}")
+                        navController.navigate("${Screens.Maps.route}/${stage.acronym}")
                     }
                 )
             }

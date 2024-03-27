@@ -1,4 +1,8 @@
 package com.canolabs.rallytransbetxi.ui.navigation
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -19,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.canolabs.rallytransbetxi.ui.maps.MapsScreen
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
@@ -100,10 +105,21 @@ fun Navigation(
                 TeamsScreen(viewModel = teamsScreenViewModel)
             }
             composable(
-                route = "${Screens.StagesMap.route}/{stageAcronym}",
+                route = "${Screens.Maps.route}/{stageAcronym}",
                 arguments = listOf(navArgument("stageAcronym") { type = NavType.StringType })
             ) {
-                Text("Stage Map")
+                val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+                val isVisible = currentRoute?.contains(Screens.Maps.route) ?: false
+
+                AnimatedVisibility(
+                    visible = isVisible,
+                    enter = slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
+                    exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
+                ) {
+                    MapsScreen(
+                        stageAcronym = it.arguments?.getString("stageAcronym") ?: ""
+                    )
+                }
             }
         }
     }

@@ -14,7 +14,7 @@ sealed class Screens(
     data object Stages : Screens("stages", R.string.stages, R.drawable.map_filled, R.drawable.map_outlined)
     data object Results : Screens("results", R.string.results, R.drawable.sports_score, R.drawable.sports_score)
     data object Teams : Screens("teams", R.string.teams, R.drawable.group_filled, R.drawable.group_outlined)
-    data object StagesMap : Screens("map", hasNavigationBar = false)
+    data object Maps : Screens("map", hasNavigationBar = false)
 }
 
 fun shouldDisplayNavigationBar(route: String?): Boolean {

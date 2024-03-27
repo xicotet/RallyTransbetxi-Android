@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -21,11 +23,15 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val properties = Properties()
+        properties.load(project.rootProject.file("local.properties").inputStream())
+        buildConfigField("String", "MAPS_API_KEY", properties.getProperty("MAPS_API_KEY"))
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -40,6 +46,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -64,6 +71,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview") // Compose
     implementation("androidx.compose.material3:material3") // Compose
     implementation("androidx.navigation:navigation-compose:2.7.7") // Compose
+
+    implementation("com.google.maps.android:maps-compose:2.11.4") // Maps Compose
+    implementation("com.google.android.gms:play-services-maps:18.2.0") // Maps
 
     implementation(platform("com.google.firebase:firebase-bom:32.7.2")) // Firebase BoM
     implementation("com.google.firebase:firebase-analytics") // Firebase Analytics
