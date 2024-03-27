@@ -6,6 +6,7 @@ import javax.inject.Inject
 
 interface StagesRepository {
     suspend fun getStages(): List<Stage>
+    suspend fun getStageByAcronym(acronym: String): Stage
 }
 
 class StagesRepositoryImpl @Inject constructor(
@@ -13,5 +14,8 @@ class StagesRepositoryImpl @Inject constructor(
 ) : StagesRepository {
     override suspend fun getStages(): List<Stage> {
         return stagesServiceImpl.fetchStages()
+    }
+    override suspend fun getStageByAcronym(acronym: String): Stage {
+        return stagesServiceImpl.fetchStage(acronym) ?: throw Exception("Stage not found")
     }
 }

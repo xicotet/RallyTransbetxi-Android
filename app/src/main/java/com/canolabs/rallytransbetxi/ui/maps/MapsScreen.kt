@@ -2,6 +2,9 @@ package com.canolabs.rallytransbetxi.ui.maps
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -12,23 +15,27 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun MapsScreen(
+    viewModel: MapsScreenViewModel,
     stageAcronym: String
 ) {
-    val singapore = LatLng(1.35, 103.87)
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(singapore, 10f)
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchStage(stageAcronym)
     }
 
-    GoogleMap (
+    val betxi = LatLng(39.92847, -0.2101992)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(betxi, 13f)
+    }
+
+    GoogleMap(
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState
     ) {
         Marker(
-            state = MarkerState(
-                position = singapore,
-            ),
-            title = "Singapore",
-            snippet = "Population: 5.703 million"
+            state = MarkerState(betxi),
+            title = state.stage.name,
         )
     }
 }

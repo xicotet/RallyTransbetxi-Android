@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.miscellaneous.MainActivityViewModelFactory
 import com.canolabs.rallytransbetxi.ui.navigation.Navigation
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
@@ -48,10 +49,15 @@ class MainActivity : ComponentActivity() {
                         factory = viewModelFactory
                     )
 
+                    val mapsScreenViewModel: MapsScreenViewModel = viewModel(
+                        factory = viewModelFactory
+                    )
+
                     Navigation(
                         stagesScreenViewModel = stagesScreenViewModel,
                         teamsScreenViewModel = teamsScreenViewModel,
-                        resultsScreenViewModel = resultsScreenViewModel
+                        resultsScreenViewModel = resultsScreenViewModel,
+                        mapsScreenViewModel = mapsScreenViewModel
                     )
 
                     /*db.collection("stages").document("TCP").get().addOnSuccessListener {

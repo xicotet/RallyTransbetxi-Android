@@ -7,6 +7,7 @@ import javax.inject.Inject
 
 interface StagesService {
     suspend fun fetchStages(): List<Stage>
+    suspend fun fetchStage(acronym: String): Stage?
 }
 
 class StagesServiceImpl @Inject constructor(
@@ -27,6 +28,16 @@ class StagesServiceImpl @Inject constructor(
         } catch (e: Exception) {
             // Handle error
             emptyList()
+        }
+    }
+
+    override suspend fun fetchStage(acronym: String): Stage? {
+        return try {
+            val documentSnapshot = firebaseFirestore.collection("stages")
+                .document(acronym).get().await()
+            documentSnapshot.toObject(Stage::class.java)?.copy(acronym = documentSnapshot.id)
+        } catch (e: Exception) {
+            null
         }
     }
 }

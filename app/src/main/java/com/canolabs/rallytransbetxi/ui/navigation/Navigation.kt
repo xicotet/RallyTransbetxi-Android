@@ -24,6 +24,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreen
+import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
@@ -37,7 +38,8 @@ import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 fun Navigation(
     stagesScreenViewModel: StagesScreenViewModel,
     teamsScreenViewModel: TeamsScreenViewModel,
-    resultsScreenViewModel: ResultsScreenViewModel
+    resultsScreenViewModel: ResultsScreenViewModel,
+    mapsScreenViewModel: MapsScreenViewModel
 ) {
     val navController = rememberNavController()
     val screens = listOf(
@@ -117,6 +119,7 @@ fun Navigation(
                     exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
                 ) {
                     MapsScreen(
+                        viewModel = mapsScreenViewModel,
                         stageAcronym = it.arguments?.getString("stageAcronym") ?: ""
                     )
                 }
