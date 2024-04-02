@@ -5,5 +5,6 @@ class Constants {
         const val BEGGINING_DAY = 6
         const val BEGGINING_MONTH = 3 // April is 3 in Java.util.calendar
         const val BEGGINING_YEAR = 2024
+        const val BETXI_LOCATION = "39.927995,-0.198889"
     }
 }
