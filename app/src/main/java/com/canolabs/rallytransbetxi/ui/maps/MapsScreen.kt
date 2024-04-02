@@ -32,18 +32,22 @@ import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.utils.Constants
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsScreen(
     viewModel: MapsScreenViewModel,
+    onBackClick: () -> Unit,
     stageAcronym: String
 ) {
     val state by viewModel.state.collectAsState()
@@ -94,7 +98,7 @@ fun MapsScreen(
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = { /* do something */ },
+                        onClick = onBackClick,
                         modifier = Modifier
                             .padding(4.dp)
                             .border(
@@ -130,10 +134,26 @@ fun MapsScreen(
                 uiSettings = state.uiSettings,
                 cameraPositionState = cameraPositionState
             ) {
+                Polyline(
+                    points = state.stage.geoPoints?.map {
+                        LatLng(it.latitude, it.longitude)
+                    } ?: emptyList(),
+                    color = MaterialTheme.colorScheme.primary
+                )
                 Marker(
                     state = MarkerState(betxi),
                     title = state.stage.name,
                 )
+
+                // Animate the camera to the first geo point of the stage
+                state.stage.geoPoints?.first()?.let { geoPoint ->
+                    val targetPosition = LatLng(geoPoint.latitude, geoPoint.longitude)
+                    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
+                    LaunchedEffect(cameraUpdate) {
+                        delay(500)
+                        cameraPositionState.animate(cameraUpdate, durationMs = 2000)
+                    }
+                }
             }
         }
     }

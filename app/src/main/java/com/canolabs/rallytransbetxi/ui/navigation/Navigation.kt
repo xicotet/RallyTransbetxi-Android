@@ -120,6 +120,7 @@ fun Navigation(
                 ) {
                     MapsScreen(
                         viewModel = mapsScreenViewModel,
+                        onBackClick = { navController.popBackStack() },
                         stageAcronym = it.arguments?.getString("stageAcronym") ?: ""
                     )
                 }
