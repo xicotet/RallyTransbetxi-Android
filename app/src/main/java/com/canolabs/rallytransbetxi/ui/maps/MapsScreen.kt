@@ -8,16 +8,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -25,11 +29,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.utils.Constants
@@ -131,29 +140,70 @@ fun MapsScreen(
                 )
             }
 
-            GoogleMap(
-                modifier = Modifier.fillMaxSize(),
-                uiSettings = state.uiSettings,
-                cameraPositionState = cameraPositionState
-            ) {
-                Polyline(
-                    points = state.stage.geoPoints?.map {
-                        LatLng(it.latitude, it.longitude)
-                    } ?: emptyList(),
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Marker(
-                    state = MarkerState(betxi),
-                    title = state.stage.name,
+            Box(modifier = Modifier.fillMaxSize()) {
+                GoogleMap(
+                    modifier = Modifier.fillMaxSize(),
+                    uiSettings = state.uiSettings,
+                    cameraPositionState = cameraPositionState
+                ) {
+                    Polyline(
+                        points = state.stage.geoPoints?.map {
+                            LatLng(it.latitude, it.longitude)
+                        } ?: emptyList(),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Marker(
+                        state = MarkerState(betxi),
+                        title = state.stage.name,
+                    )
+
+                    // Animate the camera to the first geo point of the stage
+                    state.stage.geoPoints?.first()?.let { geoPoint ->
+                        val targetPosition = LatLng(geoPoint.latitude, geoPoint.longitude)
+                        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
+                        LaunchedEffect(cameraUpdate) {
+                            delay(500)
+                            cameraPositionState.animate(cameraUpdate, durationMs = 2000)
+                        }
+                    }
+                }
+
+                AssistChip(
+                    onClick = { /*TODO*/ },
+                    label = { Text(text = stringResource(id = R.string.results))},
+                    leadingIcon = {
+                        Icon(
+                            painterResource(id = R.drawable.sports_score),
+                            contentDescription = null
+                        )
+                    },
+                    colors = AssistChipDefaults.assistChipColors().copy(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        labelColor = MaterialTheme.colorScheme.onBackground
+                    ),
+                    modifier = Modifier
+                        .padding(it)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
 
-                // Animate the camera to the first geo point of the stage
-                state.stage.geoPoints?.first()?.let { geoPoint ->
-                    val targetPosition = LatLng(geoPoint.latitude, geoPoint.longitude)
-                    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
-                    LaunchedEffect(cameraUpdate) {
-                        delay(500)
-                        cameraPositionState.animate(cameraUpdate, durationMs = 2000)
+                Surface(
+                    shadowElevation = 4.dp,
+                    shape = CircleShape,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp, 16.dp, 16.dp, 200.dp)
+                        .background(Color.White, CircleShape)
+                ) {
+                    IconButton(
+                        onClick = { /*TODO: Handle MyLocation button click*/ },
+                        modifier = Modifier.size(60.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.my_location_unknown),
+                            contentDescription = "My Location",
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(36.dp)
+                        )
                     }
                 }
             }
