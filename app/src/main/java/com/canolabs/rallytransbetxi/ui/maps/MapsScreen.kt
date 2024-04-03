@@ -200,8 +200,29 @@ fun MapsScreen(
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.my_location_unknown),
-                            contentDescription = "My Location",
+                            contentDescription = null,
                             tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+                }
+
+                Surface(
+                    shadowElevation = 4.dp,
+                    shape = CircleShape,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp, 16.dp, 16.dp, 120.dp)
+                        .background(Color.White, CircleShape)
+                ) {
+                    IconButton(
+                        onClick = { /*TODO: Handle MyLocation button click*/ },
+                        modifier = Modifier.size(60.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.directions_outlined),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(36.dp)
                         )
                     }
