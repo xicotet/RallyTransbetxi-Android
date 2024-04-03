@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CountdownTimer() {
-    var timeLeft by remember { mutableLongStateOf(DateTimeUtils.secondUntilStartOfEvent()) }
+    var timeLeft by remember { mutableLongStateOf(DateTimeUtils.secondsUntilStartOfEvent()) }
     val coroutineScope = rememberCoroutineScope()
 
     Box(

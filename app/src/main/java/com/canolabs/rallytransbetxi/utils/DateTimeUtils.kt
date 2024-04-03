@@ -47,7 +47,7 @@ object DateTimeUtils {
         return "$hour:$minute"
     }
 
-    fun secondUntilStartOfEvent(): Long {
+    fun secondsUntilStartOfEvent(): Long {
         val now = Calendar.getInstance()
         val targetDate = Calendar.getInstance()
         targetDate.set(Constants.BEGGINING_YEAR, Constants.BEGGINING_MONTH, Constants.BEGGINING_DAY, 0, 0, 0)
