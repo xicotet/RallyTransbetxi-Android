@@ -50,7 +50,7 @@ object DateTimeUtils {
     fun secondsUntilStartOfEvent(): Long {
         val now = Calendar.getInstance()
         val targetDate = Calendar.getInstance()
-        targetDate.set(Constants.BEGGINING_YEAR, Constants.BEGGINING_MONTH, Constants.BEGGINING_DAY, 0, 0, 0)
+        targetDate.set(Constants.BEGINNING_YEAR, Constants.BEGINNING_MONTH, Constants.BEGINNING_DAY, 0, 0, 0)
         targetDate.set(Calendar.MILLISECOND, 0)
         val diffMillis = targetDate.timeInMillis - now.timeInMillis
         return diffMillis / 1000
