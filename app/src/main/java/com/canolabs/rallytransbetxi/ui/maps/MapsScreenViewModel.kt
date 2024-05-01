@@ -34,4 +34,8 @@ class MapsScreenViewModel @Inject constructor(
     fun setUiSettings(uiSettings: MapUiSettings) {
         _state.setUiSettings(uiSettings)
     }
+
+    fun setIsBottomSheetVisible(isBottomSheetVisible: Boolean) {
+        _state.setIsBottomSheetVisible(isBottomSheetVisible)
+    }
 }

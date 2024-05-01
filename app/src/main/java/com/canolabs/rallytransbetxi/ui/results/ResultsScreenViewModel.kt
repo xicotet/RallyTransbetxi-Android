@@ -30,10 +30,10 @@ class ResultsScreenViewModel @Inject constructor(
         }
     }
 
-    fun fetchStagesResults(stage: Stage) {
+    fun fetchStagesResults(stageAcronym: String) {
         viewModelScope.launch {
             _state.setIsBottomSheetLoading(true)
-            _state.setStageResults(getStagesResultsUseCase.invoke(stage.acronym))
+            _state.setStageResults(getStagesResultsUseCase.invoke(stageAcronym))
             _state.setIsBottomSheetLoading(false)
         }
     }

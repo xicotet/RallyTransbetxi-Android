@@ -11,14 +11,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +32,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.ui.results.BottomSheetStageResults
+import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -34,14 +42,26 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapContent(
     state: MapsScreenUIState,
     cameraPositionState: CameraPositionState,
     betxi: LatLng,
-    scaffoldPadding: PaddingValues
+    stageAcronym: String,
+    scaffoldPadding: PaddingValues,
+    mapsViewModel: MapsScreenViewModel,
+    resultsViewModel: ResultsScreenViewModel
 ) {
+    val bottomSheetState = rememberModalBottomSheetState()
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        resultsViewModel.fetchStagesResults(stageAcronym)
+    }
+
     Column {
         if (state.isLoading) {
             LinearProgressIndicator(
@@ -83,7 +103,7 @@ fun MapContent(
             }
 
             AssistChip(
-                onClick = { /*TODO*/ },
+                onClick = { mapsViewModel.setIsBottomSheetVisible(true) },
                 label = { Text(text = stringResource(id = R.string.results)) },
                 leadingIcon = {
                     Icon(
@@ -140,6 +160,25 @@ fun MapContent(
                         modifier = Modifier.size(36.dp)
                     )
                 }
+            }
+        }
+
+        val resultsState by resultsViewModel.state.collectAsState()
+
+        if (state.isBottomSheetVisible) {
+            ModalBottomSheet(
+                sheetState = bottomSheetState,
+                onDismissRequest = {
+                    coroutineScope.launch {
+                        mapsViewModel.setIsBottomSheetVisible(false)
+                        bottomSheetState.hide()
+                    }
+                },
+            ) {
+                BottomSheetStageResults(
+                    state = resultsState,
+                    viewModel = resultsViewModel
+                )
             }
         }
     }

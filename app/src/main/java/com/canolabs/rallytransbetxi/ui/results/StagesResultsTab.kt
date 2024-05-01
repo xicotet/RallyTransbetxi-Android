@@ -42,7 +42,7 @@ fun StagesResultsTab(
             StagesResultsCard(stage, onClick = {stageSelected ->
                 coroutineScope.launch {
                     viewModel.setSelectedStage(stageSelected)
-                    viewModel.fetchStagesResults(stageSelected)
+                    viewModel.fetchStagesResults(stageSelected.acronym)
                     viewModel.setIsBottomSheetVisible(true)
                     bottomSheetState.show()
                 }

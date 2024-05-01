@@ -119,7 +119,8 @@ fun Navigation(
                     exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
                 ) {
                     MapsScreen(
-                        viewModel = mapsScreenViewModel,
+                        mapsViewModel = mapsScreenViewModel,
+                        resultsViewModel = resultsScreenViewModel,
                         onBackClick = { navController.popBackStack() },
                         stageAcronym = it.arguments?.getString("stageAcronym") ?: ""
                     )

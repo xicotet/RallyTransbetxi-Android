@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
+import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.google.android.gms.maps.model.CameraPosition
@@ -37,14 +38,15 @@ import com.google.maps.android.compose.rememberCameraPositionState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsScreen(
-    viewModel: MapsScreenViewModel,
+    mapsViewModel: MapsScreenViewModel,
+    resultsViewModel: ResultsScreenViewModel,
     onBackClick: () -> Unit,
     stageAcronym: String
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by mapsViewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.fetchStage(stageAcronym)
+        mapsViewModel.fetchStage(stageAcronym)
     }
 
     val mapUiSettings = MapUiSettings(
@@ -52,7 +54,7 @@ fun MapsScreen(
         compassEnabled = false
     )
 
-    viewModel.setUiSettings(mapUiSettings)
+    mapsViewModel.setUiSettings(mapUiSettings)
 
     val betxiLocation = Constants.BETXI_LOCATION.split(",")
     val betxi = LatLng(betxiLocation[0].toDouble(), betxiLocation[1].toDouble())
@@ -113,7 +115,10 @@ fun MapsScreen(
             state = state,
             cameraPositionState = cameraPositionState,
             betxi = betxi,
-            scaffoldPadding = it
+            stageAcronym = stageAcronym,
+            scaffoldPadding = it,
+            mapsViewModel = mapsViewModel,
+            resultsViewModel = resultsViewModel
         )
     }
 }
