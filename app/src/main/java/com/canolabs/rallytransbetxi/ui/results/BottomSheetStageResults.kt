@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -138,10 +140,11 @@ fun BottomSheetStageResults(
             val filteredResultsByCategory = sortedResultsByTime.filter {
                 it.team.category.name == stringResource(id = state.selectedRacingCategory.getName())
             }
-            // We can not use LazyColumn here because we have set up
-            // a vertical scrollable component in main function
-            filteredResultsByCategory.forEachIndexed { index, result ->
-                ResultCard(result = result, position = index + 1)
+
+            LazyColumn {
+                items(filteredResultsByCategory) { result ->
+                    ResultCard(result = result, position = filteredResultsByCategory.indexOf(result) + 1)
+                }
             }
         }
     }
