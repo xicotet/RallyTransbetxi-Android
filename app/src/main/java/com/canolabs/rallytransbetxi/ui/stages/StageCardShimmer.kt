@@ -32,7 +32,6 @@ fun StageCardShimmer() {
             Column(
                 modifier = Modifier
                     .padding(16.dp)
-                    .background(brush = brush)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
