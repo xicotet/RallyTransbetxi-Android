@@ -71,9 +71,13 @@ dependencies {
     implementation("com.google.maps.android:maps-compose:2.11.4") // Maps Compose
     implementation("com.google.android.gms:play-services-maps:18.2.0") // Maps
 
-    implementation(platform("com.google.firebase:firebase-bom:32.7.2")) // Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0")) // Firebase BoM
     implementation("com.google.firebase:firebase-analytics") // Firebase Analytics
     implementation("com.google.firebase:firebase-firestore") // Cloud Firestore
+
+    implementation("com.google.android.gms:play-services-location:21.2.0") // Location services
+
+    implementation("androidx.vectordrawable:vectordrawable:1.2.0") // Vector Drawable
 
     implementation("com.google.dagger:hilt-android:2.50") // Hilt
     kapt("com.google.dagger:hilt-android-compiler:2.50") // Hilt

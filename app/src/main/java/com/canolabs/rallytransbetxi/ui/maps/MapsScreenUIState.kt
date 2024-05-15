@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.maps
 
+import android.location.Location
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.canolabs.rallytransbetxi.ui.miscellaneous.UIState
 import com.google.maps.android.compose.MapProperties
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 data class MapsScreenUIState(
     val stage: Stage = Stage(),
     val mapProperties: MapProperties = MapProperties(),
+    val location: Location? = null,
     val uiSettings: MapUiSettings = MapUiSettings(),
     val isBottomSheetVisible: Boolean = false,
     override val isLoading: Boolean = false,
@@ -25,6 +27,10 @@ fun MutableStateFlow<MapsScreenUIState>.setStage(stage: Stage) {
 
 fun MutableStateFlow<MapsScreenUIState>.setIsBottomSheetVisible(isBottomSheetVisible: Boolean) {
     value = value.copy(isBottomSheetVisible = isBottomSheetVisible)
+}
+
+fun MutableStateFlow<MapsScreenUIState>.setLocation(location: Location) {
+    value = value.copy(location = location)
 }
 
 fun MutableStateFlow<MapsScreenUIState>.setMapProperties(mapProperties: MapProperties) {

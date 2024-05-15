@@ -1,5 +1,7 @@
 package com.canolabs.rallytransbetxi.ui.maps
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,10 +30,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.ui.miscellaneous.bitmapDescriptorFromVector
 import com.canolabs.rallytransbetxi.ui.results.BottomSheetStageResults
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -57,6 +61,14 @@ fun MapContent(
 ) {
     val bottomSheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            mapsViewModel.getLocation()
+        }
+    }
 
     LaunchedEffect(Unit) {
         resultsViewModel.fetchStagesResults(stageAcronym)
@@ -91,15 +103,37 @@ fun MapContent(
                     title = state.stage.name,
                 )
 
-                // Animate the camera to the first geo point of the stage
-                state.stage.geoPoints?.first()?.let { geoPoint ->
-                    val targetPosition = LatLng(geoPoint.latitude, geoPoint.longitude)
+                state.location?.let {
+                    val context = LocalContext.current
+                    val icon = context.bitmapDescriptorFromVector(R.drawable.location_circle, 0.5f)
+
+                    Marker(
+                        state = MarkerState(LatLng(it.latitude, it.longitude)),
+                        title = "User Location",
+                        icon = icon,
+
+                    )
+                    // Animate the camera to the user's location
+                    val targetPosition = LatLng(it.latitude, it.longitude)
                     val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
                     LaunchedEffect(cameraUpdate) {
                         delay(500)
                         cameraPositionState.animate(cameraUpdate, durationMs = 2000)
                     }
                 }
+
+                if (state.location == null) {
+                    // Animate the camera to the first geo point of the stage
+                    state.stage.geoPoints?.first()?.let { geoPoint ->
+                        val targetPosition = LatLng(geoPoint.latitude, geoPoint.longitude)
+                        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
+                        LaunchedEffect(cameraUpdate) {
+                            delay(500)
+                            cameraPositionState.animate(cameraUpdate, durationMs = 2000)
+                        }
+                    }
+                }
+
             }
 
             AssistChip(
@@ -129,13 +163,33 @@ fun MapContent(
                     .background(Color.White, CircleShape)
             ) {
                 IconButton(
-                    onClick = { /*TODO: Handle MyLocation button click*/ },
+                    onClick = {
+                        permissionLauncher.launch(
+                            android.Manifest.permission.ACCESS_FINE_LOCATION
+                        )
+                        // Move the camera to the user's location
+                        state.location?.let {
+                            val targetPosition = LatLng(it.latitude, it.longitude)
+                            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
+                            coroutineScope.launch {
+                                cameraPositionState.animate(cameraUpdate, durationMs = 2000)
+                            }
+                        }
+                    },
                     modifier = Modifier.size(60.dp),
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.my_location_unknown),
+                        painter = if (state.location == null) {
+                            painterResource(id = R.drawable.my_location_unknown)
+                        } else {
+                            painterResource(id = R.drawable.my_location_known)
+                        },
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error,
+                        tint = if (state.location == null) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            MaterialTheme.colorScheme.onSurface
+                        },
                         modifier = Modifier.size(36.dp)
                     )
                 }
