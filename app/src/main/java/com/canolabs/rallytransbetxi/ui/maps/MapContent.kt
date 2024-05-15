@@ -125,7 +125,7 @@ fun MapContent(
                 shape = CircleShape,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(16.dp, 16.dp, 16.dp, 200.dp)
+                    .padding(16.dp, 16.dp, 16.dp, 120.dp)
                     .background(Color.White, CircleShape)
             ) {
                 IconButton(
@@ -146,7 +146,7 @@ fun MapContent(
                 shape = CircleShape,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(16.dp, 16.dp, 16.dp, 120.dp)
+                    .padding(16.dp, 16.dp, 16.dp, 40.dp)
                     .background(Color.White, CircleShape)
             ) {
                 IconButton(
