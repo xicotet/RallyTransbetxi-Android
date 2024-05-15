@@ -101,7 +101,10 @@ fun Navigation(
                 )
             }
             composable(Screens.Results.route) {
-                ResultsScreen(viewModel = resultsScreenViewModel)
+                ResultsScreen(
+                    viewModel = resultsScreenViewModel,
+                    navController = navController
+                )
             }
             composable(Screens.Teams.route) {
                 TeamsScreen(viewModel = teamsScreenViewModel)

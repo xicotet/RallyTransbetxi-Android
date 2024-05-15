@@ -21,13 +21,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ResultsScreen(
-    viewModel: ResultsScreenViewModel
+    viewModel: ResultsScreenViewModel,
+    navController: NavController
 ) {
     val state by viewModel.state.collectAsState()
     val titles = listOf(R.string.global, R.string.stages)
@@ -75,7 +77,8 @@ fun ResultsScreen(
                 stages = state.stages,
                 isLoading = state.isLoading,
                 state = state,
-                viewModel = viewModel
+                viewModel = viewModel,
+                navController = navController
             )
         }
     }

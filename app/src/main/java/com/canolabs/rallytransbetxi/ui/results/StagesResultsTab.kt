@@ -8,6 +8,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
 import kotlinx.coroutines.launch
@@ -18,7 +19,8 @@ fun StagesResultsTab(
     stages: List<Stage>,
     isLoading: Boolean,
     state: ResultsScreenUIState,
-    viewModel: ResultsScreenViewModel
+    viewModel: ResultsScreenViewModel,
+    navController: NavController
 ) {
     val bottomSheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
@@ -62,7 +64,8 @@ fun StagesResultsTab(
         ) {
             BottomSheetStageResults(
                 state = state,
-                viewModel = viewModel
+                viewModel = viewModel,
+                navController = navController
             )
         }
     }

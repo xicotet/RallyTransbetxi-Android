@@ -30,7 +30,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.ui.navigation.Screens
 import com.canolabs.rallytransbetxi.ui.theme.PaddingLarge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
 import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
@@ -39,7 +41,9 @@ import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 @Composable
 fun BottomSheetStageResults(
     state: ResultsScreenUIState,
-    viewModel: ResultsScreenViewModel
+    viewModel: ResultsScreenViewModel,
+    isComingFromMaps: Boolean = false,
+    navController: NavController? = null
 ) {
     Column(
         modifier = Modifier.padding(bottom = 32.dp),
@@ -116,24 +120,27 @@ fun BottomSheetStageResults(
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        OutlinedButton(
-                            shape = MaterialTheme.shapes.extraLarge,
-                            colors = ButtonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary,
-                                disabledContainerColor = MaterialTheme.colorScheme.primary,
-                                disabledContentColor = MaterialTheme.colorScheme.primary
-                            ),
-                            border = BorderStroke(2.dp, MaterialTheme.colorScheme.scrim),
-                            onClick = { /*TODO*/ }
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.map_outlined),
-                                contentDescription = null
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = stringResource(id = R.string.location))
-                        }
+                        if (!isComingFromMaps)
+                            OutlinedButton(
+                                shape = MaterialTheme.shapes.extraLarge,
+                                colors = ButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                                    disabledContainerColor = MaterialTheme.colorScheme.primary,
+                                    disabledContentColor = MaterialTheme.colorScheme.primary
+                                ),
+                                border = BorderStroke(2.dp, MaterialTheme.colorScheme.scrim),
+                                onClick = {
+                                    navController?.navigate("${Screens.Maps.route}/${state.stageSelected.acronym}")
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.map_outlined),
+                                    contentDescription = null
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(text = stringResource(id = R.string.location))
+                            }
                         IconButton(
                             onClick = { viewModel.setIsBottomSheetSearchBarVisible(true) },
                             modifier = Modifier

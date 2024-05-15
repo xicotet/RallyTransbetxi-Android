@@ -177,7 +177,8 @@ fun MapContent(
             ) {
                 BottomSheetStageResults(
                     state = resultsState,
-                    viewModel = resultsViewModel
+                    viewModel = resultsViewModel,
+                    isComingFromMaps = true,
                 )
             }
         }
