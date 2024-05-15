@@ -12,6 +12,7 @@ data class ResultsScreenUIState(
     val stages: List<Stage> = emptyList(),
     val stageSelected: Stage = Stage(),
     val isSearchBarVisible: Boolean = false,
+    val isBottomSheetSearchBarVisible: Boolean = false,
     val isBottomSheetVisible: Boolean = false,
     val isBottomSheetLoading: Boolean = false,
     val searchText: String = "",
@@ -51,6 +52,10 @@ fun MutableStateFlow<ResultsScreenUIState>.setSearchText(searchText: String) {
 
 fun MutableStateFlow<ResultsScreenUIState>.setIsSearchBarVisible(isSearchBarVisible: Boolean) {
     value = value.copy(isSearchBarVisible = isSearchBarVisible)
+}
+
+fun MutableStateFlow<ResultsScreenUIState>.setIsBottomSheetSearchBarVisible(isBottomSheetSearchBarVisible: Boolean) {
+    value = value.copy(isBottomSheetSearchBarVisible = isBottomSheetSearchBarVisible)
 }
 
 fun MutableStateFlow<ResultsScreenUIState>.setIsBottomSheetVisible(isBottomSheetVisible: Boolean) {

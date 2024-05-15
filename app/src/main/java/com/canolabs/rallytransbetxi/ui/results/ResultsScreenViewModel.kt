@@ -65,6 +65,10 @@ class ResultsScreenViewModel @Inject constructor(
         _state.setIsSearchBarVisible(isSearchBarVisible)
     }
 
+    fun setIsBottomSheetSearchBarVisible(isBottomSheetSearchBarVisible: Boolean) {
+        _state.setIsBottomSheetSearchBarVisible(isBottomSheetSearchBarVisible)
+    }
+
     fun setIsBottomSheetVisible(isBottomSheetVisible: Boolean) {
         _state.setIsBottomSheetVisible(isBottomSheetVisible)
     }
