@@ -56,13 +56,18 @@ fun ResultsScreen(
 
         if (state.selectedTabIndex == 0) {
             RacingCategorySegmentedButton(
-                selectedTabIndex = state.selectedRacingCategory.getTabIndex(),
-                onSelectedTabIndexChange = { viewModel.setSelectedRacingCategory(it) }
+                selectedRacingCategories = state.selectedRacingCategories,
+                onSelectedTabIndexChange = { tabIndex ->
+                    if (state.selectedRacingCategories.any { it.getTabIndex() == tabIndex }) {
+                        viewModel.removeSelectedRacingCategoryWithIndex(tabIndex)
+                    } else {
+                        viewModel.addSelectedRacingCategoryWithIndex(tabIndex)
+                    }
+                }
             )
             GlobalResultsTab(
                 results = state.globalResults,
                 isLoading = state.isLoading,
-                selectedRacingCategory = state.selectedRacingCategory,
                 state = state
             )
         } else {

@@ -16,7 +16,7 @@ data class ResultsScreenUIState(
     val isBottomSheetLoading: Boolean = false,
     val searchText: String = "",
     val selectedTabIndex: Int = 0,
-    val selectedRacingCategory: RacingCategory = RacingCategory.PROTOTYPE,
+    val selectedRacingCategories: List<RacingCategory> = listOf(RacingCategory.PROTOTYPE),
     override val isLoading: Boolean = false,
     override val loadingMessageId: Int? = null,
 ): UIState
@@ -37,8 +37,12 @@ fun MutableStateFlow<ResultsScreenUIState>.setSelectedTabIndex(selectedTabIndex:
     value = value.copy(selectedTabIndex = selectedTabIndex)
 }
 
-fun MutableStateFlow<ResultsScreenUIState>.setSelectedRacingCategory(selectedRacingCategory: Int) {
-    value = value.copy(selectedRacingCategory = RacingCategory.entries[selectedRacingCategory])
+fun MutableStateFlow<ResultsScreenUIState>.addSelectedRacingCategory(selectedRacingCategory: RacingCategory) {
+    value = value.copy(selectedRacingCategories = value.selectedRacingCategories + selectedRacingCategory)
+}
+
+fun MutableStateFlow<ResultsScreenUIState>.removeSelectedRacingCategory(selectedRacingCategory: RacingCategory) {
+    value = value.copy(selectedRacingCategories = value.selectedRacingCategories - selectedRacingCategory)
 }
 
 fun MutableStateFlow<ResultsScreenUIState>.setSearchText(searchText: String) {

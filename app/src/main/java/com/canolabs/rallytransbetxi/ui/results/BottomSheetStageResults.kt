@@ -126,8 +126,14 @@ fun BottomSheetStageResults(
         }
 
         RacingCategorySegmentedButton(
-            selectedTabIndex = state.selectedRacingCategory.getTabIndex(),
-            onSelectedTabIndexChange = { viewModel.setSelectedRacingCategory(it) }
+            selectedRacingCategories = state.selectedRacingCategories,
+            onSelectedTabIndexChange = { tabIndex ->
+                if (state.selectedRacingCategories.any { it.getTabIndex() == tabIndex }) {
+                    viewModel.removeSelectedRacingCategoryWithIndex(tabIndex)
+                } else {
+                    viewModel.addSelectedRacingCategoryWithIndex(tabIndex)
+                }
+            }
         )
 
         if (state.isBottomSheetLoading) {
@@ -137,8 +143,10 @@ fun BottomSheetStageResults(
         } else {
             val sortedResultsByTime = state.stageResults.sortedBy { it.time }
 
-            val filteredResultsByCategory = sortedResultsByTime.filter {
-                it.team.category.name == stringResource(id = state.selectedRacingCategory.getName())
+            val filteredResultsByCategory = sortedResultsByTime.filter { result ->
+                state.selectedRacingCategories.any { selectedCategory ->
+                    result.team.category.name == stringResource(id = selectedCategory.getName())
+                }
             }
 
             LazyColumn {

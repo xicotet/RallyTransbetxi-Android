@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui.results
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
+import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
@@ -48,8 +49,12 @@ class ResultsScreenViewModel @Inject constructor(
         _state.setSelectedTabIndex(selectedTabIndex)
     }
 
-    fun setSelectedRacingCategory(selectedRacingCategory: Int) {
-        _state.setSelectedRacingCategory(selectedRacingCategory)
+    fun removeSelectedRacingCategoryWithIndex(selectedRacingCategory: Int) {
+        _state.removeSelectedRacingCategory(RacingCategory.entries[selectedRacingCategory])
+    }
+
+    fun addSelectedRacingCategoryWithIndex(selectedRacingCategory: Int) {
+        _state.addSelectedRacingCategory(RacingCategory.entries[selectedRacingCategory])
     }
 
     fun setSearchText(searchText: String) {

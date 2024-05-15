@@ -10,7 +10,6 @@ import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 fun GlobalResultsTab(
     results: List<Result>,
     isLoading: Boolean,
-    selectedRacingCategory: RacingCategory,
     state: ResultsScreenUIState
 ) {
     if (isLoading) {
@@ -29,8 +28,10 @@ fun GlobalResultsTab(
             results
         }
 
-        val filteredResultsByCategory = filteredResultsBySearchBar.filter {
-            it.team.category.name == stringResource(id = selectedRacingCategory.getName())
+        val filteredResultsByCategory = filteredResultsBySearchBar.filter { result ->
+            state.selectedRacingCategories.any { selectedCategory ->
+                result.team.category.name == stringResource(id = selectedCategory.getName())
+            }
         }
 
         val sortedResultsByTime = filteredResultsByCategory.sortedBy { it.time }
