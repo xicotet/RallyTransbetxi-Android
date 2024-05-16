@@ -2,7 +2,9 @@ package com.canolabs.rallytransbetxi.ui.results
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,12 +28,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.canolabs.rallytransbetxi.data.models.responses.Result
+import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
+import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 
 @Composable
 fun ResultCard(
@@ -113,7 +119,7 @@ fun ResultCard(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Row (
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
@@ -134,7 +140,30 @@ fun ResultCard(
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
+
+                Box(
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .border(
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.scrim,
+                            shape = RoundedCornerShape(2.dp)
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    val racingCategory =
+                        RacingCategory.entries.firstOrNull { stringResource(id = it.getName()) == result.team.category.name }
+
+                    Text(
+                        text = "#" + result.number,
+                        color = racingCategory?.getColor() ?: MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontFamily = ezraFamily,
+                        modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp)
+                    )
+                }
             }
+
             Log.d("ResultCard", "Image URL: ${result.team.driverImage}")
 
             DriverImagesPager(result = result)

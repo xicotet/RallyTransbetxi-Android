@@ -66,6 +66,7 @@ fun MapsScreen(
             permissionLauncher.launch(
                 android.Manifest.permission.ACCESS_FINE_LOCATION
             )
+            mapsViewModel.setHasPressedDirectionsButton(true)
             mapsViewModel.getDirections()
         } else if (action == "results") {
             mapsViewModel.setIsBottomSheetVisible(true)
