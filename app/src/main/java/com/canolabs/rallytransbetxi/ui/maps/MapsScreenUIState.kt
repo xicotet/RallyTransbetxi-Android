@@ -11,6 +11,7 @@ data class MapsScreenUIState(
     val stage: Stage = Stage(),
     val mapProperties: MapProperties = MapProperties(),
     val location: Location? = null,
+    val directions: List<List<Double>> = emptyList(),
     val uiSettings: MapUiSettings = MapUiSettings(),
     val isBottomSheetVisible: Boolean = false,
     override val isLoading: Boolean = false,
@@ -23,6 +24,10 @@ fun MutableStateFlow<MapsScreenUIState>.setIsLoading(isLoading: Boolean) {
 
 fun MutableStateFlow<MapsScreenUIState>.setStage(stage: Stage) {
     value = value.copy(stage = stage)
+}
+
+fun MutableStateFlow<MapsScreenUIState>.setDirections(directions: List<List<Double>>) {
+    value = value.copy(directions = directions)
 }
 
 fun MutableStateFlow<MapsScreenUIState>.setIsBottomSheetVisible(isBottomSheetVisible: Boolean) {

@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui.miscellaneous
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStageByAcronymUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
@@ -30,12 +31,13 @@ class StagesViewModelFactory @Inject constructor(
 @Suppress("UNCHECKED_CAST")
 class MapsViewModelFactory @Inject constructor(
     private val getStageByAcronymUseCase: GetStageByAcronymUseCase,
+    private val getDirectionsUseCase: GetDirectionsUseCase,
     private val application: Application
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MapsScreenViewModel::class.java)) {
-            return MapsScreenViewModel(getStageByAcronymUseCase, application) as T
+            return MapsScreenViewModel(getStageByAcronymUseCase, getDirectionsUseCase, application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

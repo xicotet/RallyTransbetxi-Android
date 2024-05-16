@@ -8,12 +8,16 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.canolabs.rallytransbetxi.BuildConfig
+import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStageByAcronymUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,6 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MapsScreenViewModel @Inject constructor(
     private val getStageByAcronymUseCase: GetStageByAcronymUseCase,
+    private val getDirectionsUseCase: GetDirectionsUseCase,
     private val application: Application
 ): ViewModel() {
     private var _state = MutableStateFlow(MapsScreenUIState())
@@ -48,6 +53,21 @@ class MapsScreenViewModel @Inject constructor(
             fusedLocationClient.lastLocation.addOnSuccessListener { loc: Location? ->
                 loc?.let { _state.setLocation(it) }
             }
+        }
+    }
+
+    fun getDirections() {
+        viewModelScope.launch(Dispatchers.IO) {
+            // We cannot get directions if we don't have the user location
+            while (_state.value.location == null) {
+                delay(100)
+            }
+            val directions = getDirectionsUseCase.execute(
+                BuildConfig.DIRECTIONS_API_KEY,
+                _state.value.location?.longitude.toString() + "," + _state.value.location?.latitude.toString(),
+                _state.value.stage.geoPoints?.first()?.longitude.toString() + "," + _state.value.stage.geoPoints?.first()?.latitude.toString()
+            )
+            _state.setDirections(directions)
         }
     }
 

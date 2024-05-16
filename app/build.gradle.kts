@@ -1,3 +1,4 @@
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -18,6 +19,10 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
+        val properties = Properties()
+        properties.load(project.rootProject.file("local.properties").inputStream())
+        buildConfigField("String", "DIRECTIONS_API_KEY", properties.getProperty("DIRECTIONS_API_KEY"))
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -87,6 +92,10 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1") // Splash Screen
 
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.23") // Kotlin Reflect
+
+    implementation("com.squareup.retrofit2:retrofit:2.11.0") // Retrofit
+    implementation("com.google.code.gson:gson:2.10.1") // Gson Converter
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0") // Gson Converter
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

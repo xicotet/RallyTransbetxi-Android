@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.maps
 
+import android.location.Location
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -35,11 +36,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.canolabs.rallytransbetxi.ui.miscellaneous.bitmapDescriptorFromVector
 import com.canolabs.rallytransbetxi.ui.results.BottomSheetStageResults
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
@@ -98,42 +102,35 @@ fun MapContent(
                     } ?: emptyList(),
                     color = MaterialTheme.colorScheme.primary
                 )
+
                 Marker(
-                    state = MarkerState(betxi),
+                    state = MarkerState(state.stage.geoPoints?.first()?.let {
+                        LatLng(it.latitude, it.longitude)
+                    } ?: betxi),
+                    title = state.stage.name,
+                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
+                )
+
+                Marker(
+                    state = MarkerState(state.stage.geoPoints?.last()?.let {
+                        LatLng(it.latitude, it.longitude)
+                    } ?: betxi),
                     title = state.stage.name,
                 )
 
-                state.location?.let {
-                    val context = LocalContext.current
-                    val icon = context.bitmapDescriptorFromVector(R.drawable.location_circle, 0.5f)
+                PrintUserLocation(location = state.location)
+                PrintDirections(directions = state.directions)
 
-                    Marker(
-                        state = MarkerState(LatLng(it.latitude, it.longitude)),
-                        title = "User Location",
-                        icon = icon,
+                if (state.directions.isEmpty())
+                    AnimateCameraToUserLocation(location = state.location, cameraPositionState = cameraPositionState)
+                else
+                    AnimateCameraToDirections(directions = state.directions, cameraPositionState = cameraPositionState)
 
-                    )
-                    // Animate the camera to the user's location
-                    val targetPosition = LatLng(it.latitude, it.longitude)
-                    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
-                    LaunchedEffect(cameraUpdate) {
-                        delay(500)
-                        cameraPositionState.animate(cameraUpdate, durationMs = 2000)
-                    }
-                }
 
-                if (state.location == null) {
+                if (state.location == null && state.directions.isEmpty()) {
                     // Animate the camera to the first geo point of the stage
-                    state.stage.geoPoints?.first()?.let { geoPoint ->
-                        val targetPosition = LatLng(geoPoint.latitude, geoPoint.longitude)
-                        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
-                        LaunchedEffect(cameraUpdate) {
-                            delay(500)
-                            cameraPositionState.animate(cameraUpdate, durationMs = 2000)
-                        }
-                    }
+                    AnimateCameraToFirstStagePoint(stage = state.stage, cameraPositionState = cameraPositionState)
                 }
-
             }
 
             AssistChip(
@@ -204,7 +201,12 @@ fun MapContent(
                     .background(Color.White, CircleShape)
             ) {
                 IconButton(
-                    onClick = {  },
+                    onClick = {
+                        permissionLauncher.launch(
+                            android.Manifest.permission.ACCESS_FINE_LOCATION
+                        )
+                        mapsViewModel.getDirections()
+                    },
                     modifier = Modifier.size(60.dp),
                 ) {
                     Icon(
@@ -237,4 +239,111 @@ fun MapContent(
             }
         }
     }
+}
+
+@Composable
+fun AnimateCameraToFirstStagePoint(
+    stage: Stage,
+    cameraPositionState: CameraPositionState
+) {
+    stage.geoPoints?.first()?.let { geoPoint ->
+        val targetPosition = LatLng(geoPoint.latitude, geoPoint.longitude)
+        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
+        LaunchedEffect(cameraUpdate) {
+            delay(500)
+            cameraPositionState.animate(cameraUpdate, durationMs = 2000)
+        }
+    }
+}
+
+@Composable
+fun PrintDirections(
+    directions: List<List<Double>>,
+) {
+    Polyline(
+        points = directions.map { LatLng(it[1], it[0]) },
+        color = Color.Blue
+    )
+}
+
+@Composable
+fun AnimateCameraToDirections(
+    directions: List<List<Double>>,
+    cameraPositionState: CameraPositionState
+) {
+    if (directions.isNotEmpty()) {
+        // Obtain a center point between the first and last points of state.directions
+        LaunchedEffect(Unit) {
+            val (zoomLevel, center) = calculateZoomLevel(directions)
+            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(center, zoomLevel)
+            cameraPositionState.animate(cameraUpdate, durationMs = 2000)
+        }
+    }
+}
+
+@Composable
+fun PrintUserLocation(
+    location: Location?,
+) {
+    val context = LocalContext.current
+    val icon = context.bitmapDescriptorFromVector(R.drawable.location_circle, 0.7f)
+
+    Marker(
+        state = MarkerState(
+            LatLng(
+            location?.latitude ?: 0.0,
+                location?.longitude ?: 0.0
+            )
+        ),
+        title = "User Location",
+        icon = icon,
+
+    )
+}
+
+@Composable
+fun AnimateCameraToUserLocation(
+    location: Location?,
+    cameraPositionState: CameraPositionState
+) {
+    // Animate the camera to the user's location
+    val targetPosition = LatLng(
+        location?.latitude ?: 0.0,
+        location?.longitude ?: 0.0
+    )
+    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
+    LaunchedEffect(cameraUpdate) {
+        delay(500)
+        cameraPositionState.animate(cameraUpdate, durationMs = 2000)
+    }
+}
+
+fun calculateZoomLevel(directions: List<List<Double>>): Pair<Float, LatLng> {
+    val bounds = LatLngBounds.builder()
+        .include(LatLng(directions.first()[1], directions.first()[0]))
+        .include(LatLng(directions.last()[1], directions.last()[0]))
+        .build()
+    val center = LatLng(
+        (bounds.northeast.latitude + bounds.southwest.latitude) / 2,
+        (bounds.northeast.longitude + bounds.southwest.longitude) / 2
+    )
+
+    val distance = FloatArray(1)
+    Location.distanceBetween(
+        bounds.southwest.latitude,
+        bounds.southwest.longitude,
+        bounds.northeast.latitude,
+        bounds.northeast.longitude,
+        distance
+    )
+
+    // Adjust the zoom level based on the distance
+    val zoomLevel = when {
+        distance[0] > 10000f -> 10f
+        distance[0] > 5000f -> 12f
+        distance[0] > 2000f -> 14f
+        else -> 15f
+    }
+
+    return Pair(zoomLevel, center)
 }
