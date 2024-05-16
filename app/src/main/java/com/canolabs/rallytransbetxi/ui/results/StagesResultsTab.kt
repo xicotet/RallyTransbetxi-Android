@@ -63,7 +63,7 @@ fun StagesResultsTab(
             },
         ) {
             BottomSheetStageResults(
-                state = state,
+                resultsState = state,
                 viewModel = viewModel,
                 navController = navController
             )

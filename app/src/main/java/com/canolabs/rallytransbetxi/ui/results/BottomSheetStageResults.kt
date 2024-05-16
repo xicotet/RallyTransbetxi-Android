@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.ui.maps.MapsScreenUIState
 import com.canolabs.rallytransbetxi.ui.navigation.Screens
 import com.canolabs.rallytransbetxi.ui.theme.PaddingLarge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
@@ -40,7 +41,8 @@ import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 
 @Composable
 fun BottomSheetStageResults(
-    state: ResultsScreenUIState,
+    resultsState: ResultsScreenUIState,
+    mapsState: MapsScreenUIState? = null,
     viewModel: ResultsScreenViewModel,
     isComingFromMaps: Boolean = false,
     navController: NavController? = null
@@ -63,7 +65,8 @@ fun BottomSheetStageResults(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = state.stageSelected.acronym + " - " + state.stageSelected.name,
+                    text = if (isComingFromMaps) mapsState?.stage?.acronym + " - " + mapsState?.stage?.name
+                        else resultsState.stageSelected.acronym + " - " + resultsState.stageSelected.name,
                     fontFamily = robotoFamily,
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center,
@@ -71,9 +74,9 @@ fun BottomSheetStageResults(
                     modifier = Modifier
                         .padding(horizontal = 8.dp, vertical = 16.dp)
                 )
-                if (state.isBottomSheetSearchBarVisible) {
+                if (resultsState.isBottomSheetSearchBarVisible) {
                     TextField(
-                        value = state.searchText,
+                        value = resultsState.searchText,
                         onValueChange = viewModel::setSearchText,
                         modifier = Modifier
                             .padding(vertical = PaddingLarge, horizontal = PaddingMedium)
@@ -131,7 +134,7 @@ fun BottomSheetStageResults(
                                 ),
                                 border = BorderStroke(2.dp, MaterialTheme.colorScheme.scrim),
                                 onClick = {
-                                    navController?.navigate("${Screens.Maps.route}/${state.stageSelected.acronym}")
+                                    navController?.navigate("${Screens.Maps.route}/${resultsState.stageSelected.acronym}")
                                 }
                             ) {
                                 Icon(
@@ -159,9 +162,9 @@ fun BottomSheetStageResults(
         }
 
         RacingCategorySegmentedButton(
-            selectedRacingCategories = state.selectedRacingCategories,
+            selectedRacingCategories = resultsState.selectedRacingCategories,
             onSelectedTabIndexChange = { tabIndex ->
-                if (state.selectedRacingCategories.any { it.getTabIndex() == tabIndex }) {
+                if (resultsState.selectedRacingCategories.any { it.getTabIndex() == tabIndex }) {
                     viewModel.removeSelectedRacingCategoryWithIndex(tabIndex)
                 } else {
                     viewModel.addSelectedRacingCategoryWithIndex(tabIndex)
@@ -169,26 +172,26 @@ fun BottomSheetStageResults(
             }
         )
 
-        if (state.isBottomSheetLoading) {
+        if (resultsState.isBottomSheetLoading) {
             for (i in 0..3) {
                 ResultsCardShimmer()
             }
         } else {
-            val sortedResultsByTime = state.stageResults.sortedBy { it.time }
+            val sortedResultsByTime = resultsState.stageResults.sortedBy { it.time }
 
-            val filteredResultsBySearchBar = if (state.isBottomSheetSearchBarVisible) {
+            val filteredResultsBySearchBar = if (resultsState.isBottomSheetSearchBarVisible) {
                 sortedResultsByTime.filter { result ->
-                    result.team.driver.contains(state.searchText, ignoreCase = true) ||
-                        result.team.codriver.contains(state.searchText, ignoreCase = true) ||
-                        result.team.name.contains(state.searchText, ignoreCase = true) ||
-                        result.time.contains(state.searchText, ignoreCase = true)
+                    result.team.driver.contains(resultsState.searchText, ignoreCase = true) ||
+                        result.team.codriver.contains(resultsState.searchText, ignoreCase = true) ||
+                        result.team.name.contains(resultsState.searchText, ignoreCase = true) ||
+                        result.time.contains(resultsState.searchText, ignoreCase = true)
                 }
             } else {
                 sortedResultsByTime
             }
 
             val filteredResultsByCategory = filteredResultsBySearchBar.filter { result ->
-                state.selectedRacingCategories.any { selectedCategory ->
+                resultsState.selectedRacingCategories.any { selectedCategory ->
                     result.team.category.name == stringResource(id = selectedCategory.getName())
                 }
             }

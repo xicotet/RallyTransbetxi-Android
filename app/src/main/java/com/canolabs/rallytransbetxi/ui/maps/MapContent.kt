@@ -232,7 +232,8 @@ fun MapContent(
                 },
             ) {
                 BottomSheetStageResults(
-                    state = resultsState,
+                    resultsState = resultsState,
+                    mapsState = state,
                     viewModel = resultsViewModel,
                     isComingFromMaps = true,
                 )
