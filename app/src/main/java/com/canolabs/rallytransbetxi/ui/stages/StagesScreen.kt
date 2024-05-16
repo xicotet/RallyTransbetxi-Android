@@ -25,14 +25,14 @@ import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 
 @Composable
 fun StagesScreen(
-    viewModel: StagesScreenViewModel,
+    stagesViewModel: StagesScreenViewModel,
     navController: NavController
 ) {
 
-    val state by viewModel.state.collectAsState()
+    val state by stagesViewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.fetchStages()
+        stagesViewModel.fetchStages()
     }
 
     Surface(
@@ -44,7 +44,10 @@ fun StagesScreen(
 }
 
 @Composable
-fun StageList(state: StagesScreenUIState, navController: NavController) {
+fun StageList(
+    state: StagesScreenUIState,
+    navController: NavController,
+) {
     val sortedStagesByStartTime = state.stages.sortedBy { it.startTime }
     val groupedStagesByDate = sortedStagesByStartTime.groupBy {
         it.startTime?.let { timestamp ->
@@ -84,9 +87,9 @@ fun StageList(state: StagesScreenUIState, navController: NavController) {
             items(entry.value) { stage ->
                 StageCard(
                     stage = stage,
-                    onStageCardClick = {
-                        navController.navigate("${Screens.Maps.route}/${stage.acronym}")
-                    }
+                    onStageCardClick = { stageSelected, action ->
+                        navController.navigate("${Screens.Maps.route}/${stageSelected.acronym}/$action")
+                    },
                 )
             }
         }

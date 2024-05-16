@@ -96,7 +96,7 @@ fun Navigation(
             composable(Screens.Rally.route) { RallyScreen() }
             composable(Screens.Stages.route) {
                 StagesScreen(
-                    viewModel = stagesScreenViewModel,
+                    stagesViewModel = stagesScreenViewModel,
                     navController = navController
                 )
             }
@@ -110,8 +110,14 @@ fun Navigation(
                 TeamsScreen(viewModel = teamsScreenViewModel)
             }
             composable(
-                route = "${Screens.Maps.route}/{stageAcronym}",
-                arguments = listOf(navArgument("stageAcronym") { type = NavType.StringType })
+                route = "${Screens.Maps.route}/{stageAcronym}/{action}",
+                arguments = listOf(
+                    navArgument("stageAcronym") { type = NavType.StringType },
+                    navArgument("action") {
+                        type = NavType.StringType
+                        defaultValue = ""
+                    }
+                )
             ) {
                 val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
                 val isVisible = currentRoute?.contains(Screens.Maps.route) ?: false
@@ -125,7 +131,8 @@ fun Navigation(
                         mapsViewModel = mapsScreenViewModel,
                         resultsViewModel = resultsScreenViewModel,
                         onBackClick = { navController.popBackStack() },
-                        stageAcronym = it.arguments?.getString("stageAcronym") ?: ""
+                        stageAcronym = it.arguments?.getString("stageAcronym") ?: "",
+                        action = it.arguments?.getString("action") ?: ""
                     )
                 }
             }

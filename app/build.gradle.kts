@@ -84,6 +84,8 @@ dependencies {
 
     implementation("androidx.vectordrawable:vectordrawable:1.2.0") // Vector Drawable
 
+    implementation("de.charlex.compose:revealswipe:2.0.0-beta01") // Reveal Swipe
+
     implementation("com.google.dagger:hilt-android:2.50") // Hilt
     kapt("com.google.dagger:hilt-android-compiler:2.50") // Hilt
 

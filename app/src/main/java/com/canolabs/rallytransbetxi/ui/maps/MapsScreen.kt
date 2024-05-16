@@ -1,5 +1,7 @@
 package com.canolabs.rallytransbetxi.ui.maps
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -41,12 +43,33 @@ fun MapsScreen(
     mapsViewModel: MapsScreenViewModel,
     resultsViewModel: ResultsScreenViewModel,
     onBackClick: () -> Unit,
-    stageAcronym: String
+    stageAcronym: String,
+    action: String
 ) {
     val state by mapsViewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
         mapsViewModel.fetchStage(stageAcronym)
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            mapsViewModel.getLocation()
+        }
+    }
+
+    // Direct actions from swiping left/right the stages card
+    LaunchedEffect(stageAcronym, action) {
+        if (action == "getDirections") {
+            permissionLauncher.launch(
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            mapsViewModel.getDirections()
+        } else if (action == "results") {
+            mapsViewModel.setIsBottomSheetVisible(true)
+        }
     }
 
     val mapUiSettings = MapUiSettings(
@@ -115,6 +138,7 @@ fun MapsScreen(
             state = state,
             cameraPositionState = cameraPositionState,
             betxi = betxi,
+            permissionLauncher = permissionLauncher,
             stageAcronym = stageAcronym,
             scaffoldPadding = it,
             mapsViewModel = mapsViewModel,

@@ -1,8 +1,7 @@
 package com.canolabs.rallytransbetxi.ui.maps
 
 import android.location.Location
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,6 +57,7 @@ fun MapContent(
     state: MapsScreenUIState,
     cameraPositionState: CameraPositionState,
     betxi: LatLng,
+    permissionLauncher: ManagedActivityResultLauncher<String, Boolean>,
     stageAcronym: String,
     scaffoldPadding: PaddingValues,
     mapsViewModel: MapsScreenViewModel,
@@ -65,14 +65,6 @@ fun MapContent(
 ) {
     val bottomSheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            mapsViewModel.getLocation()
-        }
-    }
 
     LaunchedEffect(Unit) {
         resultsViewModel.fetchStagesResults(stageAcronym)
