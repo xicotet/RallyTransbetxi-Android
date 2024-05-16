@@ -76,7 +76,7 @@ fun StageCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(PaddingSmall),
-            onClick = { onStageCardClick(stage, "") },
+            onClick = { onStageCardClick(stage, "nothing") },
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
