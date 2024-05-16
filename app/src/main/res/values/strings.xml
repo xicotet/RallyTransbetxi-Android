@@ -15,6 +15,9 @@
     <string name="where_to_eat">Dónde comer</string>
     <string name="weather_forecast">Previsión metereológica</string>
 
+    // Maps destination
+    <string name="navigate">Navegar</string>
+
     // Tabs inside Results fragment
     <string name="global">General</string>
 
@@ -24,6 +27,6 @@
     <string name="serie">Serie</string>
 
     // General
-    <string name="search">Buscar...</string>
+    <string name="search">Buscar&#8230;</string>
     <string name="location">Localización</string>
 </resources>

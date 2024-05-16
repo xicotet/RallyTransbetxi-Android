@@ -87,6 +87,10 @@ class MapsScreenViewModel @Inject constructor(
         _state.setUiSettings(uiSettings)
     }
 
+    fun setHasPressedDirectionsButton(hasPressedDirectionsButton: Boolean) {
+        _state.setHasPressedDirectionsButton(hasPressedDirectionsButton)
+    }
+
     fun setIsBottomSheetVisible(isBottomSheetVisible: Boolean) {
         _state.setIsBottomSheetVisible(isBottomSheetVisible)
     }

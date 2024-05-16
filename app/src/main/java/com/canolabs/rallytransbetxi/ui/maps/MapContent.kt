@@ -11,9 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -30,7 +34,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -65,6 +68,7 @@ fun MapContent(
 ) {
     val bottomSheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         resultsViewModel.fetchStagesResults(stageAcronym)
@@ -183,30 +187,53 @@ fun MapContent(
                     )
                 }
             }
-
-            Surface(
-                shadowElevation = 4.dp,
-                shape = CircleShape,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp, 16.dp, 16.dp, 40.dp)
-                    .background(Color.White, CircleShape)
-            ) {
-                IconButton(
-                    onClick = {
-                        permissionLauncher.launch(
-                            android.Manifest.permission.ACCESS_FINE_LOCATION
-                        )
-                        mapsViewModel.getDirections()
-                    },
-                    modifier = Modifier.size(60.dp),
+            
+            if (state.hasPressedDirectionsButton) {
+                Surface(
+                    shadowElevation = 4.dp,
+                    shape = CircleShape,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp, 16.dp, 16.dp, 40.dp)
+                        .background(Color.White, CircleShape)
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.directions_outlined),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.size(36.dp)
+                    ExtendedFloatingActionButton(
+                        onClick = {
+                            val gmmIntentUri = Uri.parse("google.navigation:q=${state.directions.last()[1]},${state.directions.last()[0]}")
+                            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                            mapIntent.setPackage("com.google.android.apps.maps")
+                            context.startActivity(mapIntent)
+                        },
+                        icon = { Icon(painterResource(id = R.drawable.navigation), "Extended floating action button.") },
+                        text = { Text(text = stringResource(id = R.string.navigate)) },
                     )
+                }
+            } else {
+                Surface(
+                    shadowElevation = 4.dp,
+                    shape = CircleShape,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp, 16.dp, 16.dp, 40.dp)
+                        .background(Color.White, CircleShape)
+                ) {
+                    IconButton(
+                        onClick = {
+                            permissionLauncher.launch(
+                                android.Manifest.permission.ACCESS_FINE_LOCATION
+                            )
+                            mapsViewModel.setHasPressedDirectionsButton(true)
+                            mapsViewModel.getDirections()
+                        },
+                        modifier = Modifier.size(60.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.directions_outlined),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
                 }
             }
         }

@@ -12,6 +12,7 @@ data class MapsScreenUIState(
     val mapProperties: MapProperties = MapProperties(),
     val location: Location? = null,
     val directions: List<List<Double>> = emptyList(),
+    val hasPressedDirectionsButton: Boolean = false,
     val uiSettings: MapUiSettings = MapUiSettings(),
     val isBottomSheetVisible: Boolean = false,
     override val isLoading: Boolean = false,
@@ -36,6 +37,10 @@ fun MutableStateFlow<MapsScreenUIState>.setIsBottomSheetVisible(isBottomSheetVis
 
 fun MutableStateFlow<MapsScreenUIState>.setLocation(location: Location) {
     value = value.copy(location = location)
+}
+
+fun MutableStateFlow<MapsScreenUIState>.setHasPressedDirectionsButton(hasPressedDirectionsButton: Boolean) {
+    value = value.copy(hasPressedDirectionsButton = hasPressedDirectionsButton)
 }
 
 fun MutableStateFlow<MapsScreenUIState>.setMapProperties(mapProperties: MapProperties) {
