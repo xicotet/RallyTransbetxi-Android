@@ -3,7 +3,6 @@ package com.canolabs.rallytransbetxi.ui.results
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.canolabs.rallytransbetxi.data.models.responses.Result
-import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 
 
 @Composable

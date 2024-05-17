@@ -94,8 +94,16 @@ fun ResultCard(
                     .padding(start = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                // To peacefully accommodate german names which only consists of two words
+                val driverName = result.team.driver
+                val trimmedDriverName = if (driverName.split(" ").size > 2) {
+                    driverName.substringBeforeLast(" ")
+                } else {
+                    driverName
+                }
+
                 Text(
-                    text = result.team.driver.substringBeforeLast(" "),
+                    text = trimmedDriverName,
                     fontFamily = antaFamily,
                     textAlign = TextAlign.Center,
                     overflow = TextOverflow.Ellipsis,
@@ -106,8 +114,16 @@ fun ResultCard(
 
                 Spacer(modifier = Modifier.width(8.dp))
 
+                // To peacefully accommodate german names which only consists of two words
+                val codriverName = result.team.codriver
+                val trimmedCodriverName = if (codriverName.split(" ").size > 2) {
+                    codriverName.substringBeforeLast(" ")
+                } else {
+                    codriverName
+                }
+
                 Text(
-                    text = result.team.codriver.substringBeforeLast(" "),
+                    text = trimmedCodriverName,
                     fontFamily = antaFamily,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Center,
