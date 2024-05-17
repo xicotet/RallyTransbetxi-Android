@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui.results
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.canolabs.rallytransbetxi.data.models.responses.Result
+import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 
 
 @Composable
@@ -26,11 +27,11 @@ fun GlobalResultsTab(
 
         val filteredResultsBySearchBar = if (state.isSearchBarVisible) {
             sortedResultsByTime.filter { result ->
-                result.team.driver.contains(state.searchText, ignoreCase = true) ||
-                    result.team.codriver.contains(state.searchText, ignoreCase = true) ||
-                    result.team.name.contains(state.searchText, ignoreCase = true) ||
-                    result.team.number.contains(state.searchText, ignoreCase = true) ||
-                    result.time.contains(state.searchText, ignoreCase = true)
+                result.team.driver.removeDiacriticalMarks().contains(state.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
+                    result.team.codriver.removeDiacriticalMarks().contains(state.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
+                    result.team.name.removeDiacriticalMarks().contains(state.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
+                    result.team.number.removeDiacriticalMarks().contains(state.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
+                    result.time.removeDiacriticalMarks().contains(state.searchText.removeDiacriticalMarks(), ignoreCase = true)
             }
         } else {
             sortedResultsByTime

@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenUIState
+import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 import com.canolabs.rallytransbetxi.ui.navigation.Screens
 import com.canolabs.rallytransbetxi.ui.theme.PaddingLarge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
@@ -170,18 +171,18 @@ fun BottomSheetStageResults(
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(text = stringResource(id = R.string.location))
                             }
-                        IconButton(
-                            onClick = { viewModel.setIsBottomSheetSearchBarVisible(true) },
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .padding(horizontal = PaddingRegular)
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.search),
-                                contentDescription = null,
-                                modifier = Modifier.size(48.dp)
-                            )
-                        }
+                            IconButton(
+                                onClick = { viewModel.setIsBottomSheetSearchBarVisible(true) },
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .padding(horizontal = PaddingRegular)
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.search),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(48.dp)
+                                )
+                            }
                     }
                 }
             }
@@ -213,10 +214,11 @@ fun BottomSheetStageResults(
 
             val filteredResultsBySearchBar = if (resultsState.isBottomSheetSearchBarVisible) {
                 sortedResultsByTime.filter { result ->
-                    result.team.driver.contains(resultsState.searchText, ignoreCase = true) ||
-                        result.team.codriver.contains(resultsState.searchText, ignoreCase = true) ||
-                        result.team.name.contains(resultsState.searchText, ignoreCase = true) ||
-                        result.time.contains(resultsState.searchText, ignoreCase = true)
+                    result.team.driver.removeDiacriticalMarks().contains(resultsState.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
+                        result.team.codriver.removeDiacriticalMarks().contains(resultsState.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
+                        result.team.name.removeDiacriticalMarks().contains(resultsState.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
+                        result.time.removeDiacriticalMarks().contains(resultsState.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
+                        result.team.number.removeDiacriticalMarks().contains(resultsState.searchText.removeDiacriticalMarks(), ignoreCase = true)
                 }
             } else {
                 sortedResultsByTime
