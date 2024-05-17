@@ -75,7 +75,6 @@ fun ResultCard(
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier
-                    .weight(0.15f)
                     .padding(start = 8.dp)
             )
 
