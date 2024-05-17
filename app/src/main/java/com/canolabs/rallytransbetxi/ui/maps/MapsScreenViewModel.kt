@@ -87,6 +87,15 @@ class MapsScreenViewModel @Inject constructor(
         _state.setUiSettings(uiSettings)
     }
 
+    fun cleanDirections() {
+        _state.setDirections(emptyList())
+        setHasPressedDirectionsButton(false)
+    }
+
+    fun cleanLocation() {
+        _state.setLocation(null)
+    }
+
     fun setHasPressedDirectionsButton(hasPressedDirectionsButton: Boolean) {
         _state.setHasPressedDirectionsButton(hasPressedDirectionsButton)
     }

@@ -35,7 +35,7 @@ fun MutableStateFlow<MapsScreenUIState>.setIsBottomSheetVisible(isBottomSheetVis
     value = value.copy(isBottomSheetVisible = isBottomSheetVisible)
 }
 
-fun MutableStateFlow<MapsScreenUIState>.setLocation(location: Location) {
+fun MutableStateFlow<MapsScreenUIState>.setLocation(location: Location?) {
     value = value.copy(location = location)
 }
 

@@ -50,6 +50,8 @@ fun MapsScreen(
 
     LaunchedEffect(Unit) {
         mapsViewModel.fetchStage(stageAcronym)
+        mapsViewModel.cleanDirections()
+        mapsViewModel.cleanLocation()
     }
 
     val permissionLauncher = rememberLauncherForActivityResult(
