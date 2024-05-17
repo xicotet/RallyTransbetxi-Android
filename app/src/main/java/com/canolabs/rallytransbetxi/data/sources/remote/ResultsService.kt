@@ -38,20 +38,28 @@ class ResultsServiceImpl @Inject constructor(
             }.awaitAll().filterNotNull()
         }
         val endTime = System.currentTimeMillis()
-        Log.d("ResultsServiceImpl", "Time: ${endTime - startupTime} ms")
+        Log.d("ResultsServiceImpl", "Time fetching global results: ${endTime - startupTime} ms")
         return results
     }
 
     override suspend fun fetchStageResults(stageId: String): List<Result> {
+        val startupTime = System.currentTimeMillis()
         val documentSnapshot = firebaseFirestore.collection("results/stage/$stageId").get().await()
-        val results = documentSnapshot.documents.mapNotNull {
-            val result = it.toObject(Result::class.java)
-            val teamReference = it["teamReference"] as DocumentReference
-            val team = teamsServiceImpl.fetchTeamByReference(teamReference)
-            result?.team = team
-            Log.d("ResultsServiceImpl", "Result: $result")
-            result
-        }
+        val results = coroutineScope {
+            documentSnapshot.documents.mapNotNull {
+                async {
+                    val result = it.toObject(Result::class.java)
+                    val teamReference = it["teamReference"] as DocumentReference
+                    val team = teamsServiceImpl.fetchTeamByReference(teamReference)
+                    result?.team = team
+                    Log.d("ResultsServiceImpl", "Result: $result")
+                    result
+                }
+            }
+        }.awaitAll().filterNotNull()
+
+        val endTime = System.currentTimeMillis()
+        Log.d("ResultsServiceImpl", "Time fetching stage: ${endTime - startupTime} ms")
         return results
     }
 }
