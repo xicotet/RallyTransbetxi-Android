@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,48 +38,69 @@ fun ResultsScreenHeader(
     val state by viewModel.state.collectAsState()
 
     if (state.isSearchBarVisible) {
-        TextField(
-            value = state.searchText,
-            onValueChange = viewModel::setSearchText,
+        Row(
             modifier = Modifier
-                .padding(vertical = PaddingLarge, horizontal = PaddingMedium)
-                .fillMaxWidth()
-                .height(56.dp)
-                .border(
-                    2.dp,
-                    MaterialTheme.colorScheme.onSurface,
-                    MaterialTheme.shapes.extraLarge
-                ),
-            colors = TextFieldDefaults.colors().copy(
-                focusedContainerColor = MaterialTheme.colorScheme.surface,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                cursorColor = MaterialTheme.colorScheme.onSurface
-            ),
-            shape = MaterialTheme.shapes.small,
-            singleLine = true,
-            placeholder = { Text(stringResource(id = R.string.search)) },
-            leadingIcon = {
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                onClick = { viewModel.setIsSearchBarVisible(false) },
+                modifier = Modifier
+                    .padding(top = PaddingLarge, bottom = PaddingLarge, start = PaddingMedium)
+                    .size(24.dp)
+            ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.search),
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = null,
                     modifier = Modifier.size(24.dp)
                 )
-            },
-            trailingIcon = {
-                IconButton(
-                    onClick = { viewModel.setIsSearchBarVisible(false) },
-                    modifier = Modifier.size(24.dp)
-                ) {
+            }
+
+            TextField(
+                value = state.searchText,
+                onValueChange = viewModel::setSearchText,
+                modifier = Modifier
+                    .padding(vertical = PaddingLarge, horizontal = PaddingMedium)
+                    .height(56.dp)
+                    .fillMaxWidth()
+                    .border(
+                        2.dp,
+                        MaterialTheme.colorScheme.onSurface,
+                        MaterialTheme.shapes.extraLarge
+                    ),
+                colors = TextFieldDefaults.colors().copy(
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    cursorColor = MaterialTheme.colorScheme.onSurface
+                ),
+                shape = MaterialTheme.shapes.small,
+                singleLine = true,
+                placeholder = { Text(stringResource(id = R.string.search)) },
+                leadingIcon = {
                     Icon(
-                        painter = painterResource(id = R.drawable.close),
+                        painter = painterResource(id = R.drawable.search),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp)
                     )
+                },
+                trailingIcon = {
+                    IconButton(
+                        onClick = { viewModel.setSearchText("") },
+                        modifier = Modifier.size(24.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.close),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                 }
-            }
-        )
+            )
+
+        }
     } else {
         Row(
             modifier = Modifier
@@ -109,7 +132,6 @@ fun ResultsScreenHeader(
                     modifier = Modifier.size(48.dp)
                 )
             }
-
         }
     }
 }

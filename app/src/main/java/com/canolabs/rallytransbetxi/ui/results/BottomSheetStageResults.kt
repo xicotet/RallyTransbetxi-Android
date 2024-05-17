@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -75,48 +77,72 @@ fun BottomSheetStageResults(
                         .padding(horizontal = 8.dp, vertical = 16.dp)
                 )
                 if (resultsState.isBottomSheetSearchBarVisible) {
-                    TextField(
-                        value = resultsState.searchText,
-                        onValueChange = viewModel::setSearchText,
+                    Row(
                         modifier = Modifier
-                            .padding(vertical = PaddingLarge, horizontal = PaddingMedium)
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .border(
-                                2.dp,
-                                MaterialTheme.colorScheme.onSurface,
-                                MaterialTheme.shapes.extraLarge
-                            ),
-                        colors = TextFieldDefaults.colors().copy(
-                            focusedContainerColor = MaterialTheme.colorScheme.surface,
-                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            cursorColor = MaterialTheme.colorScheme.onSurface
-                        ),
-                        shape = MaterialTheme.shapes.small,
-                        singleLine = true,
-                        placeholder = { Text(stringResource(id = R.string.search)) },
-                        leadingIcon = {
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(
+                            onClick = { viewModel.setIsBottomSheetSearchBarVisible(false) },
+                            modifier = Modifier
+                                .padding(
+                                    top = PaddingLarge,
+                                    bottom = PaddingLarge,
+                                    start = PaddingMedium
+                                )
+                                .size(24.dp)
+                        ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.search),
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = null,
                                 modifier = Modifier.size(24.dp)
                             )
-                        },
-                        trailingIcon = {
-                            IconButton(
-                                onClick = { viewModel.setIsBottomSheetSearchBarVisible(false) },
-                                modifier = Modifier.size(24.dp)
-                            ) {
+                        }
+                        TextField(
+                            value = resultsState.searchText,
+                            onValueChange = viewModel::setSearchText,
+                            modifier = Modifier
+                                .padding(vertical = PaddingLarge, horizontal = PaddingMedium)
+                                .fillMaxWidth()
+                                .height(56.dp)
+                                .border(
+                                    2.dp,
+                                    MaterialTheme.colorScheme.onSurface,
+                                    MaterialTheme.shapes.extraLarge
+                                ),
+                            colors = TextFieldDefaults.colors().copy(
+                                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                cursorColor = MaterialTheme.colorScheme.onSurface
+                            ),
+                            shape = MaterialTheme.shapes.small,
+                            singleLine = true,
+                            placeholder = { Text(stringResource(id = R.string.search)) },
+                            leadingIcon = {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.close),
+                                    painter = painterResource(id = R.drawable.search),
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp)
                                 )
+                            },
+                            trailingIcon = {
+                                IconButton(
+                                    onClick = { viewModel.setSearchText("") },
+                                    modifier = Modifier.size(24.dp)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.close),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
+
                 } else {
                     Row(
                         modifier = Modifier
