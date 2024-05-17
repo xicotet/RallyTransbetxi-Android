@@ -203,7 +203,13 @@ fun BottomSheetStageResults(
                 ResultsCardShimmer()
             }
         } else {
-            val sortedResultsByTime = resultsState.stageResults.sortedBy { it.time }
+            val filteredResultsByCategory = resultsState.stageResults.filter { result ->
+                resultsState.selectedRacingCategories.any { selectedCategory ->
+                    result.team.category.name == stringResource(id = selectedCategory.getName())
+                }
+            }
+
+            val sortedResultsByTime = filteredResultsByCategory.sortedBy { it.time }
 
             val filteredResultsBySearchBar = if (resultsState.isBottomSheetSearchBarVisible) {
                 sortedResultsByTime.filter { result ->
@@ -216,15 +222,11 @@ fun BottomSheetStageResults(
                 sortedResultsByTime
             }
 
-            val filteredResultsByCategory = filteredResultsBySearchBar.filter { result ->
-                resultsState.selectedRacingCategories.any { selectedCategory ->
-                    result.team.category.name == stringResource(id = selectedCategory.getName())
-                }
-            }
-
             LazyColumn {
-                items(filteredResultsByCategory) { result ->
-                    ResultCard(result = result, position = filteredResultsByCategory.indexOf(result) + 1)
+                items(sortedResultsByTime) { result ->
+                    if (filteredResultsBySearchBar.contains(result)) {
+                        ResultCard(result = result, position = sortedResultsByTime.indexOf(result) + 1)
+                    }
                 }
             }
         }
