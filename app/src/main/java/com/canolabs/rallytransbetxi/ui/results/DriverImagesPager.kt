@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.results
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,6 +18,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,21 +33,49 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DriverImagesPager(result: Result) {
 
+    val teamNumber = result.team.number
+    val driverImagePath = "driverImage${teamNumber}.png"
+    val codriverImagePath = "codriverImage${teamNumber}.png"
+
+    val storage = Firebase.storage
+    val driverStorageRef = storage.reference.child(driverImagePath)
+    val codriverStorageRef = storage.reference.child(codriverImagePath)
+
+    val driverImageUrl = remember { mutableStateOf<String?>(null) }
+    val codriverImageUrl = remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(teamNumber) {
+        try {
+            val driverUrl = driverStorageRef.downloadUrl.await()
+            driverImageUrl.value = driverUrl.toString()
+            Log.d("DriverImagesPager", "Driver Image URL: $driverUrl")
+
+            val codriverUrl = codriverStorageRef.downloadUrl.await()
+            codriverImageUrl.value = codriverUrl.toString()
+            Log.d("DriverImagesPager", "Codriver Image URL: $codriverUrl")
+        } catch (e: Exception) {
+            Log.d("DriverImagesPager", "Error: $e")
+        }
+    }
+
     val driverPainter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(result.team.driverImage)
+            .data(driverImageUrl.value ?: "")
             .size(Size.ORIGINAL)
             .build(),
     )
 
     val codriverPainter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(result.team.codriverImage)
+            .data(codriverImageUrl.value ?: "")
             .size(Size.ORIGINAL)
             .build(),
     )

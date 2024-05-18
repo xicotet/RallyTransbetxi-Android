@@ -6,6 +6,7 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.dagger.hilt.android")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("com.google.firebase.crashlytics")
     kotlin("kapt")
 }
 
@@ -78,6 +79,8 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:33.0.0")) // Firebase BoM
     implementation("com.google.firebase:firebase-analytics") // Firebase Analytics
+    implementation("com.google.firebase:firebase-crashlytics") // Firebase Crashlytics
+    implementation("com.google.firebase:firebase-storage-ktx") // Firebase Storage
     implementation("com.google.firebase:firebase-firestore") // Cloud Firestore
 
     implementation("com.google.android.gms:play-services-location:21.2.0") // Location services
