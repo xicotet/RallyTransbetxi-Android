@@ -2,6 +2,7 @@ package com.canolabs.rallytransbetxi.ui.teams
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import com.canolabs.rallytransbetxi.domain.usecases.GetTeamsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,5 +24,21 @@ class TeamsScreenViewModel @Inject constructor(
             _state.setTeams(getTeamsUseCase.invoke())
             _state.setIsLoading(false)
         }
+    }
+
+    fun setIsSearchBarVisible(isSearchBarVisible: Boolean) {
+        _state.setIsSearchBarVisible(isSearchBarVisible)
+    }
+
+    fun setSearchText(searchText: String) {
+        _state.setSearchText(searchText)
+    }
+
+    fun removeSelectedRacingCategoryWithIndex(selectedRacingCategory: Int) {
+        _state.removeSelectedRacingCategory(RacingCategory.entries[selectedRacingCategory])
+    }
+
+    fun addSelectedRacingCategoryWithIndex(selectedRacingCategory: Int) {
+        _state.addSelectedRacingCategory(RacingCategory.entries[selectedRacingCategory])
     }
 }
