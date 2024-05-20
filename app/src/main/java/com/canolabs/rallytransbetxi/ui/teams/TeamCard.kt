@@ -126,7 +126,8 @@ fun TeamCard(
                     modifier = Modifier.padding(top = 8.dp),
                 )
 
-                if (driverPainter.state is AsyncImagePainter.State.Loading) {
+                if (driverPainter.state is AsyncImagePainter.State.Loading ||
+                    driverImageUrl.value == null) {
                     Shimmer { brush ->
                         Box(
                             modifier = Modifier
@@ -147,7 +148,8 @@ fun TeamCard(
                     )
                 }
 
-                if (codriverPainter.state is AsyncImagePainter.State.Loading) {
+                if (codriverPainter.state is AsyncImagePainter.State.Loading ||
+                    codriverImageUrl.value == null) {
                     Shimmer { brush ->
                         Box(
                             modifier = Modifier
