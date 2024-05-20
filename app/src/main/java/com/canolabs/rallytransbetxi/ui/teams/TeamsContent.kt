@@ -15,27 +15,28 @@ fun TeamsContent(
     if (isLoading) {
         TeamCardShimmer()
     } else {
-        val filteredTeamsByCategory = teams.filter { teams ->
+
+        val sortedTeamsByNumber = teams.sortedBy { it.number.toIntOrNull() ?: Int.MAX_VALUE }
+
+        val filteredTeamsByCategory = sortedTeamsByNumber.filter { teams ->
             state.selectedRacingCategories.any { selectedCategory ->
                 teams.category.name == stringResource(id = selectedCategory.getName())
             }
         }
 
-        val sortedTeamsByNumber = filteredTeamsByCategory.sortedBy { it.number }
-
         val filteredTeamsBySearchBar = if (state.isSearchBarVisible) {
-            sortedTeamsByNumber.filter { team ->
+            filteredTeamsByCategory.filter { team ->
                 team.driver.removeDiacriticalMarks().contains(state.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
                     team.codriver.removeDiacriticalMarks().contains(state.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
                     team.name.removeDiacriticalMarks().contains(state.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
                     team.number.removeDiacriticalMarks().contains(state.searchText.removeDiacriticalMarks(), ignoreCase = true)
             }
         } else {
-            sortedTeamsByNumber
+            filteredTeamsByCategory
         }
 
         Column {
-            teams.forEach {
+            filteredTeamsByCategory.forEach {
                 if (filteredTeamsBySearchBar.contains(it)) {
                     TeamCard(team = it)
                 }
