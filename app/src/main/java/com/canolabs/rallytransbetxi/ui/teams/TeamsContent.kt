@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui.teams
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.data.models.responses.Team
 import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 
@@ -10,7 +11,8 @@ import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 fun TeamsContent(
     teams: List<Team>,
     isLoading: Boolean,
-    state: TeamsScreenUIState
+    state: TeamsScreenUIState,
+    navController: NavController,
 ) {
     if (isLoading) {
         TeamCardShimmer()
@@ -38,7 +40,10 @@ fun TeamsContent(
         Column {
             filteredTeamsByCategory.forEach {
                 if (filteredTeamsBySearchBar.contains(it)) {
-                    TeamCard(team = it)
+                    TeamCard(
+                        team = it,
+                        navController = navController,
+                    )
                 }
             }
         }

@@ -11,11 +11,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.ui.results.RacingCategorySegmentedButton
 
 @Composable
 fun TeamsScreen(
-    viewModel: TeamsScreenViewModel
+    viewModel: TeamsScreenViewModel,
+    navController: NavController
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -47,7 +49,8 @@ fun TeamsScreen(
         TeamsContent(
             teams = state.teams,
             isLoading = state.isLoading,
-            state = state
+            state = state,
+            navController = navController,
         )
     }
 }

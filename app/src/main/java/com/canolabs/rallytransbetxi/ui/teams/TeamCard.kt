@@ -54,6 +54,8 @@ import kotlinx.coroutines.tasks.await
 
 @Composable
 fun TeamCard(
+    team: Team,
+    navController: NavController,
 ) {
     Card(
         modifier = Modifier

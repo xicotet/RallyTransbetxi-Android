@@ -30,6 +30,7 @@ import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreen
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreenViewModel
+import com.canolabs.rallytransbetxi.ui.teams.TeamDetailScreen
 import com.canolabs.rallytransbetxi.ui.teams.TeamsScreen
 import com.canolabs.rallytransbetxi.ui.teams.TeamsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
@@ -107,7 +108,10 @@ fun Navigation(
                 )
             }
             composable(Screens.Teams.route) {
-                TeamsScreen(viewModel = teamsScreenViewModel)
+                TeamsScreen(
+                    viewModel = teamsScreenViewModel,
+                    navController = navController
+                )
             }
             composable(
                 route = "${Screens.Maps.route}/{stageAcronym}/{action}",
@@ -134,6 +138,26 @@ fun Navigation(
                         stageAcronym = it.arguments?.getString("stageAcronym") ?: "",
                         action = it.arguments?.getString("action") ?: ""
                     )
+                }
+            }
+            composable(
+                route = "${Screens.TeamDetail.route}/{teamNumber}",
+                arguments = listOf(
+                    navArgument("teamNumber") { type = NavType.StringType },
+                )
+            ) {
+                val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+                val isVisible = currentRoute?.contains(Screens.TeamDetail.route) ?: false
+
+                AnimatedVisibility(
+                    visible = isVisible,
+                    enter = slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
+                    exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
+                ) {
+                   TeamDetailScreen(
+                       teamNumber = it.arguments?.getString("teamNumber") ?: "",
+                       teamsViewModel = teamsScreenViewModel
+                   )
                 }
             }
         }
