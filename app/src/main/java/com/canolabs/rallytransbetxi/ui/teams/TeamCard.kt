@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,12 +36,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
 import com.canolabs.rallytransbetxi.data.models.responses.Team
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
+import com.canolabs.rallytransbetxi.ui.navigation.Screens
 import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
@@ -51,7 +54,6 @@ import kotlinx.coroutines.tasks.await
 
 @Composable
 fun TeamCard(
-    team: Team
 ) {
     Card(
         modifier = Modifier
@@ -71,15 +73,16 @@ fun TeamCard(
         val driverImageUrl = remember { mutableStateOf<String?>(null) }
         val codriverImageUrl = remember { mutableStateOf<String?>(null) }
 
+        val firstImageIsLoaded = remember { mutableStateOf(false) }
+        val secondImageIsLoaded = remember { mutableStateOf(false) }
+
         LaunchedEffect(teamNumber) {
             try {
                 val driverUrl = driverStorageRef.downloadUrl.await()
                 driverImageUrl.value = driverUrl.toString()
-                Log.d("DriverImagesPager", "Driver Image URL: $driverUrl")
 
                 val codriverUrl = codriverStorageRef.downloadUrl.await()
                 codriverImageUrl.value = codriverUrl.toString()
-                Log.d("DriverImagesPager", "Codriver Image URL: $codriverUrl")
             } catch (e: Exception) {
                 Log.d("DriverImagesPager", "Error: $e")
             }
@@ -90,6 +93,13 @@ fun TeamCard(
                 .data(driverImageUrl.value ?: "")
                 .size(Size.ORIGINAL)
                 .build(),
+            onState = { state ->
+                if (state is AsyncImagePainter.State.Success) {
+                    firstImageIsLoaded.value = true
+                } else if (state is AsyncImagePainter.State.Loading) {
+                    firstImageIsLoaded.value = false
+                }
+            }
         )
 
         val codriverPainter = rememberAsyncImagePainter(
@@ -97,6 +107,13 @@ fun TeamCard(
                 .data(codriverImageUrl.value ?: "")
                 .size(Size.ORIGINAL)
                 .build(),
+            onState = { state ->
+                if (state is AsyncImagePainter.State.Success) {
+                    secondImageIsLoaded.value = true
+                } else if (state is AsyncImagePainter.State.Loading) {
+                    secondImageIsLoaded.value = false
+                }
+            }
         )
 
         val gradient = Brush.linearGradient(
@@ -108,36 +125,24 @@ fun TeamCard(
             end = Offset(1000f, 1000f)
         )
 
-        Column(
-            modifier = Modifier
-                .background(brush = gradient)
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+        if (firstImageIsLoaded.value && secondImageIsLoaded.value) {
+            Column(
+                modifier = Modifier
+                    .background(brush = gradient)
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "#" + team.number,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontFamily = ezraFamily,
-                    modifier = Modifier.padding(top = 8.dp),
-                )
-
-                if (driverPainter.state is AsyncImagePainter.State.Loading ||
-                    driverImageUrl.value == null) {
-                    Shimmer { brush ->
-                        Box(
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .height(96.dp)
-                                .width(96.dp)
-                                .background(brush = brush)
-                        )
-                    }
-                } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "#" + team.number,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontFamily = ezraFamily,
+                        modifier = Modifier.padding(top = 8.dp),
+                    )
                     Image(
                         painter = driverPainter,
                         contentDescription = null,
@@ -146,20 +151,6 @@ fun TeamCard(
                             .height(144.dp)
                             .width(144.dp)
                     )
-                }
-
-                if (codriverPainter.state is AsyncImagePainter.State.Loading ||
-                    codriverImageUrl.value == null) {
-                    Shimmer { brush ->
-                        Box(
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .height(96.dp)
-                                .width(96.dp)
-                                .background(brush = brush)
-                        )
-                    }
-                } else {
                     Image(
                         painter = codriverPainter,
                         contentDescription = null,
@@ -169,58 +160,129 @@ fun TeamCard(
                             .width(144.dp)
                     )
                 }
-            }
 
-            Text(
-                text = team.name,
-                fontFamily = robotoFamily,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(8.dp)
-            )
+                Text(
+                    text = team.name,
+                    fontFamily = robotoFamily,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(8.dp)
+                )
 
-            Row (
-                modifier = Modifier.padding(8.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(
-                    modifier = Modifier
-                        .width(200.dp)
-                ) {
-                    Text(
-                        text = team.driver,
-                        fontFamily = antaFamily,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 2
-                    )
-                    Text(
-                        text = team.codriver,
-                        fontFamily = antaFamily,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 2
-                    )
-                }
-                ElevatedButton(
-                    onClick = { /*TODO*/ },
-                    shape = CircleShape,
-                    colors = ButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                        disabledContainerColor = MaterialTheme.colorScheme.primary,
-                        disabledContentColor = MaterialTheme.colorScheme.primary
-                    ),
+                Row(
                     modifier = Modifier
                         .padding(8.dp)
-                        .width(144.dp)
-                        .height(48.dp)
-
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = null
+                    Column(
+                        modifier = Modifier
+                            .width(200.dp)
+                    ) {
+                        Text(
+                            text = team.driver,
+                            fontFamily = antaFamily,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 2
+                        )
+                        Text(
+                            text = team.codriver,
+                            fontFamily = antaFamily,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 2
+                        )
+                    }
+                    ElevatedButton(
+                        onClick = { navController.navigate("${Screens.TeamDetail.route}/${team.number}") },
+                        shape = CircleShape,
+                        colors = ButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            disabledContainerColor = MaterialTheme.colorScheme.primary,
+                            disabledContentColor = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .width(144.dp)
+                            .height(48.dp)
+
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+        } else {
+            Shimmer { brush ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min)
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .height(24.dp)
+                                .width(50.dp)
+                                .background(brush = brush)
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .height(100.dp)
+                                .width(100.dp)
+                                .background(brush = brush)
+                        )
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Box(
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .height(100.dp)
+                                .width(100.dp)
+                                .background(brush = brush)
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .height(24.dp)
+                            .fillMaxWidth()
+                            .background(brush = brush)
                     )
+
+                    Row(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .width(200.dp)
+                                .height(48.dp)
+                                .background(brush = brush)
+                        )
+                        Box(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .width(144.dp)
+                                .height(48.dp)
+                                .background(brush = brush)
+                        )
+                    }
                 }
             }
         }
