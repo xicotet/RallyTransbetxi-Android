@@ -21,6 +21,13 @@
     // Tabs inside Results fragment
     <string name="global">General</string>
 
+    // Team details
+    <string name="category">Categoría</string>
+    <string name="bib_number">Dorsal</string>
+    <string name="category_position">Posición categoría</string>
+    <string name="overall_position">Posición general</string>
+    <string name="overall_time">Tiempo acumulado</string>
+
     // Segmented button
     <string name="agria">Agria</string>
     <string name="prototype">Prototipo</string>

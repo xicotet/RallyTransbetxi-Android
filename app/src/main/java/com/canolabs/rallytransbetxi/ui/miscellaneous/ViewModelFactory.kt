@@ -45,12 +45,13 @@ class MapsViewModelFactory @Inject constructor(
 
 @Suppress("UNCHECKED_CAST")
 class TeamsViewModelFactory @Inject constructor(
-    private val getTeamsUseCase: GetTeamsUseCase
+    private val getTeamsUseCase: GetTeamsUseCase,
+    private val getGlobalResultsUseCase: GetGlobalResultsUseCase
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TeamsScreenViewModel::class.java)) {
-            return TeamsScreenViewModel(getTeamsUseCase) as T
+            return TeamsScreenViewModel(getTeamsUseCase, getGlobalResultsUseCase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
