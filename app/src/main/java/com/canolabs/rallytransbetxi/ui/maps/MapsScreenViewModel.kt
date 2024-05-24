@@ -13,7 +13,6 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStageByAcronymUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -100,7 +99,11 @@ class MapsScreenViewModel @Inject constructor(
         _state.setHasPressedDirectionsButton(hasPressedDirectionsButton)
     }
 
-    fun setIsBottomSheetVisible(isBottomSheetVisible: Boolean) {
-        _state.setIsBottomSheetVisible(isBottomSheetVisible)
+    fun setIsResultsBottomSheetVisible(isBottomSheetVisible: Boolean) {
+        _state.setIsResultsBottomSheetVisible(isBottomSheetVisible)
+    }
+
+    fun setIsPermissionDeniedBottomSheetVisible(isPermissionDeniedBottomSheetVisible: Boolean) {
+        _state.setIsPermissionDeniedBottomSheetVisible(isPermissionDeniedBottomSheetVisible)
     }
 }

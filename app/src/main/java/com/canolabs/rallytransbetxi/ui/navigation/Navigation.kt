@@ -114,10 +114,10 @@ fun Navigation(
                 )
             }
             composable(
-                route = "${Screens.Maps.route}/{stageAcronym}/{action}",
+                route = "${Screens.Maps.route}/{stageAcronym}/{fastAction}",
                 arguments = listOf(
                     navArgument("stageAcronym") { type = NavType.StringType },
-                    navArgument("action") {
+                    navArgument("fastAction") {
                         type = NavType.StringType
                         defaultValue = ""
                     }
@@ -136,7 +136,7 @@ fun Navigation(
                         resultsViewModel = resultsScreenViewModel,
                         onBackClick = { navController.popBackStack() },
                         stageAcronym = it.arguments?.getString("stageAcronym") ?: "",
-                        action = it.arguments?.getString("action") ?: ""
+                        fastAction = it.arguments?.getString("fastAction") ?: ""
                     )
                 }
             }

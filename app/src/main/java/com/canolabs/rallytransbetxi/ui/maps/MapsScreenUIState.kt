@@ -15,7 +15,8 @@ data class MapsScreenUIState(
     val directions: List<List<Double>> = emptyList(),
     val hasPressedDirectionsButton: Boolean = false,
     val uiSettings: MapUiSettings = MapUiSettings(),
-    val isBottomSheetVisible: Boolean = false,
+    val isPermissionDeniedBottomSheetVisible: Boolean = false,
+    val isResultsBottomSheetVisible: Boolean = false,
     override val isLoading: Boolean = false,
     override val loadingMessageId: Int? = null,
 ) : UIState
@@ -32,8 +33,12 @@ fun MutableStateFlow<MapsScreenUIState>.setDirections(directions: List<List<Doub
     value = value.copy(directions = directions)
 }
 
-fun MutableStateFlow<MapsScreenUIState>.setIsBottomSheetVisible(isBottomSheetVisible: Boolean) {
-    value = value.copy(isBottomSheetVisible = isBottomSheetVisible)
+fun MutableStateFlow<MapsScreenUIState>.setIsResultsBottomSheetVisible(isBottomSheetVisible: Boolean) {
+    value = value.copy(isResultsBottomSheetVisible = isBottomSheetVisible)
+}
+
+fun MutableStateFlow<MapsScreenUIState>.setIsPermissionDeniedBottomSheetVisible(isPermissionDeniedBottomSheetVisible: Boolean) {
+    value = value.copy(isPermissionDeniedBottomSheetVisible = isPermissionDeniedBottomSheetVisible)
 }
 
 fun MutableStateFlow<MapsScreenUIState>.setLocation(location: Location?) {

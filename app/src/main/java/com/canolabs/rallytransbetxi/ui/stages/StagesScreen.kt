@@ -87,8 +87,8 @@ fun StageList(
             items(entry.value) { stage ->
                 StageCard(
                     stage = stage,
-                    onStageCardClick = { stageSelected, action ->
-                        navController.navigate("${Screens.Maps.route}/${stageSelected.acronym}/$action")
+                    onStageCardClick = { stageSelected, fastAction ->
+                        navController.navigate("${Screens.Maps.route}/${stageSelected.acronym}/$fastAction")
                     },
                 )
             }

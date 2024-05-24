@@ -45,7 +45,7 @@ fun StageCard(
             IconButton(
                 onClick = {
                     onStageCardClick(stage, "getDirections")
-                          },
+                },
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = PaddingSmall),
             ) {
                 Icon(

@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.maps
 
+import android.Manifest
 import android.location.Location
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.compose.foundation.background
@@ -60,7 +61,7 @@ fun MapContent(
     state: MapsScreenUIState,
     cameraPositionState: CameraPositionState,
     betxi: LatLng,
-    permissionLauncher: ManagedActivityResultLauncher<String, Boolean>,
+    permissionLauncher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>,
     stageAcronym: String,
     scaffoldPadding: PaddingValues,
     mapsViewModel: MapsScreenViewModel,
@@ -130,7 +131,7 @@ fun MapContent(
             }
 
             AssistChip(
-                onClick = { mapsViewModel.setIsBottomSheetVisible(true) },
+                onClick = { mapsViewModel.setIsResultsBottomSheetVisible(true) },
                 label = { Text(text = stringResource(id = R.string.results)) },
                 leadingIcon = {
                     Icon(
@@ -158,7 +159,10 @@ fun MapContent(
                 IconButton(
                     onClick = {
                         permissionLauncher.launch(
-                            android.Manifest.permission.ACCESS_FINE_LOCATION
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            )
                         )
                         // Move the camera to the user's location
                         state.location?.let {
@@ -220,7 +224,10 @@ fun MapContent(
                     IconButton(
                         onClick = {
                             permissionLauncher.launch(
-                                android.Manifest.permission.ACCESS_FINE_LOCATION
+                                arrayOf(
+                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION
+                                )
                             )
                             if (state.locationPermissionIsGranted) {
                                 mapsViewModel.setHasPressedDirectionsButton(true)
@@ -243,12 +250,12 @@ fun MapContent(
 
         val resultsState by resultsViewModel.state.collectAsState()
 
-        if (state.isBottomSheetVisible) {
+        if (state.isResultsBottomSheetVisible) {
             ModalBottomSheet(
                 sheetState = bottomSheetState,
                 onDismissRequest = {
                     coroutineScope.launch {
-                        mapsViewModel.setIsBottomSheetVisible(false)
+                        mapsViewModel.setIsResultsBottomSheetVisible(false)
                         bottomSheetState.hide()
                     }
                 },
@@ -258,6 +265,26 @@ fun MapContent(
                     mapsState = state,
                     viewModel = resultsViewModel,
                     isComingFromMaps = true,
+                )
+            }
+        } else if (state.isPermissionDeniedBottomSheetVisible) {
+            ModalBottomSheet(
+                sheetState = bottomSheetState,
+                dragHandle = {},
+                onDismissRequest = {
+                    coroutineScope.launch {
+                        mapsViewModel.setIsPermissionDeniedBottomSheetVisible(false)
+                        bottomSheetState.hide()
+                    }
+                },
+            ) {
+                BottomSheetPermissionDenied(
+                    onOmitButtonPressed = {
+                        coroutineScope.launch {
+                            mapsViewModel.setIsPermissionDeniedBottomSheetVisible(false)
+                            bottomSheetState.hide()
+                        }
+                    }
                 )
             }
         }

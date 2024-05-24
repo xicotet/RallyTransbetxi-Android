@@ -1,5 +1,7 @@
 package com.canolabs.rallytransbetxi.ui.maps
 
+import android.Manifest
+import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -22,11 +24,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
@@ -43,7 +47,7 @@ fun MapsScreen(
     resultsViewModel: ResultsScreenViewModel,
     onBackClick: () -> Unit,
     stageAcronym: String,
-    action: String
+    fastAction: String
 ) {
     val state by mapsViewModel.state.collectAsState()
 
@@ -53,27 +57,51 @@ fun MapsScreen(
         mapsViewModel.cleanLocation()
     }
 
+    val context = LocalContext.current
+    val activity = context as Activity
+
     val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val fineLocationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+        val coarseLocationGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
+
+        if (fineLocationGranted || coarseLocationGranted) {
             mapsViewModel.setLocationPermissionIsGranted(true)
             mapsViewModel.getLocation()
+        } else {
+            val isFineLocationPermanentlyDenied =
+                !ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            val isCoarseLocationPermanentlyDenied =
+                !ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+
+            if (isFineLocationPermanentlyDenied && isCoarseLocationPermanentlyDenied) {
+                mapsViewModel.setIsPermissionDeniedBottomSheetVisible(true)
+            }
         }
     }
 
-    // Direct actions from swiping left/right the stages card
-    LaunchedEffect(stageAcronym, action) {
-        if (action == "getDirections") {
+    // Fast actions from swiping left/right the stages card
+    LaunchedEffect(stageAcronym, fastAction) {
+        if (fastAction == "getDirections") {
             permissionLauncher.launch(
-                android.Manifest.permission.ACCESS_FINE_LOCATION
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
             )
             if (state.locationPermissionIsGranted) {
                 mapsViewModel.setHasPressedDirectionsButton(true)
                 mapsViewModel.getDirections()
             }
-        } else if (action == "results") {
-            mapsViewModel.setIsBottomSheetVisible(true)
+        } else if (fastAction == "results") {
+            mapsViewModel.setIsResultsBottomSheetVisible(true)
         }
     }
 
