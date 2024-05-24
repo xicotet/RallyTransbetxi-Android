@@ -2,16 +2,25 @@ package com.canolabs.rallytransbetxi.ui.rally
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,15 +30,16 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
+import java.util.Locale
 
 @Composable
 fun RallyScreen() {
     LazyColumn(
-        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         item {
@@ -38,10 +48,169 @@ fun RallyScreen() {
                 contentDescription = null
             )
             CountdownTimer()
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = stringResource(id = R.string.featured_section).uppercase(Locale.ROOT),
+                style = MaterialTheme.typography.headlineMedium,
+                fontFamily = ezraFamily,
+                modifier = Modifier.padding(horizontal = 24.dp),
+                textAlign = TextAlign.Start
+            )
+
+            LazyRow {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .width(140.dp)
+                            .padding(top = 16.dp, start = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        IconButton(
+                            onClick = { /*TODO*/ },
+                            modifier = Modifier
+                                .size(120.dp)
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .background(brush = rallyScreenCardsGradient())
+                                .align(Alignment.CenterHorizontally)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                modifier = Modifier.size(48.dp),
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                contentDescription = null
+                            )
+                        }
+
+                        Text(
+                            text = stringResource(id = R.string.settings),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontFamily = ezraFamily,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(top = 8.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+                item {
+                    Column(
+                        modifier = Modifier
+                            .width(140.dp)
+                            .padding(top = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        IconButton(
+                            onClick = { /*TODO*/ },
+                            modifier = Modifier
+                                .size(120.dp)
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .background(brush = rallyScreenCardsGradient())
+                                .align(Alignment.CenterHorizontally)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.trophy_outlined),
+                                modifier = Modifier.size(48.dp),
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                contentDescription = null
+                            )
+                        }
+
+                        Text(
+                            text = stringResource(id = R.string.list_of_champions),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontFamily = ezraFamily,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(top = 8.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+                item {
+                    Column(
+                        modifier = Modifier
+                            .width(140.dp)
+                            .padding(top = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        IconButton(
+                            onClick = { /*TODO*/ },
+                            modifier = Modifier
+                                .size(120.dp)
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .background(brush = rallyScreenCardsGradient())
+                                .align(Alignment.CenterHorizontally)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.sponsors),
+                                modifier = Modifier.size(48.dp),
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                contentDescription = null
+                            )
+                        }
+
+                        Text(
+                            text = stringResource(id = R.string.sponsors),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontFamily = ezraFamily,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(top = 8.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+                item {
+                    Column(
+                        modifier = Modifier
+                            .width(140.dp)
+                            .padding(top = 16.dp, end = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        IconButton(
+                            onClick = { /*TODO*/ },
+                            modifier = Modifier
+                                .size(120.dp)
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .background(brush = rallyScreenCardsGradient())
+                                .align(Alignment.CenterHorizontally)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.restaurant_outlined),
+                                modifier = Modifier.size(48.dp),
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                contentDescription = null
+                            )
+                        }
+
+                        Text(
+                            text = stringResource(id = R.string.where_to_eat),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontFamily = ezraFamily,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(top = 8.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
             BreakingNewsCard()
-            ListOfChampionsCard()
             ActivityProgramCard()
-            WhereToEatCard()
         }
     }
 }
@@ -56,18 +225,9 @@ fun BreakingNewsCard() {
         onClick = {},
         elevation = CardDefaults.cardElevation(cardsElevation)
     ) {
-        val gradient = Brush.linearGradient(
-            colors = listOf(
-                MaterialTheme.colorScheme.surface,
-                MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
-            ),
-            start = Offset(0f, 0f), // Start at the top left corner
-            end = Offset(1000f, 1000f)
-        )
-
         Row(
             modifier = Modifier
-                .background(brush = gradient)
+                .background(brush = rallyScreenCardsGradient())
                 .padding(32.dp)
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
@@ -101,60 +261,6 @@ fun BreakingNewsCard() {
 }
 
 @Composable
-fun ListOfChampionsCard() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp, horizontal = 16.dp),
-        shape = RoundedCornerShape(8.dp),
-        onClick = {},
-        elevation = CardDefaults.cardElevation(cardsElevation)
-    ) {
-        val gradient = Brush.linearGradient(
-            colors = listOf(
-                MaterialTheme.colorScheme.surface,
-                MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
-            ),
-            start = Offset(0f, 0f), // Start at the top left corner
-            end = Offset(1000f, 1000f)
-        )
-
-        Row(
-            modifier = Modifier
-                .background(brush = gradient)
-                .padding(32.dp)
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(),
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.trophy_outlined),
-                modifier = Modifier
-                    .size(48.dp)
-                    .weight(1f)
-                    .padding(end = 8.dp),
-                tint = MaterialTheme.colorScheme.onSurface,
-                contentDescription = null
-            )
-            Text(
-                text = stringResource(id = R.string.list_of_champions),
-                style = MaterialTheme.typography.headlineLarge,
-                fontFamily = ezraFamily,
-                maxLines = 1,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .weight(5f)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.arrow_forward_ios),
-                modifier = Modifier.align(Alignment.CenterVertically),
-                contentDescription = null
-            )
-        }
-    }
-}
-
-@Composable
 fun ActivityProgramCard() {
     Card(
         modifier = Modifier
@@ -164,18 +270,10 @@ fun ActivityProgramCard() {
         onClick = {},
         elevation = CardDefaults.cardElevation(cardsElevation)
     ) {
-        val gradient = Brush.linearGradient(
-            colors = listOf(
-                MaterialTheme.colorScheme.surface,
-                MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
-            ),
-            start = Offset(0f, 0f), // Start at the top left corner
-            end = Offset(1000f, 1000f)
-        )
 
         Row(
             modifier = Modifier
-                .background(brush = gradient)
+                .background(brush = rallyScreenCardsGradient())
                 .padding(32.dp)
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
@@ -208,54 +306,13 @@ fun ActivityProgramCard() {
 }
 
 @Composable
-fun WhereToEatCard() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp, horizontal = 16.dp),
-        shape = RoundedCornerShape(8.dp),
-        onClick = {},
-        elevation = CardDefaults.cardElevation(cardsElevation)
-    ) {
-        val gradient = Brush.linearGradient(
-            colors = listOf(
-                MaterialTheme.colorScheme.surface,
-                MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
-            ),
-            start = Offset(0f, 0f), // Start at the top left corner
-            end = Offset(1000f, 1000f)
-        )
-
-        Row(
-            modifier = Modifier
-                .background(brush = gradient)
-                .padding(32.dp)
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(),
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.restaurant_outlined),
-                modifier = Modifier
-                    .size(48.dp)
-                    .weight(1f)
-                    .padding(end = 8.dp),
-                tint = MaterialTheme.colorScheme.onSurface,
-                contentDescription = null
-            )
-            Text(
-                text = stringResource(id = R.string.where_to_eat),
-                style = MaterialTheme.typography.headlineLarge,
-                fontFamily = ezraFamily,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .weight(5f)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.arrow_forward_ios),
-                modifier = Modifier.align(Alignment.CenterVertically),
-                contentDescription = null
-            )
-        }
-    }
+fun rallyScreenCardsGradient(): Brush {
+    return Brush.linearGradient(
+        colors = listOf(
+            MaterialTheme.colorScheme.surface,
+            MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
+        ),
+        start = Offset(0f, 0f), // Start at the top left corner
+        end = Offset(1000f, 1000f)
+    )
 }
