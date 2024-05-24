@@ -79,10 +79,6 @@ class MapsScreenViewModel @Inject constructor(
         }
     }
 
-    fun setMapProperties(mapProperties: MapProperties) {
-        _state.setMapProperties(mapProperties)
-    }
-
     fun setLocationPermissionIsGranted(locationPermissionIsGranted: Boolean) {
         _state.setLocationPermissionIsGranted(locationPermissionIsGranted)
     }
