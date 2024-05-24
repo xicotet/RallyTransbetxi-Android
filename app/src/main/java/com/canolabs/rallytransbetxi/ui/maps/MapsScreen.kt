@@ -3,12 +3,10 @@ package com.canolabs.rallytransbetxi.ui.maps
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
@@ -111,6 +110,8 @@ fun MapsScreen(
                             fontFamily = ezraFamily,
                             fontWeight = FontWeight.Medium,
                             textAlign = TextAlign.Start,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
                             lineHeight = 20.sp,
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
@@ -121,11 +122,6 @@ fun MapsScreen(
                         onClick = onBackClick,
                         modifier = Modifier
                             .padding(4.dp)
-                            .border(
-                                width = 2.dp,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer, // Circular shape
-                                shape = CircleShape
-                            )
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
