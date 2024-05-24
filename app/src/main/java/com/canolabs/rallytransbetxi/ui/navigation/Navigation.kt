@@ -156,7 +156,8 @@ fun Navigation(
                 ) {
                    TeamDetailScreen(
                        teamNumber = it.arguments?.getString("teamNumber") ?: "",
-                       teamsViewModel = teamsScreenViewModel
+                       teamsViewModel = teamsScreenViewModel,
+                       onBackClick = { navController.popBackStack() }
                    )
                 }
             }

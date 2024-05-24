@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -68,7 +69,8 @@ import kotlinx.coroutines.tasks.await
 @Composable
 fun TeamDetailScreen(
     teamNumber: String,
-    teamsViewModel: TeamsScreenViewModel
+    teamsViewModel: TeamsScreenViewModel,
+    onBackClick: () -> Unit
 ) {
     val state = teamsViewModel.state.collectAsState()
     val team = state.value.teams.find { it.number == teamNumber }
@@ -140,7 +142,7 @@ fun TeamDetailScreen(
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = { },
+                        onClick = { onBackClick() },
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -207,9 +209,16 @@ fun TeamDetailScreen(
                 Box(
                     modifier = Modifier
                         .wrapContentWidth()
+                        .background(
+                            color = if (isSystemInDarkTheme()) {
+                                MaterialTheme.colorScheme.onSurface
+                            } else {
+                                MaterialTheme.colorScheme.background
+                            },
+                        )
                         .border(
                             width = 2.dp,
-                            color = MaterialTheme.colorScheme.scrim,
+                            color = MaterialTheme.colorScheme.onSurface,
                             shape = RoundedCornerShape(2.dp)
                         ),
                     contentAlignment = Alignment.Center,
