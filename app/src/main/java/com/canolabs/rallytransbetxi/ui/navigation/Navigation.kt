@@ -26,6 +26,7 @@ import androidx.navigation.navArgument
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreen
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreen
+import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreen
@@ -40,7 +41,8 @@ fun Navigation(
     stagesScreenViewModel: StagesScreenViewModel,
     teamsScreenViewModel: TeamsScreenViewModel,
     resultsScreenViewModel: ResultsScreenViewModel,
-    mapsScreenViewModel: MapsScreenViewModel
+    mapsScreenViewModel: MapsScreenViewModel,
+    rallyScreenViewModel: RallyScreenViewModel
 ) {
     val navController = rememberNavController()
     val screens = listOf(
@@ -94,7 +96,11 @@ fun Navigation(
             startDestination = Screens.Rally.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screens.Rally.route) { RallyScreen() }
+            composable(Screens.Rally.route) {
+                RallyScreen(
+                    viewModel = rallyScreenViewModel,
+                )
+            }
             composable(Screens.Stages.route) {
                 StagesScreen(
                     stagesViewModel = stagesScreenViewModel,

@@ -24,6 +24,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -38,7 +41,15 @@ import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import java.util.Locale
 
 @Composable
-fun RallyScreen() {
+fun RallyScreen(
+    viewModel: RallyScreenViewModel
+) {
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchNews()
+    }
+
     LazyColumn(
         verticalArrangement = Arrangement.Center
     ) {
@@ -47,6 +58,7 @@ fun RallyScreen() {
                 painter = painterResource(id = R.drawable.transbetxi_header),
                 contentDescription = null
             )
+
             CountdownTimer()
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -55,6 +67,7 @@ fun RallyScreen() {
                 text = stringResource(id = R.string.featured_section).uppercase(Locale.ROOT),
                 style = MaterialTheme.typography.headlineMedium,
                 fontFamily = ezraFamily,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(horizontal = 24.dp),
                 textAlign = TextAlign.Start
             )
@@ -76,7 +89,7 @@ fun RallyScreen() {
                                     color = MaterialTheme.colorScheme.onSurface,
                                     shape = RoundedCornerShape(8.dp)
                                 )
-                                .background(brush = rallyScreenCardsGradient())
+                                .background(brush = getRallyScreenCardsGradient())
                                 .align(Alignment.CenterHorizontally)
                         ) {
                             Icon(
@@ -113,7 +126,7 @@ fun RallyScreen() {
                                     color = MaterialTheme.colorScheme.onSurface,
                                     shape = RoundedCornerShape(8.dp)
                                 )
-                                .background(brush = rallyScreenCardsGradient())
+                                .background(brush = getRallyScreenCardsGradient())
                                 .align(Alignment.CenterHorizontally)
                         ) {
                             Icon(
@@ -150,7 +163,7 @@ fun RallyScreen() {
                                     color = MaterialTheme.colorScheme.onSurface,
                                     shape = RoundedCornerShape(8.dp)
                                 )
-                                .background(brush = rallyScreenCardsGradient())
+                                .background(brush = getRallyScreenCardsGradient())
                                 .align(Alignment.CenterHorizontally)
                         ) {
                             Icon(
@@ -187,7 +200,7 @@ fun RallyScreen() {
                                     color = MaterialTheme.colorScheme.onSurface,
                                     shape = RoundedCornerShape(8.dp)
                                 )
-                                .background(brush = rallyScreenCardsGradient())
+                                .background(brush = getRallyScreenCardsGradient())
                                 .align(Alignment.CenterHorizontally)
                         ) {
                             Icon(
@@ -209,56 +222,13 @@ fun RallyScreen() {
                     }
                 }
             }
-            BreakingNewsCard()
+
+            BreakingNewsSection(state = state)
             ActivityProgramCard()
         }
     }
 }
 
-@Composable
-fun BreakingNewsCard() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp, horizontal = 16.dp),
-        shape = RoundedCornerShape(8.dp),
-        onClick = {},
-        elevation = CardDefaults.cardElevation(cardsElevation)
-    ) {
-        Row(
-            modifier = Modifier
-                .background(brush = rallyScreenCardsGradient())
-                .padding(32.dp)
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(),
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.campaign_outlined),
-                modifier = Modifier
-                    .size(48.dp)
-                    .weight(1f)
-                    .padding(end = 8.dp),
-                tint = MaterialTheme.colorScheme.onSurface,
-                contentDescription = null
-            )
-            Text(
-                text = stringResource(id = R.string.breaking_news),
-                style = MaterialTheme.typography.headlineLarge,
-                fontFamily = ezraFamily,
-                maxLines = 1,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .weight(5f)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.arrow_forward_ios),
-                modifier = Modifier.align(Alignment.CenterVertically),
-                contentDescription = null
-            )
-        }
-    }
-}
 
 @Composable
 fun ActivityProgramCard() {
@@ -273,7 +243,7 @@ fun ActivityProgramCard() {
 
         Row(
             modifier = Modifier
-                .background(brush = rallyScreenCardsGradient())
+                .background(brush = getRallyScreenCardsGradient())
                 .padding(32.dp)
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
@@ -306,7 +276,7 @@ fun ActivityProgramCard() {
 }
 
 @Composable
-fun rallyScreenCardsGradient(): Brush {
+fun getRallyScreenCardsGradient(): Brush {
     return Brush.linearGradient(
         colors = listOf(
             MaterialTheme.colorScheme.surface,

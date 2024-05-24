@@ -31,6 +31,20 @@ object DateTimeUtils {
         return dateString[0].uppercaseChar() + dateString.substring(1)
     }
 
+    fun getDaysAndHoursSince(dateInSeconds: Long): Pair<String, String> {
+        val currentDateInMillis = Calendar.getInstance().timeInMillis
+        val dateInMillis = dateInSeconds * 1000 // Convert seconds to milliseconds
+        val diffInMillis = currentDateInMillis - dateInMillis
+
+        val diffInSeconds = diffInMillis / 1000
+        val days = diffInSeconds / (24 * 60 * 60)
+        val hours = (diffInSeconds % (24 * 60 * 60)) / (60 * 60)
+
+        return Pair(days.toString(), hours.toString())
+    }
+
+
+
     fun secondsToDateInSpanishAbbreviated(seconds: Long): String {
         val date = Date(seconds * 1000) // Convert seconds to milliseconds
         val format = SimpleDateFormat("d MMM", Locale("es", "ES"))

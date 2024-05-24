@@ -5,15 +5,30 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStageByAcronymUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetTeamsUseCase
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
+import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreenViewModel
 import com.canolabs.rallytransbetxi.ui.teams.TeamsScreenViewModel
 import javax.inject.Inject
+
+class RallyViewModelFactory @Inject constructor(
+    private val getNewsUseCase: GetNewsUseCase
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return when {
+            modelClass.isAssignableFrom(RallyScreenViewModel::class.java) -> {
+                RallyScreenViewModel(getNewsUseCase) as T
+            }
+            else -> throw IllegalArgumentException("Unknown ViewModel class")
+        }
+    }
+}
 
 @Suppress("UNCHECKED_CAST")
 class StagesViewModelFactory @Inject constructor(
@@ -80,7 +95,8 @@ class MainActivityViewModelFactory @Inject constructor(
     private val stagesViewModelFactory: StagesViewModelFactory,
     private val teamsViewModelFactory: TeamsViewModelFactory,
     private val resultsViewModelFactory: ResultsViewModelFactory,
-    private val mapsViewModelFactory: MapsViewModelFactory
+    private val mapsViewModelFactory: MapsViewModelFactory,
+    private val rallyViewModelFactory: RallyViewModelFactory
     // Add other ViewModelFactories here
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -96,6 +112,9 @@ class MainActivityViewModelFactory @Inject constructor(
             }
             modelClass.isAssignableFrom(MapsScreenViewModel::class.java) -> {
                mapsViewModelFactory.create(modelClass)
+            }
+            modelClass.isAssignableFrom(RallyScreenViewModel::class.java) -> {
+                rallyViewModelFactory.create(modelClass)
             }
             // Add other ViewModel class checks here
             else -> throw IllegalArgumentException("Unknown ViewModel class")

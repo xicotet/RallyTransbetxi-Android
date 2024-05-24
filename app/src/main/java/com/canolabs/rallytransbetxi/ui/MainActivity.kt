@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.miscellaneous.MainActivityViewModelFactory
 import com.canolabs.rallytransbetxi.ui.navigation.Navigation
+import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreenViewModel
 import com.canolabs.rallytransbetxi.ui.teams.TeamsScreenViewModel
@@ -53,11 +54,16 @@ class MainActivity : ComponentActivity() {
                         factory = viewModelFactory
                     )
 
+                    val rallyScreenViewModel: RallyScreenViewModel = viewModel(
+                        factory = viewModelFactory
+                    )
+
                     Navigation(
                         stagesScreenViewModel = stagesScreenViewModel,
                         teamsScreenViewModel = teamsScreenViewModel,
                         resultsScreenViewModel = resultsScreenViewModel,
-                        mapsScreenViewModel = mapsScreenViewModel
+                        mapsScreenViewModel = mapsScreenViewModel,
+                        rallyScreenViewModel = rallyScreenViewModel
                     )
 
                     /*db.collection("stages").document("TCP").get().addOnSuccessListener {
