@@ -83,6 +83,10 @@ class MapsScreenViewModel @Inject constructor(
         _state.setMapProperties(mapProperties)
     }
 
+    fun setLocationPermissionIsGranted(locationPermissionIsGranted: Boolean) {
+        _state.setLocationPermissionIsGranted(locationPermissionIsGranted)
+    }
+
     fun setUiSettings(uiSettings: MapUiSettings) {
         _state.setUiSettings(uiSettings)
     }

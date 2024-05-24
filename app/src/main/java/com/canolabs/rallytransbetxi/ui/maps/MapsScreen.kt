@@ -57,6 +57,7 @@ fun MapsScreen(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
+            mapsViewModel.setLocationPermissionIsGranted(true)
             mapsViewModel.getLocation()
         }
     }
@@ -67,8 +68,10 @@ fun MapsScreen(
             permissionLauncher.launch(
                 android.Manifest.permission.ACCESS_FINE_LOCATION
             )
-            mapsViewModel.setHasPressedDirectionsButton(true)
-            mapsViewModel.getDirections()
+            if (state.locationPermissionIsGranted) {
+                mapsViewModel.setHasPressedDirectionsButton(true)
+                mapsViewModel.getDirections()
+            }
         } else if (action == "results") {
             mapsViewModel.setIsBottomSheetVisible(true)
         }

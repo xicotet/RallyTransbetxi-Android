@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 data class MapsScreenUIState(
     val stage: Stage = Stage(),
     val mapProperties: MapProperties = MapProperties(),
+    val locationPermissionIsGranted: Boolean = false,
     val location: Location? = null,
     val directions: List<List<Double>> = emptyList(),
     val hasPressedDirectionsButton: Boolean = false,
@@ -41,6 +42,11 @@ fun MutableStateFlow<MapsScreenUIState>.setLocation(location: Location?) {
 
 fun MutableStateFlow<MapsScreenUIState>.setHasPressedDirectionsButton(hasPressedDirectionsButton: Boolean) {
     value = value.copy(hasPressedDirectionsButton = hasPressedDirectionsButton)
+}
+
+fun MutableStateFlow<MapsScreenUIState>.setLocationPermissionIsGranted(locationPermissionIsGranted: Boolean) {
+    value = value.copy(locationPermissionIsGranted = locationPermissionIsGranted)
+
 }
 
 fun MutableStateFlow<MapsScreenUIState>.setMapProperties(mapProperties: MapProperties) {

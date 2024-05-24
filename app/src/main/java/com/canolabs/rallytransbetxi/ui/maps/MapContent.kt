@@ -222,8 +222,11 @@ fun MapContent(
                             permissionLauncher.launch(
                                 android.Manifest.permission.ACCESS_FINE_LOCATION
                             )
-                            mapsViewModel.setHasPressedDirectionsButton(true)
-                            mapsViewModel.getDirections()
+                            if (state.locationPermissionIsGranted) {
+                                mapsViewModel.setHasPressedDirectionsButton(true)
+                                mapsViewModel.getDirections()
+                            }
+
                         },
                         modifier = Modifier.size(60.dp),
                     ) {
