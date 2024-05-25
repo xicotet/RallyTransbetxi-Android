@@ -1,6 +1,5 @@
 package com.canolabs.rallytransbetxi.ui.rally
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,27 +27,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import coil.size.Size
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
-import com.canolabs.rallytransbetxi.utils.Constants
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.tasks.await
 import java.util.Locale
 
 @Composable
@@ -61,36 +50,12 @@ fun RallyScreen(
         viewModel.fetchNews()
     }
 
-    val headerImagePath = "${Constants.HEADER_FOLDER}${Constants.HEADER_IMAGE_PREFIX}${Constants.HEADER_IMAGE_EXTENSION}"
-
-    val storage = Firebase.storage
-    val headerStorageRef = storage.reference.child(headerImagePath)
-
-    val headerImageUrl = remember { mutableStateOf<String?>(null) }
-
-    LaunchedEffect(Unit) {
-        try {
-            val headerUrl = headerStorageRef.downloadUrl.await()
-            headerImageUrl.value = headerUrl.toString()
-
-        } catch (e: Exception) {
-            Log.d("RallyScreen error. ", "Error: $e")
-        }
-    }
-
-    val headerPainter = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(headerImageUrl.value ?: "")
-            .size(Size.ORIGINAL)
-            .build(),
-    )
-
     LazyColumn(
         verticalArrangement = Arrangement.Center
     ) {
         item {
             Image(
-                painter = headerPainter,
+                painter = painterResource(id = R.drawable.transbetxi_header),
                 contentDescription = null
             )
 

@@ -19,10 +19,6 @@ class Constants {
         const val TEAM_IMAGE_PREFIX = "teamImage"
         const val TEAM_IMAGE_EXTENSION = ".jpg"
 
-        const val HEADER_FOLDER = "header/"
-        const val HEADER_IMAGE_PREFIX = "official"
-        const val HEADER_IMAGE_EXTENSION = ".png"
-
         const val NEWS_FOLDER = "news/"
     }
 }
