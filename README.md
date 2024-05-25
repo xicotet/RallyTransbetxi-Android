@@ -12,7 +12,7 @@ This well-established competition revolves around this concept, and this year it
 
 📢 Join us as we celebrate the legacy of the **Rally Transbetxí**.
 
-📆 **Friday, April 5 2024**, until **Saturday, April 6 2024**. 
+📆 **Saturday, April 26 2025**, until **Sunday, April 27 2025**. 
 
 📍 **Betxí, Castellón (Spain)**
 
