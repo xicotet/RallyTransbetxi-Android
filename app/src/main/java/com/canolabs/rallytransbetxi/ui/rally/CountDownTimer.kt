@@ -19,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -38,8 +39,9 @@ fun CountdownTimer() {
     Box(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .background(MaterialTheme.colorScheme.surfaceContainer)
-            .border(2.dp, ruralColor, MaterialTheme.shapes.medium),
+            .border(2.dp, ruralColor, MaterialTheme.shapes.medium)
+            .clip(MaterialTheme.shapes.medium)
+            .background(MaterialTheme.colorScheme.surfaceContainer),
         contentAlignment = Alignment.Center
     ) {
         val days = timeLeft / (60 * 60 * 24)
