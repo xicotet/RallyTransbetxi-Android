@@ -33,6 +33,10 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.CODRIVER_IMAGE_PREFIX
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.DRIVERS_FOLDER
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.DRIVER_IMAGE_EXTENSION
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.DRIVER_IMAGE_PREFIX
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
@@ -42,12 +46,12 @@ import kotlinx.coroutines.tasks.await
 fun DriverImagesPager(result: Result) {
 
     val teamNumber = result.team.number
-    val driverImagePath = "driverImage${teamNumber}.png"
-    val codriverImagePath = "codriverImage${teamNumber}.png"
+    val driverImagePath = "${DRIVER_IMAGE_PREFIX}${teamNumber}${DRIVER_IMAGE_EXTENSION}"
+    val codriverImagePath = "${CODRIVER_IMAGE_PREFIX}${teamNumber}${DRIVER_IMAGE_EXTENSION}"
 
     val storage = Firebase.storage
-    val driverStorageRef = storage.reference.child(driverImagePath)
-    val codriverStorageRef = storage.reference.child(codriverImagePath)
+    val driverStorageRef = storage.reference.child("${DRIVERS_FOLDER}${driverImagePath}")
+    val codriverStorageRef = storage.reference.child("${DRIVERS_FOLDER}${codriverImagePath}")
 
     val driverImageUrl = remember { mutableStateOf<String?>(null) }
     val codriverImageUrl = remember { mutableStateOf<String?>(null) }

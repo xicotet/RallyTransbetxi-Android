@@ -7,5 +7,22 @@ class Constants {
         const val BEGINNING_YEAR = 2025
         const val BETXI_LOCATION = "39.927995,-0.198889"
         const val DIRECTIONS_BASE_URL = "https://api.openrouteservice.org/v2/"
+
+
+        // Firebase storage
+        const val DRIVERS_FOLDER = "drivers/"
+        const val DRIVER_IMAGE_PREFIX = "driverImage"
+        const val CODRIVER_IMAGE_PREFIX = "codriverImage"
+        const val DRIVER_IMAGE_EXTENSION = ".png"
+
+        const val TEAMS_FOLDER = "teams/"
+        const val TEAM_IMAGE_PREFIX = "teamImage"
+        const val TEAM_IMAGE_EXTENSION = ".jpg"
+
+        const val HEADER_FOLDER = "header/"
+        const val HEADER_IMAGE_PREFIX = "official"
+        const val HEADER_IMAGE_EXTENSION = ".png"
+
+        const val NEWS_FOLDER = "news/"
     }
 }

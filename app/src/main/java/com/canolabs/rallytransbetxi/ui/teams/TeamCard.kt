@@ -48,6 +48,7 @@ import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
+import com.canolabs.rallytransbetxi.utils.Constants
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
@@ -65,12 +66,12 @@ fun TeamCard(
         shape = RoundedCornerShape(8.dp)
     ) {
         val teamNumber = team.number
-        val driverImagePath = "driverImage${teamNumber}.png"
-        val codriverImagePath = "codriverImage${teamNumber}.png"
+        val driverImagePath = "${Constants.DRIVER_IMAGE_PREFIX}${teamNumber}${Constants.DRIVER_IMAGE_EXTENSION}"
+        val codriverImagePath = "${Constants.CODRIVER_IMAGE_PREFIX}${teamNumber}${Constants.DRIVER_IMAGE_EXTENSION}"
 
         val storage = Firebase.storage
-        val driverStorageRef = storage.reference.child(driverImagePath)
-        val codriverStorageRef = storage.reference.child(codriverImagePath)
+        val driverStorageRef = storage.reference.child("${Constants.DRIVERS_FOLDER}${driverImagePath}")
+        val codriverStorageRef = storage.reference.child("${Constants.DRIVERS_FOLDER}${codriverImagePath}")
 
         val driverImageUrl = remember { mutableStateOf<String?>(null) }
         val codriverImageUrl = remember { mutableStateOf<String?>(null) }

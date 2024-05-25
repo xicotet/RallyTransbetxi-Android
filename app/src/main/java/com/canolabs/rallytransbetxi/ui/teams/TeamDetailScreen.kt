@@ -61,6 +61,7 @@ import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
+import com.canolabs.rallytransbetxi.utils.Constants
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
@@ -86,10 +87,10 @@ fun TeamDetailScreen(
         24.sp // Larger font size when the AppBar is less than half collapsed
     }
 
-    val teamImagePath = "teamImage${teamNumber}.jpg"
+    val teamImagePath = "${Constants.TEAM_IMAGE_PREFIX}${teamNumber}${Constants.TEAM_IMAGE_EXTENSION}"
 
     val storage = Firebase.storage
-    val teamStorageRef = storage.reference.child(teamImagePath)
+    val teamStorageRef = storage.reference.child("${Constants.TEAMS_FOLDER}/$teamImagePath")
 
     val teamImageUrl = remember { mutableStateOf<String?>(null) }
 

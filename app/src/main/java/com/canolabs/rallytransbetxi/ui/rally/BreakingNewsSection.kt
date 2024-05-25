@@ -40,6 +40,7 @@ import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
+import com.canolabs.rallytransbetxi.utils.Constants
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -116,7 +117,7 @@ fun BreakingNewsSection(
                                 val newsImagePath = news.imageName
 
                                 val storage = Firebase.storage
-                                val newsStorageRef = storage.reference.child(newsImagePath)
+                                val newsStorageRef = storage.reference.child("${Constants.NEWS_FOLDER}${newsImagePath}")
 
                                 val newsImageUrl = remember { mutableStateOf<String?>(null) }
 
