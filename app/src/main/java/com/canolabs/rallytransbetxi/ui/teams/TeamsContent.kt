@@ -16,6 +16,7 @@ fun TeamsContent(
 ) {
     if (isLoading) {
         TeamCardShimmer()
+        TeamCardShimmer()
     } else {
 
         val sortedTeamsByNumber = teams.sortedBy { it.number.toIntOrNull() ?: Int.MAX_VALUE }

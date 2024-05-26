@@ -68,7 +68,7 @@ fun RallyScreen(
                 style = MaterialTheme.typography.headlineMedium,
                 fontFamily = ezraFamily,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(horizontal = 24.dp),
+                modifier = Modifier.padding(horizontal = 38.dp),
                 textAlign = TextAlign.Start
             )
 
@@ -223,7 +223,11 @@ fun RallyScreen(
                 }
             }
 
-            BreakingNewsSection(state = state)
+            BreakingNewsSection(
+                state = state,
+                viewModel = viewModel
+            )
+
             ActivityProgramCard()
         }
     }

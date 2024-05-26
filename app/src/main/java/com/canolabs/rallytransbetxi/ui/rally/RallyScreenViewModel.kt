@@ -21,8 +21,14 @@ class RallyScreenViewModel @Inject constructor(
     fun fetchNews() {
         viewModelScope.launch {
             _state.setIsLoading(true)
-            _state.setNews(getNewsUseCase.invoke())
+            val news = getNewsUseCase.invoke()
+            val newsOrderedByDate = news.sortedByDescending { it.date }
+            _state.setNews(newsOrderedByDate)
             _state.setIsLoading(false)
         }
+    }
+
+    fun toggleBreakingNews() {
+        _state.setAreBreakingNewsCollapsed(!_state.value.areBreakingNewsCollapsed)
     }
 }

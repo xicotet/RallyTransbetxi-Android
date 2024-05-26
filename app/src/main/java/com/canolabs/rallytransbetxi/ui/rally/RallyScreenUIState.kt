@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 data class RallyScreenUIState(
     val news: List<News> = emptyList(),
+    val areBreakingNewsCollapsed: Boolean = false,
     override val isLoading: Boolean = false,
     override val loadingMessageId: Int? = null,
 ) : UIState
@@ -16,4 +17,8 @@ fun MutableStateFlow<RallyScreenUIState>.setIsLoading(isLoading: Boolean) {
 
 fun MutableStateFlow<RallyScreenUIState>.setNews(news: List<News>) {
     value = value.copy(news = news)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setAreBreakingNewsCollapsed(areBreakingNewsCollapsed: Boolean) {
+    value = value.copy(areBreakingNewsCollapsed = areBreakingNewsCollapsed)
 }

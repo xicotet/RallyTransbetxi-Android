@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -41,7 +42,7 @@ import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
-import com.canolabs.rallytransbetxi.utils.DateTimeUtils
+import com.canolabs.rallytransbetxi.utils.DateTimeUtils.secondsToDateInSpanish
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
@@ -49,10 +50,9 @@ import java.util.Locale
 
 @Composable
 fun BreakingNewsSection(
-    state: RallyScreenUIState
+    state: RallyScreenUIState,
+    viewModel: RallyScreenViewModel
 ) {
-    val isContentVisible = remember { mutableStateOf(true) }
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -73,10 +73,11 @@ fun BreakingNewsSection(
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
+                        .padding(start = 16.dp)
                         .weight(5f)
                 )
-                IconButton(onClick = { isContentVisible.value = !isContentVisible.value }) {
-                    if (isContentVisible.value) {
+                IconButton(onClick = { viewModel.toggleBreakingNews() }) {
+                    if (!state.areBreakingNewsCollapsed) {
                         Icon(
                             painter = painterResource(id = R.drawable.collapse_all),
                             modifier = Modifier
@@ -100,100 +101,83 @@ fun BreakingNewsSection(
                 }
             }
 
-            AnimatedVisibility(visible = isContentVisible.value) {
-                if (!state.isLoading) {
-                    state.news.forEach { news ->
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            onClick = {},
-                        ) {
-                            Column(
+            if (!state.isLoading) {
+                AnimatedVisibility(visible = state.areBreakingNewsCollapsed.not()) {
+                    Column {
+                        state.news.forEach { news ->
+                            Card(
                                 modifier = Modifier
-                                    .background(color = MaterialTheme.colorScheme.errorContainer)
-                                    .padding(16.dp)
-                                    .fillMaxWidth(),
+                                    .fillMaxWidth()
+                                    .wrapContentHeight(),
+                                onClick = {},
                             ) {
-                                val newsImagePath = news.imageName
+                                Column(
+                                    modifier = Modifier
+                                        .background(color = MaterialTheme.colorScheme.errorContainer)
+                                        .padding(16.dp)
+                                        .fillMaxWidth(),
+                                ) {
+                                    val newsImagePath = news.imageName
 
-                                val storage = Firebase.storage
-                                val newsStorageRef = storage.reference.child("${Constants.NEWS_FOLDER}${newsImagePath}")
+                                    val storage = Firebase.storage
+                                    val newsStorageRef =
+                                        storage.reference.child("${Constants.NEWS_FOLDER}${newsImagePath}")
 
-                                val newsImageUrl = remember { mutableStateOf<String?>(null) }
+                                    val newsImageUrl = remember { mutableStateOf<String?>(null) }
 
-                                LaunchedEffect(Unit) {
-                                    try {
-                                        val imageUrl = newsStorageRef.downloadUrl.await()
-                                        newsImageUrl.value = imageUrl.toString()
-                                    } catch (e: Exception) {
-                                        Log.d("News", "Error: $e")
+                                    LaunchedEffect(Unit) {
+                                        try {
+                                            val imageUrl = newsStorageRef.downloadUrl.await()
+                                            newsImageUrl.value = imageUrl.toString()
+                                        } catch (e: Exception) {
+                                            Log.d("News", "Error: $e")
+                                        }
                                     }
-                                }
 
-                                val newsPainter = rememberAsyncImagePainter(
-                                    model = ImageRequest.Builder(LocalContext.current)
-                                        .data(newsImageUrl.value ?: "")
-                                        .size(Size.ORIGINAL)
-                                        .build(),
-                                )
+                                    val newsPainter = rememberAsyncImagePainter(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data(newsImageUrl.value ?: "")
+                                            .size(Size.ORIGINAL)
+                                            .build(),
+                                    )
 
-                                if (newsPainter.state is AsyncImagePainter.State.Loading) {
-                                    Shimmer { brush ->
-                                        Box(
+                                    if (newsPainter.state is AsyncImagePainter.State.Loading) {
+                                        Shimmer { brush ->
+                                            Box(
+                                                modifier = Modifier
+                                                    .clip(RectangleShape)
+                                                    .fillMaxWidth()
+                                                    .height(200.dp)
+                                                    .background(brush = brush)
+                                            )
+                                        }
+                                    } else {
+                                        Image(
+                                            painter = newsPainter,
+                                            contentDescription = null,
                                             modifier = Modifier
                                                 .clip(RectangleShape)
+                                                .padding(vertical = 8.dp)
                                                 .fillMaxWidth()
-                                                .height(200.dp)
-                                                .background(brush = brush)
                                         )
                                     }
-                                } else {
-                                    Image(
-                                        painter = newsPainter,
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .clip(RectangleShape)
-                                            .padding(vertical = 8.dp)
-                                            .fillMaxWidth()
+
+                                    Text(
+                                        text = secondsToDateInSpanish(news.date?.seconds ?: 0),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontFamily = robotoFamily,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                    )
+
+                                    Text(
+                                        text = news.title,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontFamily = robotoFamily,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        modifier = Modifier.padding(vertical = 8.dp),
+                                        textAlign = TextAlign.Start
                                     )
                                 }
-
-                                val newsDateInSeconds = news.date?.seconds ?: 0
-                                val daysAndHoursSince =
-                                    DateTimeUtils.getDaysAndHoursSince(newsDateInSeconds)
-                                val timeSinceNewsDate = when {
-                                    daysAndHoursSince.first != "0" && daysAndHoursSince.first != "1" -> {
-                                        "${daysAndHoursSince.first} " + stringResource(id = R.string.days)
-                                    }
-
-                                    daysAndHoursSince.first == "1" -> {
-                                        "${daysAndHoursSince.first} " + stringResource(id = R.string.day)
-                                    }
-
-                                    daysAndHoursSince.second == "1" -> {
-                                        "${daysAndHoursSince.second} " + stringResource(id = R.string.hour)
-                                    }
-
-                                    else -> {
-                                        "${daysAndHoursSince.second} " + stringResource(id = R.string.hours)
-                                    }
-                                }
-
-                                Text(
-                                    text = timeSinceNewsDate,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontFamily = robotoFamily,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                )
-
-                                Text(
-                                    text = news.title,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontFamily = robotoFamily,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    modifier = Modifier.padding(vertical = 8.dp),
-                                    textAlign = TextAlign.Start
-                                )
                             }
                         }
                     }
