@@ -3,7 +3,7 @@
 
     // Top level destinations
     <string name="rally">Rally</string>
-    <string name="stages">Etapas</string>
+    <string name="stages">Tramos</string>
     <string name="results">Resultados</string>
     <string name="teams">Equipos</string>
 
