@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -47,8 +48,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
@@ -91,8 +94,16 @@ fun MapContent(
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
                 uiSettings = state.uiSettings,
+                properties = MapProperties().copy(
+                    mapStyleOptions = if (isSystemInDarkTheme()) {
+                        MapStyleOptions.loadRawResourceStyle(context, R.raw.night_map_style)
+                    } else {
+                        null
+                    }
+                ),
                 cameraPositionState = cameraPositionState
             ) {
+
                 Polyline(
                     points = state.stage.geoPoints?.map {
                         LatLng(it.latitude, it.longitude)
