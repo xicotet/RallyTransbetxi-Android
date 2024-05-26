@@ -2,6 +2,7 @@ package com.canolabs.rallytransbetxi.ui.rally
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,7 +26,9 @@ import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 
 @Composable
-fun FeaturedSection() {
+fun FeaturedSection(
+    viewModel: RallyScreenViewModel
+) {
     LazyRow {
         item {
             Column(
@@ -35,7 +38,9 @@ fun FeaturedSection() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                       viewModel.setIsSettingsBottomSheetVisible(true)
+                    },
                     modifier = Modifier
                         .size(120.dp)
                         .border(
@@ -43,6 +48,11 @@ fun FeaturedSection() {
                             color = MaterialTheme.colorScheme.onSurface,
                             shape = RoundedCornerShape(8.dp)
                         )
+                        .clickable {
+                            // This clickable section needs to be added in order
+                            // to make the whole button clickable
+                            viewModel.setIsSettingsBottomSheetVisible(true)
+                        }
                         .background(brush = getRallyScreenCardsGradient())
                         .align(Alignment.CenterHorizontally)
                 ) {

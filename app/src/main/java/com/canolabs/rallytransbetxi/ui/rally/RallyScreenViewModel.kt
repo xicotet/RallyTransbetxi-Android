@@ -65,4 +65,8 @@ class RallyScreenViewModel @Inject constructor(
     fun toggleShowAllBreakingNews() {
         _state.setIsShowAllBreakingNewsEnabled(!_state.value.isShowAllBreakingNewsEnabled)
     }
+
+    fun setIsSettingsBottomSheetVisible(isVisible: Boolean) {
+        _state.setIsSettingsBottomSheetVisible(isVisible)
+    }
 }
