@@ -162,9 +162,7 @@ fun TeamDetailScreen(
                 .padding(innerPadding)
                 .verticalScroll(scrollState),
         ) {
-            if (teamPainter.state is AsyncImagePainter.State.Loading ||
-                teamImageUrl.value == null
-            ) {
+            if (teamImageUrl.value == null) {
                 Shimmer { brush ->
                     Box(
                         modifier = Modifier
@@ -175,16 +173,35 @@ fun TeamDetailScreen(
                             .background(brush = brush)
                     )
                 }
-            } else {
-                Image(
-                    painter = teamPainter,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(RectangleShape)
-                        .height(400.dp)
-                        .width(300.dp)
-                        .align(Alignment.CenterHorizontally),
-                )
+            }
+
+            when (teamPainter.state) {
+                is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> {
+                    Shimmer { brush ->
+                        Box(
+                            modifier = Modifier
+                                .clip(RectangleShape)
+                                .height(400.dp)
+                                .width(300.dp)
+                                .align(Alignment.CenterHorizontally)
+                                .background(brush = brush)
+                        )
+                    }
+                }
+                is AsyncImagePainter.State.Success -> {
+                    Image(
+                        painter = teamPainter,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clip(RectangleShape)
+                            .height(400.dp)
+                            .width(300.dp)
+                            .align(Alignment.CenterHorizontally),
+                    )
+                }
+                is AsyncImagePainter.State.Error -> {
+                    // Show a placeholder image
+                }
             }
 
             Row(
