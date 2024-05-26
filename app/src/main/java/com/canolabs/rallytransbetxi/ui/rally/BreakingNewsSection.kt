@@ -39,6 +39,7 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
+import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
@@ -56,8 +57,9 @@ fun BreakingNewsSection(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp),
-        shape = RoundedCornerShape(32.dp),
+            .padding(16.dp),
+        shape = RoundedCornerShape(8.dp),
+        shadowElevation = cardsElevation,
     ) {
         Column(
             modifier = Modifier
@@ -73,7 +75,7 @@ fun BreakingNewsSection(
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
-                        .padding(start = 16.dp)
+                        .padding(start = 12.dp)
                         .weight(5f)
                 )
                 IconButton(onClick = { viewModel.toggleBreakingNews() }) {

@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui.miscellaneous
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
@@ -18,12 +19,13 @@ import com.canolabs.rallytransbetxi.ui.teams.TeamsScreenViewModel
 import javax.inject.Inject
 
 class RallyViewModelFactory @Inject constructor(
-    private val getNewsUseCase: GetNewsUseCase
+    private val getNewsUseCase: GetNewsUseCase,
+    private val getActivitiesUseCase: GetActivitiesUseCase
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(RallyScreenViewModel::class.java) -> {
-                RallyScreenViewModel(getNewsUseCase) as T
+                RallyScreenViewModel(getNewsUseCase, getActivitiesUseCase) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")
         }
