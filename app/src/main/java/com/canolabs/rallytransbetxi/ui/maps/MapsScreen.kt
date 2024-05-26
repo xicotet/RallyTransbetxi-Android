@@ -144,7 +144,7 @@ fun MapsScreen(
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
                             lineHeight = 20.sp,
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            modifier = Modifier.padding(end = 8.dp)
                         )
                     }
                 },
