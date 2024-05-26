@@ -61,4 +61,8 @@ class RallyScreenViewModel @Inject constructor(
     fun toggleShowAllActivities() {
         _state.setIsShowAllActivitiesEnabled(!_state.value.isShowAllActivitiesEnabled)
     }
+
+    fun toggleShowAllBreakingNews() {
+        _state.setIsShowAllBreakingNewsEnabled(!_state.value.isShowAllBreakingNewsEnabled)
+    }
 }

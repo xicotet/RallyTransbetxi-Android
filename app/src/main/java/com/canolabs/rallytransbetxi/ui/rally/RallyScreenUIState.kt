@@ -9,6 +9,7 @@ data class RallyScreenUIState(
     val news: List<News> = emptyList(),
     val activities: List<Activity>  = emptyList(),
     val areBreakingNewsCollapsed: Boolean = false,
+    val isShowAllBreakingNewsEnabled: Boolean = false,
     val areActivitiesCollapsed: Boolean = false,
     val isShowAllActivitiesEnabled: Boolean = false,
     override val isLoading: Boolean = false,
@@ -33,6 +34,10 @@ fun MutableStateFlow<RallyScreenUIState>.setAreBreakingNewsCollapsed(areBreaking
 
 fun MutableStateFlow<RallyScreenUIState>.setIsShowAllActivitiesEnabled(isShowAllActivitiesEnabled: Boolean) {
     value = value.copy(isShowAllActivitiesEnabled = isShowAllActivitiesEnabled)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setIsShowAllBreakingNewsEnabled(isShowBreakingNewsEnabled: Boolean) {
+    value = value.copy(isShowAllBreakingNewsEnabled = isShowBreakingNewsEnabled)
 }
 
 fun MutableStateFlow<RallyScreenUIState>.setAreActivitiesCollapsed(areActivitiesCollapsed: Boolean) {

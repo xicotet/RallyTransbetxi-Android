@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,6 +31,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -43,6 +45,7 @@ import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.MAX_NEWS
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils.secondsToDateInSpanish
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -106,7 +109,11 @@ fun BreakingNewsSection(
             if (!state.isLoading) {
                 AnimatedVisibility(visible = state.areBreakingNewsCollapsed.not()) {
                     Column {
-                        state.news.forEach { news ->
+                        val newsToShow =
+                            if (state.isShowAllBreakingNewsEnabled) state.news
+                            else state.news.take(MAX_NEWS)
+
+                        newsToShow.forEach { news ->
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -181,6 +188,20 @@ fun BreakingNewsSection(
                                     )
                                 }
                             }
+                        }
+
+                        if (state.news.size > MAX_NEWS) {
+                            ClickableText(
+                                text = AnnotatedString(
+                                    if (state.isShowAllActivitiesEnabled) stringResource(id = R.string.show_less)
+                                    else stringResource(id = R.string.show_all)
+                                ),
+                                onClick = { viewModel.toggleShowAllBreakingNews() },
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .align(Alignment.CenterHorizontally),
+                                style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.tertiary),
+                            )
                         }
                     }
                 }

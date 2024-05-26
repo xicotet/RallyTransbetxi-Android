@@ -105,6 +105,7 @@ fun ActivityProgramSection(
                             if (state.isShowAllActivitiesEnabled) state.activities else state.activities.take(
                                 MAX_ACTIVITIES
                             )
+
                         activitiesToShow.forEach { activity ->
                             Card(
                                 modifier = Modifier
