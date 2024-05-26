@@ -45,10 +45,6 @@ class ResultsScreenViewModel @Inject constructor(
         }
     }
 
-    fun setSelectedTabIndex(selectedTabIndex: Int) {
-        _state.setSelectedTabIndex(selectedTabIndex)
-    }
-
     fun removeSelectedRacingCategoryWithIndex(selectedRacingCategory: Int) {
         _state.removeSelectedRacingCategory(RacingCategory.entries[selectedRacingCategory])
     }

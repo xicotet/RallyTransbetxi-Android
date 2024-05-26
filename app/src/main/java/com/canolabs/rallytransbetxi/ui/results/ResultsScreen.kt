@@ -1,21 +1,24 @@
 package com.canolabs.rallytransbetxi.ui.results
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.TabRow
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,8 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ResultsScreen(
     viewModel: ResultsScreenViewModel,
@@ -32,6 +36,7 @@ fun ResultsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val titles = listOf(R.string.global, R.string.stages)
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.fetchGlobalResults()
@@ -46,39 +51,57 @@ fun ResultsScreen(
 
         ResultsScreenHeader(viewModel = viewModel)
 
-        SecondaryTabRow(selectedTabIndex = state.selectedTabIndex) {
+        val pagerState = rememberPagerState(pageCount = { titles.size })
+
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+        ) {
             titles.forEachIndexed { index, title ->
                 ResultsTab(
                     title = stringResource(id = title),
-                    onClick = { viewModel.setSelectedTabIndex(index) },
+                    onClick = {
+                          coroutineScope.launch {
+                              pagerState.animateScrollToPage(index)
+                          }
+                    },
                 )
             }
         }
 
-        if (state.selectedTabIndex == 0) {
-            RacingCategorySegmentedButton(
-                selectedRacingCategories = state.selectedRacingCategories,
-                onSelectedTabIndexChange = { tabIndex ->
-                    if (state.selectedRacingCategories.any { it.getTabIndex() == tabIndex }) {
-                        viewModel.removeSelectedRacingCategoryWithIndex(tabIndex)
-                    } else {
-                        viewModel.addSelectedRacingCategoryWithIndex(tabIndex)
+        HorizontalPager(state = pagerState) { page ->
+            when (page) {
+                0 -> {
+                    Column {
+                        RacingCategorySegmentedButton(
+                            selectedRacingCategories = state.selectedRacingCategories,
+                            onSelectedTabIndexChange = { tabIndex ->
+                                if (state.selectedRacingCategories.any { it.getTabIndex() == tabIndex }) {
+                                    viewModel.removeSelectedRacingCategoryWithIndex(tabIndex)
+                                } else {
+                                    viewModel.addSelectedRacingCategoryWithIndex(tabIndex)
+                                }
+                            }
+                        )
+                        GlobalResultsTab(
+                            results = state.globalResults,
+                            isLoading = state.isLoading,
+                            state = state
+                        )
                     }
                 }
-            )
-            GlobalResultsTab(
-                results = state.globalResults,
-                isLoading = state.isLoading,
-                state = state
-            )
-        } else {
-            StagesResultsTab(
-                stages = state.stages,
-                isLoading = state.isLoading,
-                state = state,
-                viewModel = viewModel,
-                navController = navController
-            )
+                1 -> {
+                    Column {
+                        StagesResultsTab(
+                            stages = state.stages,
+                            isLoading = state.isLoading,
+                            state = state,
+                            viewModel = viewModel,
+                            navController = navController
+                        )
+                    }
+                }
+            }
         }
     }
 }
