@@ -125,6 +125,7 @@ fun Navigation(
                     navArgument("stageAcronym") { type = NavType.StringType },
                     navArgument("fastAction") {
                         type = NavType.StringType
+                        nullable = true
                         defaultValue = ""
                     }
                 )

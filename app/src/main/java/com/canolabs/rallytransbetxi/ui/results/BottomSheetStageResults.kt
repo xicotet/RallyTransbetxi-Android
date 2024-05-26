@@ -161,7 +161,8 @@ fun BottomSheetStageResults(
                                 ),
                                 border = BorderStroke(2.dp, MaterialTheme.colorScheme.scrim),
                                 onClick = {
-                                    navController?.navigate("${Screens.Maps.route}/${resultsState.stageSelected.acronym}")
+                                    val fastAction: String? = null
+                                    navController?.navigate("${Screens.Maps.route}/${resultsState.stageSelected.acronym}/${fastAction}")
                                 }
                             ) {
                                 Icon(
