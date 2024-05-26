@@ -86,7 +86,6 @@ fun StagesResultsCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = stage.name,
@@ -95,6 +94,7 @@ fun StagesResultsCard(
                     color = MaterialTheme.colorScheme.onSecondaryContainer,
                     modifier = Modifier
                         .padding(start = 8.dp)
+                        .align(Alignment.Start),
                 )
             }
         }
