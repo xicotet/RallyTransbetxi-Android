@@ -21,6 +21,9 @@
 
     // Maps destination
     <string name="navigate">Navegar</string>
+    <string name="standard_map">Estándar</string>
+    <string name="satellite_map">Satélite</string>
+    <string name="terrain_map">Terreno</string>
 
     // Permission denied bottom sheet
     <string name="permission_denied_title">Permiso de ubicación</string>

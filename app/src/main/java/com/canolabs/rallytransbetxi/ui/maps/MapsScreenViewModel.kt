@@ -13,6 +13,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStageByAcronymUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -84,6 +85,10 @@ class MapsScreenViewModel @Inject constructor(
 
     fun setUiSettings(uiSettings: MapUiSettings) {
         _state.setUiSettings(uiSettings)
+    }
+
+    fun setMapProperties(mapProperties: MapProperties) {
+        _state.setMapProperties(mapProperties)
     }
 
     fun cleanDirections() {

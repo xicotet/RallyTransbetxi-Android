@@ -15,11 +15,16 @@ import androidx.compose.foundation.shape.CircleShape
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -32,7 +37,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,7 +59,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
@@ -74,6 +82,16 @@ fun MapContent(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
+    val mapStyleOptions = if (isSystemInDarkTheme()) {
+        MapStyleOptions.loadRawResourceStyle(context, R.raw.night_map_style)
+    } else {
+        null
+    }
+
+    mapsViewModel.setMapProperties(
+        state.mapProperties.copy(mapStyleOptions = mapStyleOptions)
+    )
+
     LaunchedEffect(Unit) {
         resultsViewModel.fetchStagesResults(stageAcronym)
     }
@@ -94,13 +112,7 @@ fun MapContent(
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
                 uiSettings = state.uiSettings,
-                properties = MapProperties().copy(
-                    mapStyleOptions = if (isSystemInDarkTheme()) {
-                        MapStyleOptions.loadRawResourceStyle(context, R.raw.night_map_style)
-                    } else {
-                        null
-                    }
-                ),
+                properties = state.mapProperties,
                 cameraPositionState = cameraPositionState
             ) {
 
@@ -158,6 +170,111 @@ fun MapContent(
                     .padding(scaffoldPadding)
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             )
+
+            var expanded by remember { mutableStateOf(false) }
+
+            Surface(
+                shadowElevation = 4.dp,
+                shape = CircleShape,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(scaffoldPadding)
+                    .padding(16.dp)
+                    .background(Color.White, CircleShape)
+            ) {
+                IconButton(
+                    onClick = {
+                        expanded = true
+                    },
+                    modifier = Modifier.size(40.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.layers),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(id = R.string.standard_map)) },
+                        onClick = {
+                            mapsViewModel.setMapProperties(
+                                state.mapProperties.copy(mapType = MapType.NORMAL)
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.standard_map),
+                                contentDescription = null
+                            )
+                        },
+                        trailingIcon = if (state.mapProperties.mapType == MapType.NORMAL) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null
+                                )
+                            }
+                        } else {
+                            null
+                        }
+                    )
+                    HorizontalDivider()
+                    DropdownMenuItem(
+                        text = { Text(stringResource(id = R.string.satellite_map)) },
+                        onClick = {
+                            mapsViewModel.setMapProperties(
+                                state.mapProperties.copy(mapType = MapType.SATELLITE)
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.satellite),
+                                contentDescription = null
+                            )
+                        },
+                        trailingIcon = if (state.mapProperties.mapType == MapType.SATELLITE) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null
+                                )
+                            }
+                        } else {
+                            null
+                        }
+                    )
+                    HorizontalDivider()
+                    DropdownMenuItem(
+                        text = { Text(stringResource(id = R.string.terrain_map)) },
+                        onClick = {
+                            mapsViewModel.setMapProperties(
+                                state.mapProperties.copy(mapType = MapType.TERRAIN)
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.park),
+                                contentDescription = null
+                            )
+                        },
+                        trailingIcon = if (state.mapProperties.mapType == MapType.TERRAIN) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null
+                                )
+                            }
+                        } else {
+                            null
+                        }
+                    )
+                }
+            }
 
             Surface(
                 shadowElevation = 4.dp,
