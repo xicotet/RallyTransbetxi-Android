@@ -89,6 +89,8 @@ fun RallyScreen(
                     },
                 ) {
                     BottomSheetAppSettings(
+                        state = state,
+                        viewModel = viewModel,
                     )
                 }
             }

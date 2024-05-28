@@ -6,11 +6,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetLanguageSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStageByAcronymUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetTeamsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetThemeSettingsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.InsertSettingsUseCase
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
@@ -20,12 +24,23 @@ import javax.inject.Inject
 
 class RallyViewModelFactory @Inject constructor(
     private val getNewsUseCase: GetNewsUseCase,
-    private val getActivitiesUseCase: GetActivitiesUseCase
+    private val getActivitiesUseCase: GetActivitiesUseCase,
+    private val insertSettingsUseCase: InsertSettingsUseCase,
+    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
+    private val getThemeSettingsUseCase: GetThemeSettingsUseCase,
+    private val getProfileSettingsUseCase: GetProfileSettingsUseCase
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(RallyScreenViewModel::class.java) -> {
-                RallyScreenViewModel(getNewsUseCase, getActivitiesUseCase) as T
+                RallyScreenViewModel(
+                    getNewsUseCase,
+                    getActivitiesUseCase,
+                    insertSettingsUseCase,
+                    getLanguageSettingsUseCase,
+                    getThemeSettingsUseCase,
+                    getProfileSettingsUseCase
+                ) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")
         }

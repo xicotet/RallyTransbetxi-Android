@@ -2,12 +2,18 @@ package com.canolabs.rallytransbetxi.ui.rally
 
 import com.canolabs.rallytransbetxi.data.models.responses.Activity
 import com.canolabs.rallytransbetxi.data.models.responses.News
+import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
+import com.canolabs.rallytransbetxi.domain.entities.Language
+import com.canolabs.rallytransbetxi.domain.entities.Theme
 import com.canolabs.rallytransbetxi.ui.miscellaneous.UIState
 import kotlinx.coroutines.flow.MutableStateFlow
 
 data class RallyScreenUIState(
     val news: List<News> = emptyList(),
     val activities: List<Activity>  = emptyList(),
+    val language: Language? = null,
+    val theme: Theme? = null,
+    val directionsProfile: DirectionsProfile? = null,
     val areBreakingNewsCollapsed: Boolean = false,
     val isShowAllBreakingNewsEnabled: Boolean = false,
     val areActivitiesCollapsed: Boolean = false,
@@ -31,6 +37,18 @@ fun MutableStateFlow<RallyScreenUIState>.setActivities(activities: List<Activity
 
 fun MutableStateFlow<RallyScreenUIState>.setAreBreakingNewsCollapsed(areBreakingNewsCollapsed: Boolean) {
     value = value.copy(areBreakingNewsCollapsed = areBreakingNewsCollapsed)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setDirectionsProfile(directionsProfile: DirectionsProfile) {
+    value = value.copy(directionsProfile = directionsProfile)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setLanguage(language: Language) {
+    value = value.copy(language = language)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setTheme(theme: Theme) {
+    value = value.copy(theme = theme)
 }
 
 fun MutableStateFlow<RallyScreenUIState>.setIsShowAllActivitiesEnabled(isShowAllActivitiesEnabled: Boolean) {

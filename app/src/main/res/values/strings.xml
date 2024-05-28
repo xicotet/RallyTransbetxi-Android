@@ -25,6 +25,16 @@
     <string name="satellite_map">Satélite</string>
     <string name="terrain_map">Terreno</string>
 
+    // App Settings Bottom Sheet
+    <string name="language">Idioma</string>
+    <string name="theme">Tema de la app</string>
+    <string name="light_mode">Claro</string>
+    <string name="dark_mode">Oscuro</string>
+    <string name="system_default">Sistema</string>
+    <string name="directions_mode">Modo de navegación</string>
+    <string name="driving_car_mode">Coche</string>
+    <string name="walking_mode">Andando</string>
+
     // Permission denied bottom sheet
     <string name="permission_denied_title">Permiso de ubicación</string>
     <string name="permission_denied_message">Para poder obtener tu ubicación, necesitamos que actives el permiso en ajustes</string>

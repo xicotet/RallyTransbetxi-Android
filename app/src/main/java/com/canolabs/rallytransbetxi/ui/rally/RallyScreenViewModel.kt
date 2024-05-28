@@ -1,9 +1,17 @@
 package com.canolabs.rallytransbetxi.ui.rally
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
+import com.canolabs.rallytransbetxi.domain.entities.Language
+import com.canolabs.rallytransbetxi.domain.entities.Theme
 import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetLanguageSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetThemeSettingsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.InsertSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,8 +22,12 @@ import javax.inject.Inject
 @HiltViewModel
 class RallyScreenViewModel @Inject constructor(
     private val getNewsUseCase: GetNewsUseCase,
-    private val getActivitiesUseCase: GetActivitiesUseCase
-): ViewModel() {
+    private val getActivitiesUseCase: GetActivitiesUseCase,
+    private val insertSettingsUseCase: InsertSettingsUseCase,
+    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
+    private val getThemeSettingsUseCase: GetThemeSettingsUseCase,
+    private val getProfileSettingsUseCase: GetProfileSettingsUseCase
+) : ViewModel() {
 
     private var _state = MutableStateFlow(RallyScreenUIState())
     val state: StateFlow<RallyScreenUIState> = _state.asStateFlow()
@@ -50,6 +62,42 @@ class RallyScreenViewModel @Inject constructor(
         }
     }
 
+    fun fetchProfileSettings() {
+        viewModelScope.launch {
+            val profile = getProfileSettingsUseCase.invoke()
+            _state.setDirectionsProfile(DirectionsProfile.entries.find { it.getDatabaseName() == profile }!!)
+        }
+    }
+
+    fun fetchThemeSettings() {
+        viewModelScope.launch {
+            val theme = getThemeSettingsUseCase.invoke()
+            _state.setTheme(Theme.entries.find {
+                it.getDatabaseName() == theme
+            }!!)
+        }
+    }
+
+    fun fetchLanguageSettings() {
+        viewModelScope.launch {
+            val language = getLanguageSettingsUseCase.invoke()
+            Log.d("RallyScreenViewModel", "Language from database: $language")
+            _state.setLanguage(Language.entries.find {
+                Log.d("RallyScreenViewModel", "Language: ${it.getDatabaseName()}")
+                it.getDatabaseName() == language }!!)
+        }
+    }
+
+    fun insertSettings() {
+        viewModelScope.launch {
+            val language = _state.value.language?.getDatabaseName()!!
+            val theme = _state.value.theme?.getDatabaseName()!!
+            val profile = _state.value.directionsProfile?.getDatabaseName()!!
+
+            insertSettingsUseCase.invoke(language, theme, profile)
+        }
+    }
+
     fun toggleBreakingNews() {
         _state.setAreBreakingNewsCollapsed(!_state.value.areBreakingNewsCollapsed)
     }
@@ -68,5 +116,17 @@ class RallyScreenViewModel @Inject constructor(
 
     fun setIsSettingsBottomSheetVisible(isVisible: Boolean) {
         _state.setIsSettingsBottomSheetVisible(isVisible)
+    }
+
+    fun setLanguage(language: Language) {
+        _state.setLanguage(language)
+    }
+
+    fun setTheme(theme: Theme) {
+        _state.setTheme(theme)
+    }
+
+    fun setProfile(profile: DirectionsProfile) {
+        _state.setDirectionsProfile(profile)
     }
 }

@@ -62,6 +62,7 @@ android {
 }
 
 dependencies {
+    val roomVersion = "2.6.1"
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -91,6 +92,13 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android:2.50") // Hilt
     kapt("com.google.dagger:hilt-android-compiler:2.50") // Hilt
+
+    implementation("androidx.room:room-ktx:$roomVersion") // Room
+    implementation("androidx.room:room-runtime:$roomVersion") // Room
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")  // Room
+
+    //noinspection KaptUsageInsteadOfKsp
+    kapt("androidx.room:room-compiler:$roomVersion") // Kotlin annotation processing tool (kapt)
 
     implementation("io.coil-kt:coil-compose:2.6.0") // Coil
 

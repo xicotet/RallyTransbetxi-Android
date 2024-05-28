@@ -2,6 +2,7 @@ package com.canolabs.rallytransbetxi.utils
 
 class Constants {
     companion object {
+        const val BETXI_LOCATION = "39.927995,-0.198889"
         // Day of the event
         const val BEGINNING_DAY = 26
         const val BEGINNING_MONTH = 3 // April is 3 in Java.util.calendar
@@ -11,7 +12,11 @@ class Constants {
         const val MAX_NEWS = 2
         const val MAX_ACTIVITIES = 5
 
-        const val BETXI_LOCATION = "39.927995,-0.198889"
+        // Room storage
+        const val DATABASE_NAME = "app_database"
+        const val DEFAULT_LANGUAGE = "spanish"
+        const val DEFAULT_THEME = "light"
+        const val DEFAULT_PROFILE = "driving-car"
 
         // OpenRouteService
         const val DIRECTIONS_BASE_URL = "https://api.openrouteservice.org/v2/"
