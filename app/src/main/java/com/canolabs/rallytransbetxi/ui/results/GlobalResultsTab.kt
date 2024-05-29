@@ -19,7 +19,7 @@ fun GlobalResultsTab(
     } else {
         val filteredResultsByCategory = results.filter { result ->
             state.selectedRacingCategories.any { selectedCategory ->
-                result.team.category.name == stringResource(id = selectedCategory.getName())
+                result.team.category.name == selectedCategory.getApiName()
             }
         }
 

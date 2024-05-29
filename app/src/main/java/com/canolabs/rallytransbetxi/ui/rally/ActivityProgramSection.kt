@@ -38,7 +38,7 @@ import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
-import com.canolabs.rallytransbetxi.utils.Constants.Companion.MAX_ACTIVITIES
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_ACTIVITIES
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 import java.util.Locale
 
@@ -104,7 +104,7 @@ fun ActivityProgramSection(
                     Column {
                         val activitiesToShow =
                             if (state.isShowAllActivitiesEnabled) state.activities else state.activities.take(
-                                MAX_ACTIVITIES
+                                DEFAULT_ACTIVITIES
                             )
 
                         activitiesToShow.forEach { activity ->
@@ -220,7 +220,7 @@ fun ActivityProgramSection(
                             }
                         }
 
-                        if (state.activities.size > MAX_ACTIVITIES) {
+                        if (state.activities.size > DEFAULT_ACTIVITIES) {
                             ClickableText(
                                 text = AnnotatedString(
                                     if (state.isShowAllActivitiesEnabled) stringResource(id = R.string.show_less)

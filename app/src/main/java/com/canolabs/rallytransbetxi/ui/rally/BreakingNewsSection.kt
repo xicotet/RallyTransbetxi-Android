@@ -45,7 +45,7 @@ import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
-import com.canolabs.rallytransbetxi.utils.Constants.Companion.MAX_NEWS
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_NEWS
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils.secondsToDateInSpanish
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -112,7 +112,7 @@ fun BreakingNewsSection(
                     Column {
                         val newsToShow =
                             if (state.isShowAllBreakingNewsEnabled) state.news
-                            else state.news.take(MAX_NEWS)
+                            else state.news.take(DEFAULT_NEWS)
 
                         newsToShow.forEach { news ->
                             Card(
@@ -191,7 +191,7 @@ fun BreakingNewsSection(
                             }
                         }
 
-                        if (state.news.size > MAX_NEWS) {
+                        if (state.news.size > DEFAULT_NEWS) {
                             ClickableText(
                                 text = AnnotatedString(
                                     if (state.isShowAllActivitiesEnabled) stringResource(id = R.string.show_less)

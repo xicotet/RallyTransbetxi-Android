@@ -167,7 +167,7 @@ fun ResultCard(
                     contentAlignment = Alignment.Center,
                 ) {
                     val racingCategory =
-                        RacingCategory.entries.firstOrNull { stringResource(id = it.getName()) == result.team.category.name }
+                        RacingCategory.entries.firstOrNull { it.getApiName() == result.team.category.name }
 
                     Text(
                         text = "#" + result.number,

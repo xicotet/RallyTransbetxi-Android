@@ -44,7 +44,8 @@ fun Navigation(
     resultsScreenViewModel: ResultsScreenViewModel,
     mapsScreenViewModel: MapsScreenViewModel,
     rallyScreenViewModel: RallyScreenViewModel,
-    darkThemeState: MutableState<Boolean>
+    darkThemeState: MutableState<Boolean>,
+    changeLocale: (String) -> Unit
 ) {
     val navController = rememberNavController()
     val screens = listOf(
@@ -101,7 +102,8 @@ fun Navigation(
             composable(Screens.Rally.route) {
                 RallyScreen(
                     viewModel = rallyScreenViewModel,
-                    darkThemeState = darkThemeState
+                    darkThemeState = darkThemeState,
+                    changeLocale = changeLocale
                 )
             }
             composable(Screens.Stages.route) {

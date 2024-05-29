@@ -110,6 +110,8 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1") // Gson Converter
     implementation("com.squareup.retrofit2:converter-gson:2.11.0") // Gson Converter
 
+    implementation("androidx.appcompat:appcompat:1.6.1")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

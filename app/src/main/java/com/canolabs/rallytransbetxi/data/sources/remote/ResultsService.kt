@@ -28,11 +28,11 @@ class ResultsServiceImpl @Inject constructor(
             documentSnapshot.documents.map {
                 async {
                     val result = it.toObject(Result::class.java)
-                    Log.d("ResultsServiceImpl", "Result: $result")
                     val teamReference = it["teamReference"] as DocumentReference
                     Log.d("ResultsServiceImpl", "Team reference: $teamReference")
                     val team = teamsServiceImpl.fetchTeamByReference(teamReference)
                     result?.team = team
+                    Log.d("ResultsServiceImpl", "Result: $result")
                     result
                 }
             }.awaitAll().filterNotNull()

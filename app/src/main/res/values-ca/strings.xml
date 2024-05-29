@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">Rally Transbetxi</string>
+
+    // Top level destinations
+    <string name="rally">Rally</string>
+    <string name="stages">Trams</string>
+    <string name="results">Resultats</string>
+    <string name="teams">Equips</string>
+
+    // Rally destination
+    <string name="featured_section">Destacat</string>
+    <string name="settings">Configuració</string>
+    <string name="breaking_news">Última hora</string>
+    <string name="list_of_champions">Palmarès</string>
+    <string name="activity_program">Activitats</string>
+    <string name="sponsors">Patrocinadors</string>
+    <string name="where_to_eat">Menjar</string>
+    <string name="show_all">Veure totes</string>
+    <string name="show_less">Veure menys</string>
+    <string name="weather_forecast">Previsió meteorològica</string>
+
+    // Maps destination
+    <string name="navigate">Navegar</string>
+    <string name="standard_map">Estàndard</string>
+    <string name="satellite_map">Satèl·lit</string>
+    <string name="terrain_map">Terreny</string>
+
+    // App Settings Bottom Sheet
+    <string name="language">Idioma</string>
+    <string name="theme">Tema de l\'app</string>
+    <string name="light_mode">Clar</string>
+    <string name="dark_mode">Fosc</string>
+    <string name="system_default">Sistema</string>
+    <string name="directions_mode">Mode de navegació</string>
+    <string name="driving_car_mode">Cotxe</string>
+    <string name="walking_mode">A peu</string>
+
+    // Permission denied bottom sheet
+    <string name="permission_denied_title">Permís de localització</string>
+    <string name="permission_denied_message">Per poder obtindre la teua ubicació, necessitem que actives el permís en configuració</string>
+    <string name="open_settings">Obrir configuració</string>
+    <string name="omit">Ometre</string>
+
+    // Tabs inside Results fragment
+    <string name="global">General</string>
+
+    // Team details
+    <string name="category">Categoria</string>
+    <string name="bib_number">Dorsal</string>
+    <string name="category_position">Posició categoria</string>
+    <string name="overall_position">Posició general</string>
+    <string name="overall_time">Temps acumulat</string>
+
+    // Segmented button
+    <string name="agria">Agria</string>
+    <string name="prototype">Prototip</string>
+    <string name="serie">Sèrie</string>
+
+    // General
+    <string name="search">Buscar&#8230;</string>
+    <string name="location">Ubicació</string>
+    <string name="day">Dia</string>
+    <string name="days">Dies</string>
+    <string name="hour">Hora</string>
+    <string name="hours">Hores</string>
+</resources>

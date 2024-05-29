@@ -37,7 +37,8 @@ import com.canolabs.rallytransbetxi.domain.entities.Theme
 fun BottomSheetAppSettings(
     state: RallyScreenUIState,
     viewModel: RallyScreenViewModel,
-    darkThemeState: MutableState<Boolean>
+    darkThemeState: MutableState<Boolean>,
+    changeLocale: (String) -> Unit
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchLanguageSettings()
@@ -84,6 +85,7 @@ fun BottomSheetAppSettings(
                 ) {
                     IconButton(
                         onClick = {
+                            changeLocale.invoke(Language.SPANISH.getLanguageCode())
                             viewModel.setLanguage(Language.SPANISH)
                             viewModel.insertSettings()
                         },
@@ -110,6 +112,7 @@ fun BottomSheetAppSettings(
                     }
                     IconButton(
                         onClick = {
+                            changeLocale.invoke(Language.CATALAN.getLanguageCode())
                             viewModel.setLanguage(Language.CATALAN)
                             viewModel.insertSettings()
                         },

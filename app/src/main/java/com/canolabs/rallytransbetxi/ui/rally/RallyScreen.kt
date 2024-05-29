@@ -36,7 +36,8 @@ import java.util.Locale
 @Composable
 fun RallyScreen(
     viewModel: RallyScreenViewModel,
-    darkThemeState: MutableState<Boolean>
+    darkThemeState: MutableState<Boolean>,
+    changeLocale: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val bottomSheetState = rememberModalBottomSheetState()
@@ -110,7 +111,8 @@ fun RallyScreen(
                     BottomSheetAppSettings(
                         state = state,
                         viewModel = viewModel,
-                        darkThemeState = darkThemeState
+                        darkThemeState = darkThemeState,
+                        changeLocale = changeLocale
                     )
                 }
             }

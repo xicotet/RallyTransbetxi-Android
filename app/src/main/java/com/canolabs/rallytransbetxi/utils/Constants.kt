@@ -8,9 +8,14 @@ class Constants {
         const val BEGINNING_MONTH = 3 // April is 3 in Java.util.calendar
         const val BEGINNING_YEAR = 2025
 
-        // Max elements to show in the home screen
-        const val MAX_NEWS = 2
-        const val MAX_ACTIVITIES = 5
+        // Defaul number of elements to show in the home screen
+        const val DEFAULT_NEWS = 2
+        const val DEFAULT_ACTIVITIES = 5
+
+        // Categories API names
+        const val SERIE = "Serie"
+        const val PROTOTYPE = "Prototipo"
+        const val AGRIA = "Agria"
 
         // Room storage
         const val DATABASE_NAME = "app_database"

@@ -207,7 +207,7 @@ fun BottomSheetStageResults(
         } else {
             val filteredResultsByCategory = resultsState.stageResults.filter { result ->
                 resultsState.selectedRacingCategories.any { selectedCategory ->
-                    result.team.category.name == stringResource(id = selectedCategory.getName())
+                    result.team.category.name == selectedCategory.getApiName()
                 }
             }
 
