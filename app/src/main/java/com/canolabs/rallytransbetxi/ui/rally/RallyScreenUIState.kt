@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui.rally
 import com.canolabs.rallytransbetxi.data.models.responses.Activity
 import com.canolabs.rallytransbetxi.data.models.responses.News
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
+import com.canolabs.rallytransbetxi.domain.entities.FontSizeFactor
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.entities.Theme
 import com.canolabs.rallytransbetxi.ui.miscellaneous.UIState
@@ -14,6 +15,7 @@ data class RallyScreenUIState(
     val language: Language? = null,
     val theme: Theme? = null,
     val directionsProfile: DirectionsProfile? = null,
+    val fontSizeFactor: FontSizeFactor? = null,
     val areBreakingNewsCollapsed: Boolean = false,
     val isShowAllBreakingNewsEnabled: Boolean = false,
     val areActivitiesCollapsed: Boolean = false,
@@ -49,6 +51,10 @@ fun MutableStateFlow<RallyScreenUIState>.setLanguage(language: Language) {
 
 fun MutableStateFlow<RallyScreenUIState>.setTheme(theme: Theme) {
     value = value.copy(theme = theme)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setFontSizeFactor(fontSizeFactor: FontSizeFactor) {
+    value = value.copy(fontSizeFactor = fontSizeFactor)
 }
 
 fun MutableStateFlow<RallyScreenUIState>.setIsShowAllActivitiesEnabled(isShowAllActivitiesEnabled: Boolean) {

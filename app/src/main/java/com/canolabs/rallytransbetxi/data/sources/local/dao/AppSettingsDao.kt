@@ -20,6 +20,9 @@ interface AppSettingsDao {
     @Query("SELECT COUNT(*) FROM appsetting")
     suspend fun getSettingCount(): Int
 
+    @Query("SELECT fontSizeFactor FROM appsetting WHERE id = 1")
+    suspend fun getFontSizeFactor(): Float
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSetting(setting: AppSetting)
 }

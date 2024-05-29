@@ -37,6 +37,7 @@ import java.util.Locale
 fun RallyScreen(
     viewModel: RallyScreenViewModel,
     darkThemeState: MutableState<Boolean>,
+    fontScaleState: MutableState<Float>,
     changeLocale: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
@@ -105,6 +106,7 @@ fun RallyScreen(
                         state = state,
                         viewModel = viewModel,
                         darkThemeState = darkThemeState,
+                        fontScaleState = fontScaleState,
                         changeLocale = changeLocale
                     )
                 }

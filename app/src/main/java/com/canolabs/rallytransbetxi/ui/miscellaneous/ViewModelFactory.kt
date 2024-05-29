@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetLanguageSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
@@ -28,7 +29,8 @@ class RallyViewModelFactory @Inject constructor(
     private val insertSettingsUseCase: InsertSettingsUseCase,
     private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
     private val getThemeSettingsUseCase: GetThemeSettingsUseCase,
-    private val getProfileSettingsUseCase: GetProfileSettingsUseCase
+    private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
+    private val getFontSizeFactorSettingsUseCase: GetFontSizeFactorSettingsUseCase
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
@@ -39,7 +41,8 @@ class RallyViewModelFactory @Inject constructor(
                     insertSettingsUseCase,
                     getLanguageSettingsUseCase,
                     getThemeSettingsUseCase,
-                    getProfileSettingsUseCase
+                    getProfileSettingsUseCase,
+                    getFontSizeFactorSettingsUseCase
                 ) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")

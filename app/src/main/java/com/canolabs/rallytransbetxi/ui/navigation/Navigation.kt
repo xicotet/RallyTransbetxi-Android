@@ -46,6 +46,7 @@ fun Navigation(
     mapsScreenViewModel: MapsScreenViewModel,
     rallyScreenViewModel: RallyScreenViewModel,
     darkThemeState: MutableState<Boolean>,
+    fontScaleState: MutableState<Float>,
     changeLocale: (String) -> Unit
 ) {
     val navController = rememberNavController()
@@ -106,6 +107,7 @@ fun Navigation(
                 RallyScreen(
                     viewModel = rallyScreenViewModel,
                     darkThemeState = darkThemeState,
+                    fontScaleState = fontScaleState,
                     changeLocale = changeLocale
                 )
             }

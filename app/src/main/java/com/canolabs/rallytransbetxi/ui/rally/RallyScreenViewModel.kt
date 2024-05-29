@@ -1,13 +1,14 @@
 package com.canolabs.rallytransbetxi.ui.rally
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
+import com.canolabs.rallytransbetxi.domain.entities.FontSizeFactor
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.entities.Theme
 import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetLanguageSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
@@ -28,7 +29,8 @@ class RallyScreenViewModel @Inject constructor(
     private val insertSettingsUseCase: InsertSettingsUseCase,
     private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
     private val getThemeSettingsUseCase: GetThemeSettingsUseCase,
-    private val getProfileSettingsUseCase: GetProfileSettingsUseCase
+    private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
+    private val getFontSizeFactorSettingsUseCase: GetFontSizeFactorSettingsUseCase
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(RallyScreenUIState())
@@ -80,6 +82,15 @@ class RallyScreenViewModel @Inject constructor(
         }
     }
 
+    fun fetchFontSizeFactorSettings() {
+        viewModelScope.launch {
+            val fontSizeFactor = getFontSizeFactorSettingsUseCase.invoke()
+            _state.setFontSizeFactor(FontSizeFactor.entries.find {
+                it.value() == fontSizeFactor
+            }!!)
+        }
+    }
+
     suspend fun updateInitialThemeState(darkThemeState: MutableState<Boolean>, isSystemInDarkTheme: Boolean) {
         fetchThemeSettings()
         while (state.value.theme == null) {
@@ -107,8 +118,9 @@ class RallyScreenViewModel @Inject constructor(
             val language = _state.value.language?.getDatabaseName()!!
             val theme = _state.value.theme?.getDatabaseName()!!
             val profile = _state.value.directionsProfile?.getDatabaseName()!!
+            val fontSizeFactor = _state.value.fontSizeFactor?.value()!!
 
-            insertSettingsUseCase.invoke(language, theme, profile)
+            insertSettingsUseCase.invoke(language, theme, profile, fontSizeFactor)
         }
     }
 
@@ -142,5 +154,9 @@ class RallyScreenViewModel @Inject constructor(
 
     fun setProfile(profile: DirectionsProfile) {
         _state.setDirectionsProfile(profile)
+    }
+
+    fun setFontSizeFactor(fontSizeFactor: FontSizeFactor) {
+        _state.setFontSizeFactor(fontSizeFactor)
     }
 }

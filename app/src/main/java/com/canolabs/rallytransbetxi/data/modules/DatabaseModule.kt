@@ -8,6 +8,7 @@ import com.canolabs.rallytransbetxi.data.models.storage.AppSetting
 import com.canolabs.rallytransbetxi.data.sources.local.dao.AppSettingsDao
 import com.canolabs.rallytransbetxi.data.sources.local.database.AppDatabase
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DATABASE_NAME
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_FONT_SIZE_FACTOR
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_LANGUAGE
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_PROFILE
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_THEME
@@ -38,7 +39,8 @@ object DatabaseModule {
                         1,
                         DEFAULT_LANGUAGE,
                         DEFAULT_THEME,
-                        DEFAULT_PROFILE
+                        DEFAULT_PROFILE,
+                        DEFAULT_FONT_SIZE_FACTOR
                     ))
                 }
             }

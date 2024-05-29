@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.entities.Theme
 
@@ -38,15 +41,18 @@ fun BottomSheetAppSettings(
     state: RallyScreenUIState,
     viewModel: RallyScreenViewModel,
     darkThemeState: MutableState<Boolean>,
+    fontScaleState: MutableState<Float>,
     changeLocale: (String) -> Unit
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchThemeSettings()
         viewModel.fetchLanguageSettings()
         viewModel.fetchProfileSettings()
+        viewModel.fetchFontSizeFactorSettings()
     }
 
-    if (state.language == null || state.theme == null || state.directionsProfile == null) {
+    if (state.language == null || state.theme == null || state.directionsProfile == null
+        || state.fontSizeFactor == null) {
         Shimmer {
             Box(
                 modifier = Modifier
@@ -305,6 +311,159 @@ fun BottomSheetAppSettings(
                             tint = if (state.theme.getDatabaseName() == "dark")
                                 MaterialTheme.colorScheme.onPrimary
                             else MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.directions_mode),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = stringResource(id = state.directionsProfile.getName()),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    IconButton(
+                        onClick = {
+                            viewModel.setProfile(DirectionsProfile.DRIVING_CAR)
+                            viewModel.insertSettings()
+                        },
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clip(CircleShape)
+                            .border(
+                                1.dp,
+                                MaterialTheme.colorScheme.primary,
+                                CircleShape
+                            )
+                            .background(
+                                if (state.directionsProfile.getDatabaseName() == "driving-car")
+                                    MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.onPrimary
+                            )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.directions_car),
+                            contentDescription = null,
+                            tint = if (state.directionsProfile.getDatabaseName() == "driving-car")
+                                MaterialTheme.colorScheme.onPrimary
+                            else MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            viewModel.setProfile(DirectionsProfile.FOOT_WALKING)
+                            viewModel.insertSettings()
+                        },
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clip(CircleShape)
+                            .border(
+                                1.dp,
+                                MaterialTheme.colorScheme.primary,
+                                CircleShape
+                            )
+                            .background(
+                                if (state.directionsProfile.getDatabaseName() == "foot-walking")
+                                    MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.onPrimary
+                            )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.walk),
+                            contentDescription = null,
+                            tint = if (state.directionsProfile.getDatabaseName() == "foot-walking")
+                                MaterialTheme.colorScheme.onPrimary
+                            else MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.text_size),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = stringResource(id = state.fontSizeFactor.name()),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    IconButton(
+                        onClick = {
+                            fontScaleState.value = state.fontSizeFactor.previous().value()
+                            viewModel.setFontSizeFactor(state.fontSizeFactor.previous())
+                            viewModel.insertSettings()
+                        },
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clip(CircleShape)
+                            .border(
+                                1.dp,
+                                MaterialTheme.colorScheme.primary,
+                                CircleShape
+                            )
+                            .background(MaterialTheme.colorScheme.onPrimary)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.remove),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            fontScaleState.value = state.fontSizeFactor.next().value()
+                            viewModel.setFontSizeFactor(state.fontSizeFactor.next())
+                            viewModel.insertSettings()
+                        },
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clip(CircleShape)
+                            .border(
+                                1.dp,
+                                MaterialTheme.colorScheme.primary,
+                                CircleShape
+                            )
+                            .background(MaterialTheme.colorScheme.onPrimary)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }

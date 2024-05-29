@@ -6,7 +6,17 @@ import javax.inject.Inject
 class InsertSettingsUseCase @Inject constructor(
     private val appSettingsRepositoryImpl: AppSettingsRepositoryImpl
 ) {
-    suspend operator fun invoke(language: String, theme: String, profile: String) {
-        appSettingsRepositoryImpl.insertSetting(language, theme, profile)
+    suspend operator fun invoke(
+        language: String,
+        theme: String,
+        profile: String,
+        fontSizeFactor: Float
+    ) {
+        appSettingsRepositoryImpl.insertSetting(
+            language,
+            theme,
+            profile,
+            fontSizeFactor
+        )
     }
 }

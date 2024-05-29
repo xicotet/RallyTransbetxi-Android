@@ -6,10 +6,16 @@ import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 interface AppSettingsRepository {
-    suspend fun insertSetting(language: String, theme: String, profile: String)
+    suspend fun insertSetting(
+        language: String,
+        theme: String,
+        profile: String,
+        fontSizeFactor: Float
+    )
     suspend fun getLanguage(): String
     suspend fun getTheme(): String
     suspend fun getProfile(): String
+    suspend fun getFontSizeFactor(): Float
     suspend fun isDatabaseInitialized(): Boolean
 }
 
@@ -17,8 +23,8 @@ class AppSettingsRepositoryImpl @Inject constructor(
     private val appSettingsDao: AppSettingsDao
 )  : AppSettingsRepository {
 
-    override suspend fun insertSetting(language: String, theme: String, profile: String) {
-        appSettingsDao.insertSetting(AppSetting(1, language, theme, profile))
+    override suspend fun insertSetting(language: String, theme: String, profile: String, fontSizeFactor: Float) {
+        appSettingsDao.insertSetting(AppSetting(1, language, theme, profile, fontSizeFactor))
     }
 
     override suspend fun getLanguage(): String {
@@ -40,6 +46,13 @@ class AppSettingsRepositoryImpl @Inject constructor(
             delay(500)
         }
         return appSettingsDao.getProfile()
+    }
+
+    override suspend fun getFontSizeFactor(): Float {
+        while (!isDatabaseInitialized()) {
+            delay(500)
+        }
+        return appSettingsDao.getFontSizeFactor()
     }
 
     override suspend fun isDatabaseInitialized(): Boolean {

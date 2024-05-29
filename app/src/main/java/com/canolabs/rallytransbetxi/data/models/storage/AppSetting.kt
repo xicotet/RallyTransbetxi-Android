@@ -9,5 +9,6 @@ data class AppSetting(
     @PrimaryKey val id: Int = 1, // Because there is only one setting
     val language: String,
     val theme: String,
-    val profile: String
+    val profile: String,
+    val fontSizeFactor: Float
 )

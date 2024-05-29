@@ -33,7 +33,11 @@
     <string name="system_default">Sistema</string>
     <string name="directions_mode">Modo de navegación</string>
     <string name="driving_car_mode">Coche</string>
-    <string name="walking_mode">Andando</string>
+    <string name="walking_mode">A pie</string>
+    <string name="text_size">Tamaño de letra</string>
+    <string name="text_size_small">Pequeña</string>
+    <string name="text_size_medium">Normal</string>
+    <string name="text_size_large">Grande</string>
 
     // Permission denied bottom sheet
     <string name="permission_denied_title">Permiso de ubicación</string>

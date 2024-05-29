@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -38,9 +39,11 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         setContent {
             val darkThemeState = remember { mutableStateOf(false) }
+            val fontScaleState = remember { mutableFloatStateOf(1f) }
 
             RallyTransbetxiTheme(
-                darkTheme = darkThemeState
+                darkTheme = darkThemeState,
+                fontScale = fontScaleState
             ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -78,6 +81,7 @@ class MainActivity : ComponentActivity() {
                         mapsScreenViewModel = mapsScreenViewModel,
                         rallyScreenViewModel = rallyScreenViewModel,
                         darkThemeState = darkThemeState,
+                        fontScaleState = fontScaleState,
                         changeLocale = ::changeLocale
                     )
                 }
