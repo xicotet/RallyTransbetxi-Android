@@ -53,6 +53,7 @@ fun ActivityProgramSection(
             .padding(16.dp),
         shape = RoundedCornerShape(8.dp),
         shadowElevation = cardsElevation,
+        onClick = { viewModel.toggleActivities() }
     ) {
         Column(
             modifier = Modifier
