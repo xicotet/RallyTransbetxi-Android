@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -12,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +32,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun CountdownTimer() {
+fun CountdownTimer(
+    darkThemeState: MutableState<Boolean>
+) {
     var timeLeft by remember { mutableLongStateOf(DateTimeUtils.secondsUntilStartOfEvent()) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -57,7 +59,7 @@ fun CountdownTimer() {
                     text = String.format("%02dd %02dh %02dm %02ds", days, hours, minutes, seconds),
                     fontFamily = antaFamily,
                     fontSize = 30.sp,
-                    color = if (isSystemInDarkTheme()) Color.White else ruralColor,
+                    color = if (darkThemeState.value) Color.White else ruralColor,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Image(

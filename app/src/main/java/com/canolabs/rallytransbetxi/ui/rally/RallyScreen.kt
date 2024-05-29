@@ -1,6 +1,7 @@
 package com.canolabs.rallytransbetxi.ui.rally
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -13,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,22 +26,37 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.domain.entities.Theme
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RallyScreen(
-    viewModel: RallyScreenViewModel
+    viewModel: RallyScreenViewModel,
+    darkThemeState: MutableState<Boolean>
 ) {
     val state by viewModel.state.collectAsState()
     val bottomSheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
 
+    val isSystemInDarkTheme = isSystemInDarkTheme()
+
     LaunchedEffect(Unit) {
         viewModel.fetchNews()
         viewModel.fetchActivities()
+
+        // Update app theme with saved theme settings
+        viewModel.fetchThemeSettings()
+        delay(500)
+        darkThemeState.value = when (state.theme) {
+            Theme.LIGHT ->  false
+            Theme.DARK -> true
+            Theme.AUTO -> isSystemInDarkTheme
+            else -> isSystemInDarkTheme
+        }
     }
 
     LazyColumn(
@@ -51,7 +68,9 @@ fun RallyScreen(
                 contentDescription = null
             )
 
-            CountdownTimer()
+            CountdownTimer(
+                darkThemeState = darkThemeState
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -91,6 +110,7 @@ fun RallyScreen(
                     BottomSheetAppSettings(
                         state = state,
                         viewModel = viewModel,
+                        darkThemeState = darkThemeState
                     )
                 }
             }

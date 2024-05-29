@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -17,6 +18,8 @@ import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreenViewModel
 import com.canolabs.rallytransbetxi.ui.teams.TeamsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.RallyTransbetxiTheme
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -29,7 +32,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         setContent {
-            RallyTransbetxiTheme {
+            val darkThemeState = remember { mutableStateOf(false) }
+            darkThemeState.value = isSystemInDarkTheme()
+
+            RallyTransbetxiTheme(
+                darkTheme = darkThemeState
+            ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -60,7 +68,8 @@ class MainActivity : ComponentActivity() {
                         teamsScreenViewModel = teamsScreenViewModel,
                         resultsScreenViewModel = resultsScreenViewModel,
                         mapsScreenViewModel = mapsScreenViewModel,
-                        rallyScreenViewModel = rallyScreenViewModel
+                        rallyScreenViewModel = rallyScreenViewModel,
+                        darkThemeState = darkThemeState
                     )
                 }
             }

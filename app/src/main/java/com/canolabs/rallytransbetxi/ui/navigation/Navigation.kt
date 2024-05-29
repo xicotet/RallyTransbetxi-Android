@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -42,7 +43,8 @@ fun Navigation(
     teamsScreenViewModel: TeamsScreenViewModel,
     resultsScreenViewModel: ResultsScreenViewModel,
     mapsScreenViewModel: MapsScreenViewModel,
-    rallyScreenViewModel: RallyScreenViewModel
+    rallyScreenViewModel: RallyScreenViewModel,
+    darkThemeState: MutableState<Boolean>
 ) {
     val navController = rememberNavController()
     val screens = listOf(
@@ -99,6 +101,7 @@ fun Navigation(
             composable(Screens.Rally.route) {
                 RallyScreen(
                     viewModel = rallyScreenViewModel,
+                    darkThemeState = darkThemeState
                 )
             }
             composable(Screens.Stages.route) {
@@ -142,6 +145,7 @@ fun Navigation(
                         mapsViewModel = mapsScreenViewModel,
                         resultsViewModel = resultsScreenViewModel,
                         onBackClick = { navController.popBackStack() },
+                        darkThemeState = darkThemeState,
                         stageAcronym = it.arguments?.getString("stageAcronym") ?: "",
                         fastAction = it.arguments?.getString("fastAction") ?: ""
                     )
@@ -164,6 +168,7 @@ fun Navigation(
                    TeamDetailScreen(
                        teamNumber = it.arguments?.getString("teamNumber") ?: "",
                        teamsViewModel = teamsScreenViewModel,
+                       darkThemeState = darkThemeState,
                        onBackClick = { navController.popBackStack() }
                    )
                 }

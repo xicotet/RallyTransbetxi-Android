@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -46,6 +47,7 @@ fun MapsScreen(
     mapsViewModel: MapsScreenViewModel,
     resultsViewModel: ResultsScreenViewModel,
     onBackClick: () -> Unit,
+    darkThemeState: MutableState<Boolean>,
     stageAcronym: String,
     fastAction: String
 ) {
@@ -172,7 +174,8 @@ fun MapsScreen(
             stageAcronym = stageAcronym,
             scaffoldPadding = it,
             mapsViewModel = mapsViewModel,
-            resultsViewModel = resultsViewModel
+            resultsViewModel = resultsViewModel,
+            darkThemeState = darkThemeState
         )
     }
 }

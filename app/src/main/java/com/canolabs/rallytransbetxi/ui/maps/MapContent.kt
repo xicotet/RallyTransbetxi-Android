@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.ui.platform.LocalContext
@@ -35,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -74,6 +74,7 @@ fun MapContent(
     betxi: LatLng,
     permissionLauncher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>,
     stageAcronym: String,
+    darkThemeState: MutableState<Boolean>,
     scaffoldPadding: PaddingValues,
     mapsViewModel: MapsScreenViewModel,
     resultsViewModel: ResultsScreenViewModel
@@ -82,7 +83,7 @@ fun MapContent(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    val mapStyleOptions = if (isSystemInDarkTheme()) {
+    val mapStyleOptions = if (darkThemeState.value) {
         MapStyleOptions.loadRawResourceStyle(context, R.raw.night_map_style)
     } else {
         null
