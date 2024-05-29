@@ -41,6 +41,7 @@ fun BottomSheetAppSettings(
     changeLocale: (String) -> Unit
 ) {
     LaunchedEffect(key1 = Unit) {
+        viewModel.fetchThemeSettings()
         viewModel.fetchLanguageSettings()
         viewModel.fetchProfileSettings()
     }

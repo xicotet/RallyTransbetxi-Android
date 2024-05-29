@@ -2,14 +2,12 @@ package com.canolabs.rallytransbetxi.ui
 
 import android.app.LocaleManager
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.os.LocaleList
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -28,7 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.core.os.LocaleListCompat
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -41,7 +38,6 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         setContent {
             val darkThemeState = remember { mutableStateOf(false) }
-            darkThemeState.value = isSystemInDarkTheme()
 
             RallyTransbetxiTheme(
                 darkTheme = darkThemeState

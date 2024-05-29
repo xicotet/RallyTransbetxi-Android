@@ -49,15 +49,8 @@ fun RallyScreen(
         viewModel.fetchNews()
         viewModel.fetchActivities()
 
-        // Update app theme with saved theme settings
-        viewModel.fetchThemeSettings()
-        delay(500)
-        darkThemeState.value = when (state.theme) {
-            Theme.LIGHT ->  false
-            Theme.DARK -> true
-            Theme.AUTO -> isSystemInDarkTheme
-            else -> isSystemInDarkTheme
-        }
+        // Get the initial theme state
+        viewModel.updateInitialThemeState(darkThemeState, isSystemInDarkTheme)
     }
 
     LazyColumn(

@@ -1,6 +1,7 @@
 package com.canolabs.rallytransbetxi.ui.rally
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
@@ -13,6 +14,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetThemeSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.InsertSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -78,13 +80,25 @@ class RallyScreenViewModel @Inject constructor(
         }
     }
 
+    suspend fun updateInitialThemeState(darkThemeState: MutableState<Boolean>, isSystemInDarkTheme: Boolean) {
+        fetchThemeSettings()
+        while (state.value.theme == null) {
+            delay(100)
+        }
+        darkThemeState.value = when (state.value.theme) {
+            Theme.LIGHT ->  false
+            Theme.DARK -> true
+            Theme.AUTO -> isSystemInDarkTheme
+            else -> isSystemInDarkTheme
+        }
+    }
+
     fun fetchLanguageSettings() {
         viewModelScope.launch {
             val language = getLanguageSettingsUseCase.invoke()
-            Log.d("RallyScreenViewModel", "Language from database: $language")
             _state.setLanguage(Language.entries.find {
-                Log.d("RallyScreenViewModel", "Language: ${it.getDatabaseName()}")
-                it.getDatabaseName() == language }!!)
+               it.getDatabaseName() == language
+            }!!)
         }
     }
 
