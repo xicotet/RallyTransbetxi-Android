@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
@@ -75,6 +76,8 @@ fun Navigation(
                         label = {
                             Text(
                                 text = stringResource(id = screen.title!!),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
                                 fontFamily = robotoFamily
                             )
                         },
