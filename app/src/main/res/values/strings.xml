@@ -48,6 +48,9 @@
     // Tabs inside Results fragment
     <string name="global">General</string>
 
+    // Results card
+    <string name="disqualified">Descalificado</string>
+
     // Team details
     <string name="category">Categoría</string>
     <string name="bib_number">Dorsal</string>
