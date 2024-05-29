@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui.teams
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -140,12 +142,25 @@ fun TeamCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "#" + team.number,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontFamily = ezraFamily,
-                        modifier = Modifier.padding(top = 8.dp),
-                    )
+                    Box(
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .border(
+                                width = 2.dp,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                shape = RoundedCornerShape(2.dp)
+                            ),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = "#" + team.number,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontFamily = ezraFamily,
+                            modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp)
+                        )
+                    }
+
                     Image(
                         painter = driverPainter,
                         contentDescription = null,

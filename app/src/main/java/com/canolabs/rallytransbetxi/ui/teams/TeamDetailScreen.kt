@@ -58,8 +58,8 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
+import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
-import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -87,7 +87,8 @@ fun TeamDetailScreen(
         24.sp // Larger font size when the AppBar is less than half collapsed
     }
 
-    val teamImagePath = "${Constants.TEAM_IMAGE_PREFIX}${teamNumber}${Constants.TEAM_IMAGE_EXTENSION}"
+    val teamImagePath =
+        "${Constants.TEAM_IMAGE_PREFIX}${teamNumber}${Constants.TEAM_IMAGE_EXTENSION}"
 
     val storage = Firebase.storage
     val teamStorageRef = storage.reference.child("${Constants.TEAMS_FOLDER}/$teamImagePath")
@@ -188,6 +189,7 @@ fun TeamDetailScreen(
                         )
                     }
                 }
+
                 is AsyncImagePainter.State.Success -> {
                     Image(
                         painter = teamPainter,
@@ -199,6 +201,7 @@ fun TeamDetailScreen(
                             .align(Alignment.CenterHorizontally),
                     )
                 }
+
                 is AsyncImagePainter.State.Error -> {
                     // Show a placeholder image
                 }
@@ -213,43 +216,35 @@ fun TeamDetailScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .border(2.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
-                        .padding(8.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "#" + team?.number,
-                        fontSize = 20.sp,
-                        fontFamily = ezraFamily
-                    )
-                }
-                Spacer(modifier = Modifier.width(16.dp))
-                Box(
-                    modifier = Modifier
                         .wrapContentWidth()
-                        .background(
-                            color = if (darkThemeState.value) {
-                                MaterialTheme.colorScheme.onSurface
-                            } else {
-                                MaterialTheme.colorScheme.background
-                            },
-                        )
                         .border(
                             width = 2.dp,
                             color = MaterialTheme.colorScheme.onSurface,
                             shape = RoundedCornerShape(2.dp)
+                        )
+                        .background(
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            shape = RoundedCornerShape(2.dp)
                         ),
                     contentAlignment = Alignment.Center,
                 ) {
-
                     Text(
-                        text = team?.category?.name ?: "",
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontFamily = robotoFamily,
-                        modifier = Modifier.padding(start = 4.dp, end = 4.dp)
+                        text = "#" + team?.number,
+                        fontSize = 28.sp,
+                        fontFamily = ezraFamily,
+                        modifier = Modifier.padding(4.dp)
                     )
                 }
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Text(
+                    text = team?.category?.name ?: "",
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontFamily = antaFamily,
+                    modifier = Modifier.padding(start = 4.dp, end = 4.dp)
+                )
+
             }
 
             val onBackgroundColor = MaterialTheme.colorScheme.onBackground

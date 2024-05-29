@@ -80,7 +80,6 @@ fun ResultCard(
                             .align(Alignment.Center)
                     )
 
-                    // This Text will be placed at the bottom
                     Text(
                         text = result.team.category.categoryId.substring(0, 5).uppercase(),
                         style = MaterialTheme.typography.bodyMedium,
@@ -92,8 +91,6 @@ fun ResultCard(
                     )
                 }
             }
-            // Place position number
-
 
             /*VerticalDivider(
                 modifier = Modifier
@@ -177,7 +174,7 @@ fun ResultCard(
                     modifier = Modifier
                         .wrapContentWidth()
                         .border(
-                            width = 1.dp,
+                            width = 2.dp,
                             color = MaterialTheme.colorScheme.onSurface,
                             shape = RoundedCornerShape(2.dp)
                         )
@@ -190,7 +187,7 @@ fun ResultCard(
 
                     Text(
                         text = "#" + result.number,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.titleMedium,
                         fontFamily = ezraFamily,
                         modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp)
