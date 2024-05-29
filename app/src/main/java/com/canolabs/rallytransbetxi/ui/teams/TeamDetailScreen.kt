@@ -57,7 +57,6 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
 import com.canolabs.rallytransbetxi.R
-import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
@@ -242,12 +241,10 @@ fun TeamDetailScreen(
                         ),
                     contentAlignment = Alignment.Center,
                 ) {
-                    val racingCategory =
-                        RacingCategory.entries.firstOrNull { stringResource(id = it.getName()) == team?.category?.name }
 
                     Text(
                         text = team?.category?.name ?: "",
-                        color = racingCategory?.getColor() ?: MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.titleMedium,
                         fontFamily = robotoFamily,
                         modifier = Modifier.padding(start = 4.dp, end = 4.dp)

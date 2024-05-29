@@ -33,7 +33,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.canolabs.rallytransbetxi.data.models.responses.Result
-import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
@@ -178,18 +177,20 @@ fun ResultCard(
                     modifier = Modifier
                         .wrapContentWidth()
                         .border(
-                            width = 2.dp,
-                            color = MaterialTheme.colorScheme.scrim,
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            shape = RoundedCornerShape(2.dp)
+                        )
+                        .background(
+                            color = MaterialTheme.colorScheme.onPrimary,
                             shape = RoundedCornerShape(2.dp)
                         ),
                     contentAlignment = Alignment.Center,
                 ) {
-                    val racingCategory =
-                        RacingCategory.entries.firstOrNull { it.getApiName() == result.team.category.name }
 
                     Text(
                         text = "#" + result.number,
-                        color = racingCategory?.getColor() ?: MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.titleMedium,
                         fontFamily = ezraFamily,
                         modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp)
