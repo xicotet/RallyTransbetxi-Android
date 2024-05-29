@@ -26,9 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
-import com.canolabs.rallytransbetxi.domain.entities.Theme
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 

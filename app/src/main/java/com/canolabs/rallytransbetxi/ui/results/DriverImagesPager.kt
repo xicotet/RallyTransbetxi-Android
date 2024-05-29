@@ -86,7 +86,9 @@ fun DriverImagesPager(result: Result) {
 
     val pagerState = rememberPagerState(pageCount = { 2 })
 
-    Column {
+    Column(
+        modifier = Modifier.padding(end = 16.dp)
+    ){
         HorizontalPager(
             state = pagerState,
             modifier = Modifier

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -63,19 +64,37 @@ fun ResultCard(
             modifier = Modifier
                 .background(brush = gradient)
                 .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .padding(16.dp),
+                .height(IntrinsicSize.Min),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Column {
+                Box(
+                    modifier = Modifier.fillMaxHeight()
+                ) {
+                    Text(
+                        text = position.toString(),
+                        fontFamily = antaFamily,
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .align(Alignment.Center)
+                    )
+
+                    // This Text will be placed at the bottom
+                    Text(
+                        text = result.team.category.categoryId.substring(0, 5).uppercase(),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontFamily = antaFamily,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.5f),
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .align(Alignment.BottomCenter),
+                    )
+                }
+            }
             // Place position number
-            Text(
-                text = position.toString(),
-                fontFamily = antaFamily,
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier
-                    .padding(start = 8.dp)
-            )
+
 
             /*VerticalDivider(
                 modifier = Modifier
@@ -90,7 +109,7 @@ fun ResultCard(
             Column(
                 modifier = Modifier
                     .weight(0.8f)
-                    .padding(start = 16.dp),
+                    .padding(start = 8.dp, top = 16.dp, end = 8.dp, bottom = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 // To peacefully accommodate german names which only consists of two words
