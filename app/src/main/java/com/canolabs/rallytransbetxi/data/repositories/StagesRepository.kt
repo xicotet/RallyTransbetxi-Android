@@ -67,8 +67,11 @@ class StagesRepositoryImpl @Inject constructor(
             stagesDao.insertStages(stages)
             Log.d(TAG, "Inserted fetched stages into local storage")
 
+            versionsRepositoryImpl.deleteLocalStoredVersion(versionName)
+            Log.d(TAG, "Deleted old local version")
+
             versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
-            Log.d(TAG, "Updated local version to API version: $apiVersion")
+            Log.d(TAG, "Add local version to API version: $apiVersion")
 
             stages
         } else {
@@ -127,8 +130,11 @@ class StagesRepositoryImpl @Inject constructor(
             stagesDao.insertStages(stages)
             Log.d(TAG, "Inserted fetched stages into local storage")
 
+            versionsRepositoryImpl.deleteLocalStoredVersion(versionName)
+            Log.d(TAG, "Deleted old local version")
+
             versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
-            Log.d(TAG, "Updated local version to API version: $apiVersion")
+            Log.d(TAG, "Add local version to API version: $apiVersion")
 
             return stagesDao.getStage(acronym)
         } else {

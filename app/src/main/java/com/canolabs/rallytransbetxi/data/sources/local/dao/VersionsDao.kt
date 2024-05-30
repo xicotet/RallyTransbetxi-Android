@@ -17,4 +17,7 @@ interface VersionsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVersion(version: Version)
+
+    @Query("DELETE FROM version WHERE name = :name")
+    suspend fun deleteVersion(name: String)
 }

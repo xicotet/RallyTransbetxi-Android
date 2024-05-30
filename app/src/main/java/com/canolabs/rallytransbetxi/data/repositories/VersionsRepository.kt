@@ -10,6 +10,7 @@ interface VersionsRepository {
     suspend fun getLocalStoredVersion(name: String): Timestamp
     suspend fun countLocalStoredVersionsByName(name: String): Int
     suspend fun insertLocalStoredVersion(name: String, timestamp: Timestamp)
+    suspend fun deleteLocalStoredVersion(name: String)
     suspend fun getApiVersion(name: String): Timestamp
 }
 
@@ -27,6 +28,10 @@ class VersionsRepositoryImpl @Inject constructor(
 
     override suspend fun insertLocalStoredVersion(name: String, timestamp: Timestamp) {
         versionsDao.insertVersion(Version(name = name, timestamp =  timestamp))
+    }
+
+    override suspend fun deleteLocalStoredVersion(name: String) {
+        versionsDao.deleteVersion(name)
     }
 
     override suspend fun getApiVersion(name: String): Timestamp {
