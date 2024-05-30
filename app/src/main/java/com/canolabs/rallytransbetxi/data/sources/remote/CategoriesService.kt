@@ -1,15 +1,12 @@
 package com.canolabs.rallytransbetxi.data.sources.remote
 
 import com.canolabs.rallytransbetxi.data.models.responses.Category
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface CategoriesService {
     suspend fun fetchCategories(): List<Category>
-    suspend fun fetchCategoryFromReference(documentReference: DocumentReference): Task<Category>
 }
 
 class CategoriesServiceImpl @Inject constructor(
@@ -30,22 +27,6 @@ class CategoriesServiceImpl @Inject constructor(
         } catch (e: Exception) {
             // Handle error
             emptyList()
-        }
-    }
-
-    override suspend fun fetchCategoryFromReference(documentReference: DocumentReference): Task<Category> {
-        return documentReference.get().continueWith { task ->
-            if (task.isSuccessful) {
-                val documentSnapshot = task.result
-                if (documentSnapshot != null) {
-                    Category(
-                        categoryId = documentSnapshot.id,
-                        name = documentSnapshot["name"] as String
-                    )
-                } else Category()
-            } else {
-                throw task.exception ?: Exception("Unknown error")
-            }
         }
     }
 }

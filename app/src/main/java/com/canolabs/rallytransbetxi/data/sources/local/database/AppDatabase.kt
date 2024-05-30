@@ -5,10 +5,15 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.canolabs.rallytransbetxi.data.models.responses.Version
 import com.canolabs.rallytransbetxi.data.models.responses.AppSetting
+import com.canolabs.rallytransbetxi.data.models.responses.Category
+import com.canolabs.rallytransbetxi.data.models.responses.Team
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.canolabs.rallytransbetxi.data.sources.local.dao.AppSettingsDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.CategoryDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.StagesDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.TeamDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.VersionsDao
+import com.canolabs.rallytransbetxi.data.sources.local.typeConverters.CategoryTypeConverter
 import com.canolabs.rallytransbetxi.data.sources.local.typeConverters.GeoPointListConverter
 import com.canolabs.rallytransbetxi.data.sources.local.typeConverters.TimestampConverter
 
@@ -16,15 +21,20 @@ import com.canolabs.rallytransbetxi.data.sources.local.typeConverters.TimestampC
     entities = [
         AppSetting::class,
         Version::class,
-        Stage::class
+        Stage::class,
+        Category::class,
+        Team::class
     ], version = 1
 )
 @TypeConverters(
     TimestampConverter::class,
-    GeoPointListConverter::class
+    GeoPointListConverter::class,
+    CategoryTypeConverter::class,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun settingsDao(): AppSettingsDao
     abstract fun versionsDao(): VersionsDao
     abstract fun stagesDao(): StagesDao
+    abstract fun categoriesDao(): CategoryDao
+    abstract fun teamsDao(): TeamDao
 }

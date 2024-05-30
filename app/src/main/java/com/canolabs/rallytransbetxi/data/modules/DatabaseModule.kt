@@ -6,7 +6,9 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.canolabs.rallytransbetxi.data.models.responses.AppSetting
 import com.canolabs.rallytransbetxi.data.sources.local.dao.AppSettingsDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.CategoryDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.StagesDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.TeamDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.VersionsDao
 import com.canolabs.rallytransbetxi.data.sources.local.database.AppDatabase
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DATABASE_NAME
@@ -81,5 +83,15 @@ object DatabaseModule {
     @Provides
     fun provideStagesDao(appDatabase: AppDatabase): StagesDao {
         return appDatabase.stagesDao()
+    }
+
+    @Provides
+    fun provideCategoriesDao(appDatabase: AppDatabase): CategoryDao {
+        return appDatabase.categoriesDao()
+    }
+
+    @Provides
+    fun provideTeamsDao(appDatabase: AppDatabase): TeamDao {
+        return appDatabase.teamsDao()
     }
 }
