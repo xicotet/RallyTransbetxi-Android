@@ -15,9 +15,6 @@ interface StagesDao {
      suspend fun getStage(acronym: String): Stage
 
      @Insert(onConflict = OnConflictStrategy.REPLACE)
-     suspend fun insertStage(stage: Stage)
-
-     @Insert(onConflict = OnConflictStrategy.REPLACE)
      suspend fun insertStages(stages: List<Stage>)
 
      @Query("DELETE FROM stage")
