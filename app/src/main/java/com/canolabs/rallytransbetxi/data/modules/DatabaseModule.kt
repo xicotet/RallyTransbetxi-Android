@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.canolabs.rallytransbetxi.data.models.storage.AppSetting
+import com.canolabs.rallytransbetxi.data.models.responses.AppSetting
 import com.canolabs.rallytransbetxi.data.sources.local.dao.AppSettingsDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.StagesDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.VersionsDao
 import com.canolabs.rallytransbetxi.data.sources.local.database.AppDatabase
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DATABASE_NAME
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_FONT_SIZE_FACTOR
@@ -35,13 +37,15 @@ object DatabaseModule {
             CoroutineScope(Dispatchers.IO).launch {
                 val count = appDatabase.settingsDao().getSettingCount()
                 if (count == 0) {
-                    appDatabase.settingsDao().insertSetting(AppSetting(
-                        1,
-                        DEFAULT_LANGUAGE,
-                        DEFAULT_THEME,
-                        DEFAULT_PROFILE,
-                        DEFAULT_FONT_SIZE_FACTOR
-                    ))
+                    appDatabase.settingsDao().insertSetting(
+                        AppSetting(
+                            1,
+                            DEFAULT_LANGUAGE,
+                            DEFAULT_THEME,
+                            DEFAULT_PROFILE,
+                            DEFAULT_FONT_SIZE_FACTOR
+                        )
+                    )
                 }
             }
         }
@@ -57,9 +61,9 @@ object DatabaseModule {
                 AppDatabase::class.java,
                 DATABASE_NAME
             )
-            .addCallback(callback)
-            .fallbackToDestructiveMigration()
-            .build()
+                .addCallback(callback)
+                .fallbackToDestructiveMigration()
+                .build()
         }
         return appDatabase
     }
@@ -67,5 +71,15 @@ object DatabaseModule {
     @Provides
     fun provideSettingsDao(appDatabase: AppDatabase): AppSettingsDao {
         return appDatabase.settingsDao()
+    }
+
+    @Provides
+    fun provideVersionsDao(appDatabase: AppDatabase): VersionsDao {
+        return appDatabase.versionsDao()
+    }
+
+    @Provides
+    fun provideStagesDao(appDatabase: AppDatabase): StagesDao {
+        return appDatabase.stagesDao()
     }
 }

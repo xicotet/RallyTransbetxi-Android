@@ -1,6 +1,6 @@
 package com.canolabs.rallytransbetxi.data.repositories
 
-import com.canolabs.rallytransbetxi.data.models.storage.AppSetting
+import com.canolabs.rallytransbetxi.data.models.responses.AppSetting
 import com.canolabs.rallytransbetxi.data.sources.local.dao.AppSettingsDao
 import kotlinx.coroutines.delay
 import javax.inject.Inject

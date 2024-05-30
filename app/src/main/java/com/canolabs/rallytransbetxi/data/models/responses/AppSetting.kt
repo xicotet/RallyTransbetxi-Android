@@ -1,4 +1,4 @@
-package com.canolabs.rallytransbetxi.data.models.storage
+package com.canolabs.rallytransbetxi.data.models.responses
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

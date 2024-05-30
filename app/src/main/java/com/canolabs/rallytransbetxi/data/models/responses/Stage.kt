@@ -1,13 +1,16 @@
 package com.canolabs.rallytransbetxi.data.models.responses
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.GeoPoint
-import com.google.firebase.firestore.PropertyName
 
+@Entity
 data class Stage(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val acronym: String = "",
-    @get: PropertyName("name") val name: String = "",
-    @get: PropertyName("distance") val distance: String = "",
-    @get: PropertyName("startTime") val startTime: Timestamp? = null,
-    @get: PropertyName("geoPoints") val geoPoints: List<GeoPoint>? = null
+    val name: String = "",
+    val distance: String = "",
+    val startTime: Timestamp? = null,
+    val geoPoints: List<GeoPoint>? = null
 )
