@@ -2,12 +2,12 @@ package com.canolabs.rallytransbetxi.data.sources.remote
 
 import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Result
+import com.canolabs.rallytransbetxi.data.models.responses.Team
+import com.canolabs.rallytransbetxi.data.repositories.TeamsRepositoryImpl
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 interface ResultsService {
@@ -17,49 +17,60 @@ interface ResultsService {
 
 class ResultsServiceImpl @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
-    private val teamsServiceImpl: TeamsServiceImpl
+    private val teamsRepositoryImpl: TeamsRepositoryImpl
 ) : ResultsService {
 
     override suspend fun fetchGlobalResults(): List<Result> {
         val startupTime = System.currentTimeMillis()
 
+        val teams = teamsRepositoryImpl.getTeams().associateBy { it.number }
+
         val documentSnapshot = firebaseFirestore.collection("results/global/ranking").get().await()
-        val results = coroutineScope {
-            documentSnapshot.documents.map {
-                async {
-                    val result = it.toObject(Result::class.java)
-                    val teamReference = it["teamReference"] as DocumentReference
-                    Log.d("ResultsServiceImpl", "Team reference: $teamReference")
-                    val team = teamsServiceImpl.fetchTeamByReference(teamReference)
-                    result?.team = team
-                    Log.d("ResultsServiceImpl", "Result: $result")
-                    result
-                }
-            }.awaitAll().filterNotNull()
+        val globalResults = mutableListOf<Result>()
+
+        for (document in documentSnapshot.documents) {
+            try {
+                val result = fetchResult(document, teams)
+                globalResults.add(result)
+            } catch (e: Exception) {
+                Log.d("ResultsServiceImpl", "Error getting global result ${document.id}: ", e)
+            }
         }
+
         val endTime = System.currentTimeMillis()
         Log.d("ResultsServiceImpl", "Time fetching global results: ${endTime - startupTime} ms")
-        return results
+        return globalResults
+    }
+
+    private fun fetchResult(
+        document: DocumentSnapshot,
+        teams: Map<String, Team>
+    ): Result {
+        val result = document.toObject(Result::class.java) ?: return Result()
+        val teamReference = document.get("teamReference") as DocumentReference
+        result.team = teams[teamReference.id]!!
+        return result
     }
 
     override suspend fun fetchStageResults(stageId: String): List<Result> {
         val startupTime = System.currentTimeMillis()
+
+        val teams = teamsRepositoryImpl.getTeams().associateBy { it.number }
+
         val documentSnapshot = firebaseFirestore.collection("results/stage/$stageId").get().await()
-        val results = coroutineScope {
-            documentSnapshot.documents.mapNotNull {
-                async {
-                    val result = it.toObject(Result::class.java)
-                    val teamReference = it["teamReference"] as DocumentReference
-                    val team = teamsServiceImpl.fetchTeamByReference(teamReference)
-                    result?.team = team
-                    Log.d("ResultsServiceImpl", "Result: $result")
-                    result
-                }
+        val stageResults = mutableListOf<Result>()
+
+        for (document in documentSnapshot.documents) {
+            try {
+                val result = fetchResult(document, teams)
+                stageResults.add(result)
+            } catch (e: Exception) {
+                Log.d("ResultsServiceImpl", "Error getting global result ${document.id}: ", e)
             }
-        }.awaitAll().filterNotNull()
+        }
 
         val endTime = System.currentTimeMillis()
         Log.d("ResultsServiceImpl", "Time fetching stage: ${endTime - startupTime} ms")
-        return results
+        return stageResults
     }
 }

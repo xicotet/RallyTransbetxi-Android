@@ -7,6 +7,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.canolabs.rallytransbetxi.data.models.responses.AppSetting
 import com.canolabs.rallytransbetxi.data.sources.local.dao.AppSettingsDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.CategoryDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.ResultDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.StagesDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.TeamDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.VersionsDao
@@ -93,5 +94,10 @@ object DatabaseModule {
     @Provides
     fun provideTeamsDao(appDatabase: AppDatabase): TeamDao {
         return appDatabase.teamsDao()
+    }
+
+    @Provides
+    fun provideResultsDao(appDatabase: AppDatabase): ResultDao {
+        return appDatabase.resultsDao()
     }
 }

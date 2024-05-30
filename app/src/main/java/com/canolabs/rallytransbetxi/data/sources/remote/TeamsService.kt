@@ -12,7 +12,6 @@ import javax.inject.Inject
 
 interface TeamsService {
     suspend fun fetchTeams(): List<Team>
-    suspend fun fetchTeamByReference(teamReference: DocumentReference): Team
 }
 
 class TeamsServiceImpl @Inject constructor(
@@ -50,13 +49,5 @@ class TeamsServiceImpl @Inject constructor(
         val categoryReference = document.get("categoryReference") as DocumentReference
         team.category = categories[categoryReference.id]!!
         return team
-    }
-
-    override suspend fun fetchTeamByReference(teamReference: DocumentReference): Team {
-        val documentSnapshot = teamReference.get().await()
-        val categories = categoriesRepositoryImpl.getCategories().associateBy { it.categoryId }
-        return if (documentSnapshot != null) {
-            fetchTeam(documentSnapshot, categories)
-        } else Team()
     }
 }
