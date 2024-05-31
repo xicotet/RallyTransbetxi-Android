@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.BuildConfig
 import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStageByAcronymUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -28,6 +29,7 @@ import javax.inject.Inject
 class MapsScreenViewModel @Inject constructor(
     private val getStageByAcronymUseCase: GetStageByAcronymUseCase,
     private val getDirectionsUseCase: GetDirectionsUseCase,
+    private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
     private val application: Application
 ): ViewModel() {
     private var _state = MutableStateFlow(MapsScreenUIState())
@@ -63,6 +65,7 @@ class MapsScreenViewModel @Inject constructor(
                 delay(100)
             }
             val directions = getDirectionsUseCase.execute(
+                getProfileSettingsUseCase.invoke(),
                 BuildConfig.DIRECTIONS_API_KEY,
                 _state.value.location?.longitude.toString() + "," + _state.value.location?.latitude.toString(),
                 _state.value.stage.geoPoints?.first()?.longitude.toString() + "," + _state.value.stage.geoPoints?.first()?.latitude.toString()

@@ -68,8 +68,7 @@ class RallyScreenViewModel @Inject constructor(
 
     fun fetchProfileSettings() {
         viewModelScope.launch {
-            val profile = getProfileSettingsUseCase.invoke()
-            _state.setDirectionsProfile(DirectionsProfile.entries.find { it.getDatabaseName() == profile }!!)
+            _state.setDirectionsProfile(getProfileSettingsUseCase.invoke())
         }
     }
 

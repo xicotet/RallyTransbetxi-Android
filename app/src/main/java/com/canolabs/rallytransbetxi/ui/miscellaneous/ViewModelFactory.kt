@@ -67,12 +67,18 @@ class StagesViewModelFactory @Inject constructor(
 class MapsViewModelFactory @Inject constructor(
     private val getStageByAcronymUseCase: GetStageByAcronymUseCase,
     private val getDirectionsUseCase: GetDirectionsUseCase,
+    private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
     private val application: Application
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MapsScreenViewModel::class.java)) {
-            return MapsScreenViewModel(getStageByAcronymUseCase, getDirectionsUseCase, application) as T
+            return MapsScreenViewModel(
+                getStageByAcronymUseCase,
+                getDirectionsUseCase,
+                getProfileSettingsUseCase,
+                application
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
@@ -124,15 +130,19 @@ class MainActivityViewModelFactory @Inject constructor(
             modelClass.isAssignableFrom(StagesScreenViewModel::class.java) -> {
                 stagesViewModelFactory.create(modelClass)
             }
+
             modelClass.isAssignableFrom(TeamsScreenViewModel::class.java) -> {
                 teamsViewModelFactory.create(modelClass)
             }
+
             modelClass.isAssignableFrom(ResultsScreenViewModel::class.java) -> {
                 resultsViewModelFactory.create(modelClass)
             }
+
             modelClass.isAssignableFrom(MapsScreenViewModel::class.java) -> {
-               mapsViewModelFactory.create(modelClass)
+                mapsViewModelFactory.create(modelClass)
             }
+
             modelClass.isAssignableFrom(RallyScreenViewModel::class.java) -> {
                 rallyViewModelFactory.create(modelClass)
             }
