@@ -77,7 +77,7 @@ class MapsScreenViewModel @Inject constructor(
     fun fetchStage(acronym: String) {
         viewModelScope.launch {
             _state.setIsLoading(true)
-            _state.setStage(getStageByAcronymUseCase(acronym))
+            _state.setStage(getStageByAcronymUseCase.invoke(acronym))
             _state.setIsLoading(false)
         }
     }

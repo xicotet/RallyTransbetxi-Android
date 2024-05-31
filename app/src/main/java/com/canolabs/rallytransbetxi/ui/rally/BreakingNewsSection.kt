@@ -35,6 +35,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -55,7 +56,8 @@ import java.util.Locale
 @Composable
 fun BreakingNewsSection(
     state: RallyScreenUIState,
-    viewModel: RallyScreenViewModel
+    viewModel: RallyScreenViewModel,
+    navController: NavController
 ) {
     Surface(
         modifier = Modifier
@@ -119,7 +121,9 @@ fun BreakingNewsSection(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .wrapContentHeight(),
-                                onClick = {},
+                                onClick = {
+                                    navController.navigate("newsDetail/${news.number}")
+                                },
                             ) {
                                 Column(
                                     modifier = Modifier

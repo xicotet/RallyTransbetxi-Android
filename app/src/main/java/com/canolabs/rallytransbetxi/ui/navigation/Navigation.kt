@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreen
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
+import com.canolabs.rallytransbetxi.ui.rally.NewsDetailScreen
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreen
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
@@ -108,7 +109,8 @@ fun Navigation(
                     viewModel = rallyScreenViewModel,
                     darkThemeState = darkThemeState,
                     fontScaleState = fontScaleState,
-                    changeLocale = changeLocale
+                    changeLocale = changeLocale,
+                    navController = navController
                 )
             }
             composable(Screens.Stages.route) {
@@ -177,6 +179,27 @@ fun Navigation(
                        teamsViewModel = teamsScreenViewModel,
                        onBackClick = { navController.popBackStack() }
                    )
+                }
+            }
+            composable(
+                route = "${Screens.NewsDetail.route}/{newsNumber}",
+                arguments = listOf(
+                    navArgument("newsNumber") { type = NavType.StringType },
+                )
+            ) {
+                val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+                val isVisible = currentRoute?.contains(Screens.NewsDetail.route) ?: false
+
+                AnimatedVisibility(
+                    visible = isVisible,
+                    enter = slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
+                    exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
+                ) {
+                    NewsDetailScreen(
+                        newsNumber = it.arguments?.getString("newsNumber") ?: "",
+                        viewModel = rallyScreenViewModel,
+                        onBackClick = { navController.popBackStack() }
+                    )
                 }
             }
         }
