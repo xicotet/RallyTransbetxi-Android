@@ -44,6 +44,12 @@ object DateTimeUtils {
         return(format.format(date))
     }
 
+    fun yearOfADateInSpanish(seconds: Long): String {
+        val date = Date(seconds * 1000) // Convert seconds to milliseconds
+        val format = SimpleDateFormat("yyyy", Locale("es", "ES"))
+        return(format.format(date))
+    }
+
     fun secondsToDateInSpanishAbbreviated(seconds: Long): String {
         val date = Date(seconds * 1000) // Convert seconds to milliseconds
         val format = SimpleDateFormat("d MMM", Locale("es", "ES"))

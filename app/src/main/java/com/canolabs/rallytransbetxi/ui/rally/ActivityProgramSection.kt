@@ -102,6 +102,17 @@ fun ActivityProgramSection(
             if (!state.isLoading) {
                 AnimatedVisibility(visible = state.areActivitiesCollapsed.not()) {
                     Column {
+                        if (state.activities.isNotEmpty()) {
+                            Text(
+                                text = DateTimeUtils.yearOfADateInSpanish(state.activities.first().date?.seconds ?: 0),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontFamily = robotoFamily,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(start = 16.dp).align(Alignment.CenterHorizontally)
+                            )
+                        }
+
                         val activitiesToShow =
                             if (state.isShowAllActivitiesEnabled) state.activities else state.activities.take(
                                 DEFAULT_ACTIVITIES
