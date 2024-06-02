@@ -5,8 +5,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.canolabs.rallytransbetxi.data.models.responses.AppSetting
+import com.canolabs.rallytransbetxi.data.sources.local.dao.ActivityDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.AppSettingsDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.CategoryDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.NewsDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.ResultDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.StagesDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.TeamDao
@@ -99,5 +101,15 @@ object DatabaseModule {
     @Provides
     fun provideResultsDao(appDatabase: AppDatabase): ResultDao {
         return appDatabase.resultsDao()
+    }
+
+    @Provides
+    fun provideActivitiesDao(appDatabase: AppDatabase): ActivityDao {
+        return appDatabase.activitiesDao()
+    }
+
+    @Provides
+    fun provideNewsDao(appDatabase: AppDatabase): NewsDao {
+        return appDatabase.newsDao()
     }
 }
