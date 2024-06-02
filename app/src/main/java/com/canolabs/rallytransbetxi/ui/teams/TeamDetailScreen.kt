@@ -316,7 +316,7 @@ fun TeamDetailScreen(
                         )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    if (state.value.isLoaadingGlobalResult) {
+                    if (state.value.isLoadingGlobalResult) {
                         Shimmer { brush ->
                             Row {
                                 Text(

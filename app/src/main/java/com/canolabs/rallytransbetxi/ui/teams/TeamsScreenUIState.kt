@@ -10,7 +10,7 @@ data class TeamsScreenUIState(
     val categoryResult: Int = 0,
     val isLoadingCategoryResult: Boolean = false,
     val globalResult: Int = 0,
-    val isLoaadingGlobalResult: Boolean = false,
+    val isLoadingGlobalResult: Boolean = false,
     val globalTime: String = "",
     val isLoadingGlobalTime: Boolean = false,
     val isSearchBarVisible: Boolean = false,
@@ -45,7 +45,7 @@ fun MutableStateFlow<TeamsScreenUIState>.setGlobalResult(globalResult: Int) {
 }
 
 fun MutableStateFlow<TeamsScreenUIState>.setIsLoadingGlobalResult(isLoadingGlobalResult: Boolean) {
-    value = value.copy(isLoaadingGlobalResult = isLoadingGlobalResult)
+    value = value.copy(isLoadingGlobalResult = isLoadingGlobalResult)
 }
 
 fun MutableStateFlow<TeamsScreenUIState>.setGlobalTime(globalTime: String) {
