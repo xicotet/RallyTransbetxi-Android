@@ -19,6 +19,11 @@
     <string name="show_less">Veure menys</string>
     <string name="weather_forecast">Previsió meteorològica</string>
 
+    // Eat destination
+    <string name="open_in_maps">Obrir a Google Maps</string>
+    <string name="do_you_want_to_open">Vols obrir-ho</string>
+    <string name="in_google_maps">en Google Maps?</string>
+
     // Maps destination
     <string name="navigate">Navegar</string>
     <string name="standard_map">Estàndard</string>
@@ -64,6 +69,8 @@
     <string name="serie">Sèrie</string>
 
     // General
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
     <string name="search">Buscar&#8230;</string>
     <string name="location">Ubicació</string>
     <string name="day">Dia</string>

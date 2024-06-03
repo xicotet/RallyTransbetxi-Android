@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreen
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
+import com.canolabs.rallytransbetxi.ui.rally.EatScreen
 import com.canolabs.rallytransbetxi.ui.rally.HallOfFameScreen
 import com.canolabs.rallytransbetxi.ui.rally.NewsDetailScreen
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreen
@@ -234,6 +235,24 @@ fun Navigation(
                 ) {
                     SponsorsScreen(
                         onBackClick = { navController.popBackStack() }
+                    )
+                }
+            }
+            composable(
+                route = Screens.Eat.route,
+            ) {
+                val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+                val isVisible = currentRoute?.contains(Screens.Eat.route) ?: false
+
+                AnimatedVisibility(
+                    visible = isVisible,
+                    enter = slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
+                    exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
+                ) {
+                    EatScreen (
+                        viewModel = rallyScreenViewModel,
+                        onBackClick = { navController.popBackStack() },
+                        darkThemeState = darkThemeState
                     )
                 }
             }

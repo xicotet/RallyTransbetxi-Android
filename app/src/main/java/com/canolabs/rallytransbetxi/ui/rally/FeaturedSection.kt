@@ -173,7 +173,9 @@ fun FeaturedSection(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        navController.navigate(Screens.Eat.route)
+                    },
                     modifier = Modifier
                         .size(120.dp)
                         .border(
@@ -181,6 +183,11 @@ fun FeaturedSection(
                             color = MaterialTheme.colorScheme.onSurface,
                             shape = RoundedCornerShape(8.dp)
                         )
+                        .clickable {
+                            // This clickable section needs to be added in order
+                            // to make the whole button clickable
+                            navController.navigate(Screens.Eat.route)
+                        }
                         .background(brush = getRallyScreenCardsGradient())
                         .align(Alignment.CenterHorizontally)
                 ) {

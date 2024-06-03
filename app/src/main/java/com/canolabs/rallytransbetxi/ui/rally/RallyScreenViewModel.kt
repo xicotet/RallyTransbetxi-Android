@@ -13,6 +13,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetHallOfFameUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetLanguageSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetThemeSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.InsertSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RallyScreenViewModel @Inject constructor(
     private val getNewsUseCase: GetNewsUseCase,
+    private val getRestaurantsUseCase: GetRestaurantsUseCase,
     private val getHallOfFameUseCase: GetHallOfFameUseCase,
     private val getActivitiesUseCase: GetActivitiesUseCase,
     private val insertSettingsUseCase: InsertSettingsUseCase,
@@ -77,6 +79,13 @@ class RallyScreenViewModel @Inject constructor(
             _state.setHallOfFame(hallOfFameOrderedByDate)
 
             _state.setIsHallOfFameLoading(false)
+        }
+    }
+
+    fun fetchRestaurants() {
+        viewModelScope.launch {
+            val restaurants = getRestaurantsUseCase.invoke()
+            _state.setRestaurants(restaurants)
         }
     }
 

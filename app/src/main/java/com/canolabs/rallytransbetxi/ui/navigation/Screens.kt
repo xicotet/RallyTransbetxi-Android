@@ -17,6 +17,7 @@ sealed class Screens(
     data object Maps : Screens("map", hasNavigationBar = false)
     data object HallOfFame : Screens("hallOfFame", hasNavigationBar = false)
     data object Sponsors : Screens("sponsors", hasNavigationBar = false)
+    data object Eat : Screens("eat", hasNavigationBar = false)
     data object TeamDetail : Screens("teamDetail", hasNavigationBar = false)
     data object NewsDetail : Screens("newsDetail", hasNavigationBar = false)
 }

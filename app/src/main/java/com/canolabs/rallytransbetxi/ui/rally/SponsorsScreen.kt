@@ -83,8 +83,6 @@ fun SponsorsScreen(
         )
     }
 
-    val allImagesLoaded = sponsorPainters.all { it.state !is AsyncImagePainter.State.Loading }
-
     Scaffold(
         topBar = {
             TopAppBar(
