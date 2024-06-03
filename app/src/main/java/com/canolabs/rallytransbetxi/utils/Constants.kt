@@ -37,6 +37,10 @@ class Constants {
         const val TEAM_IMAGE_PREFIX = "teamImage"
         const val TEAM_IMAGE_EXTENSION = ".jpg"
 
+        const val SPONSORS_FOLDER = "sponsors/"
+        const val SPONSORS_IMAGE_PREFIX = "sponsor"
+        const val SPONSORS_IMAGE_EXTENSION = ".jpg"
+
         const val NEWS_FOLDER = "news/"
     }
 }

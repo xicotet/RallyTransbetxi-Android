@@ -31,6 +31,7 @@ import com.canolabs.rallytransbetxi.ui.rally.HallOfFameScreen
 import com.canolabs.rallytransbetxi.ui.rally.NewsDetailScreen
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreen
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
+import com.canolabs.rallytransbetxi.ui.rally.SponsorsScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreen
@@ -216,6 +217,22 @@ fun Navigation(
                 ) {
                     HallOfFameScreen(
                         viewModel = rallyScreenViewModel,
+                        onBackClick = { navController.popBackStack() }
+                    )
+                }
+            }
+            composable(
+                route = Screens.Sponsors.route,
+            ) {
+                val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+                val isVisible = currentRoute?.contains(Screens.Sponsors.route) ?: false
+
+                AnimatedVisibility(
+                    visible = isVisible,
+                    enter = slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
+                    exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
+                ) {
+                    SponsorsScreen(
                         onBackClick = { navController.popBackStack() }
                     )
                 }

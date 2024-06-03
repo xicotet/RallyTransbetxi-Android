@@ -16,6 +16,7 @@ sealed class Screens(
     data object Teams : Screens("teams", R.string.teams, R.drawable.group_filled, R.drawable.group_outlined)
     data object Maps : Screens("map", hasNavigationBar = false)
     data object HallOfFame : Screens("hallOfFame", hasNavigationBar = false)
+    data object Sponsors : Screens("sponsors", hasNavigationBar = false)
     data object TeamDetail : Screens("teamDetail", hasNavigationBar = false)
     data object NewsDetail : Screens("newsDetail", hasNavigationBar = false)
 }
