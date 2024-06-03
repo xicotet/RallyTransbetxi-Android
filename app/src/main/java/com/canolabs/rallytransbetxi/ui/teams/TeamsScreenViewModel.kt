@@ -36,7 +36,7 @@ class TeamsScreenViewModel @Inject constructor(
             _state.setIsLoadingGlobalTime(true)
 
             val globalResults = getGlobalResultsUseCase.invoke()
-
+            
             // Get the Category position
             val filteredResultsByCategory = globalResults.filter { result ->
                 team.category.let { selectedCategory ->
@@ -46,18 +46,18 @@ class TeamsScreenViewModel @Inject constructor(
 
             val sortedResultsByTimeCategory = filteredResultsByCategory.sortedBy { it.time }
 
-            val categoryPosition = sortedResultsByTimeCategory.indexOfFirst { it.team == team }
+            val categoryPosition = sortedResultsByTimeCategory.indexOfFirst { it.team.number == team.number }
             _state.setCategoryResult(categoryPosition + 1)
             _state.setIsLoadingCategoryResult(false)
 
             // Get the Global position
             val sortedResultsByTimeGlobal = globalResults.sortedBy { it.time }
-            val globalPosition = sortedResultsByTimeGlobal.indexOfFirst { it.team == team }
+            val globalPosition = sortedResultsByTimeGlobal.indexOfFirst { it.team.number == team.number }
             _state.setGlobalResult(globalPosition + 1)
             _state.setIsLoadingGlobalResult(false)
 
             // Get the Global time
-            val globalTime = sortedResultsByTimeGlobal.first { it.team == team }.time
+            val globalTime = sortedResultsByTimeGlobal.firstOrNull { it.team.number == team.number }?.time ?: "00:00:00"
             _state.setGlobalTime(globalTime)
             _state.setIsLoadingGlobalTime(false)
         }
