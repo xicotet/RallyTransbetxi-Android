@@ -125,10 +125,8 @@ fun EatScreen(
             )
         },
     ) {
-
         val showDialog = remember { mutableStateOf(false) }
         val selectedRestaurant = remember { mutableStateOf<Restaurant?>(null) }
-
 
         Box(
             modifier = Modifier
@@ -148,10 +146,17 @@ fun EatScreen(
                     Marker(
                         state = restaurantMarkerState,
                         title = restaurant.name,
-                        icon = context.bitmapDescriptorFromVector(
-                            R.drawable.restaurant_outlined_black,
-                            1f
-                        ),
+                        icon = if (darkThemeState.value) {
+                            context.bitmapDescriptorFromVector(
+                                R.drawable.restaurant_outlined,
+                                1f
+                            )
+                        } else {
+                            context.bitmapDescriptorFromVector(
+                                R.drawable.restaurant_outlined_black,
+                                1f
+                            )
+                        },
                         onInfoWindowClick = {
                             selectedRestaurant.value = restaurant
                             showDialog.value = true
