@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreen
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
+import com.canolabs.rallytransbetxi.ui.rally.HallOfFameScreen
 import com.canolabs.rallytransbetxi.ui.rally.NewsDetailScreen
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreen
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
@@ -197,6 +198,23 @@ fun Navigation(
                 ) {
                     NewsDetailScreen(
                         newsNumber = it.arguments?.getString("newsNumber") ?: "",
+                        viewModel = rallyScreenViewModel,
+                        onBackClick = { navController.popBackStack() }
+                    )
+                }
+            }
+            composable(
+                route = Screens.HallOfFame.route,
+            ) {
+                val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+                val isVisible = currentRoute?.contains(Screens.HallOfFame.route) ?: false
+
+                AnimatedVisibility(
+                    visible = isVisible,
+                    enter = slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
+                    exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
+                ) {
+                    HallOfFameScreen(
                         viewModel = rallyScreenViewModel,
                         onBackClick = { navController.popBackStack() }
                     )

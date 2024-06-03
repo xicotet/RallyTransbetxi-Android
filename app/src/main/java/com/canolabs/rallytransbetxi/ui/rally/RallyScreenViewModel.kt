@@ -9,6 +9,7 @@ import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.entities.Theme
 import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetHallOfFameUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetLanguageSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
@@ -25,6 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RallyScreenViewModel @Inject constructor(
     private val getNewsUseCase: GetNewsUseCase,
+    private val getHallOfFameUseCase: GetHallOfFameUseCase,
     private val getActivitiesUseCase: GetActivitiesUseCase,
     private val insertSettingsUseCase: InsertSettingsUseCase,
     private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
@@ -63,6 +65,18 @@ class RallyScreenViewModel @Inject constructor(
 
             _state.setAreActivitiesCollapsed(false)
             _state.setIsLoading(false)
+        }
+    }
+
+    fun fetchHallOfFame() {
+        viewModelScope.launch {
+            _state.setIsHallOfFameLoading(true)
+
+            val hallOfFame = getHallOfFameUseCase.invoke()
+            val hallOfFameOrderedByDate = hallOfFame.sortedByDescending { it.year }
+            _state.setHallOfFame(hallOfFameOrderedByDate)
+
+            _state.setIsHallOfFameLoading(false)
         }
     }
 

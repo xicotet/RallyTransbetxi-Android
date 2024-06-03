@@ -79,7 +79,8 @@ fun RallyScreen(
             )
 
             FeaturedSection(
-                viewModel = viewModel
+                viewModel = viewModel,
+                navController = navController
             )
 
             BreakingNewsSection(

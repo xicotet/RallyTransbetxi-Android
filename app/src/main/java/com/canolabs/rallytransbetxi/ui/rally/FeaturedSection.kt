@@ -22,12 +22,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.ui.navigation.Screens
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 
 @Composable
 fun FeaturedSection(
-    viewModel: RallyScreenViewModel
+    viewModel: RallyScreenViewModel,
+    navController: NavController
 ) {
     LazyRow {
         item {
@@ -82,7 +85,9 @@ fun FeaturedSection(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        navController.navigate(Screens.HallOfFame.route)
+                    },
                     modifier = Modifier
                         .size(120.dp)
                         .border(
@@ -90,6 +95,11 @@ fun FeaturedSection(
                             color = MaterialTheme.colorScheme.onSurface,
                             shape = RoundedCornerShape(8.dp)
                         )
+                        .clickable {
+                            // This clickable section needs to be added in order
+                            // to make the whole button clickable
+                            navController.navigate(Screens.HallOfFame.route)
+                        }
                         .background(brush = getRallyScreenCardsGradient())
                         .align(Alignment.CenterHorizontally)
                 ) {
@@ -102,7 +112,7 @@ fun FeaturedSection(
                 }
 
                 Text(
-                    text = stringResource(id = R.string.list_of_champions),
+                    text = stringResource(id = R.string.hall_of_fame),
                     style = MaterialTheme.typography.bodyLarge,
                     fontFamily = ezraFamily,
                     color = MaterialTheme.colorScheme.onSurface,

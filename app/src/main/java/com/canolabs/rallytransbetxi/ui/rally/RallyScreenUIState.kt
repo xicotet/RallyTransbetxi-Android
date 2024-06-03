@@ -1,6 +1,7 @@
 package com.canolabs.rallytransbetxi.ui.rally
 
 import com.canolabs.rallytransbetxi.data.models.responses.Activity
+import com.canolabs.rallytransbetxi.data.models.responses.HallOfFame
 import com.canolabs.rallytransbetxi.data.models.responses.News
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 import com.canolabs.rallytransbetxi.domain.entities.FontSizeFactor
@@ -12,6 +13,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 data class RallyScreenUIState(
     val news: List<News> = emptyList(),
     val activities: List<Activity>  = emptyList(),
+    val hallOfFame: List<HallOfFame> = emptyList(),
+    val isHallOfFameLoading: Boolean = false,
     val language: Language? = null,
     val theme: Theme? = null,
     val directionsProfile: DirectionsProfile? = null,
@@ -47,6 +50,14 @@ fun MutableStateFlow<RallyScreenUIState>.setDirectionsProfile(directionsProfile:
 
 fun MutableStateFlow<RallyScreenUIState>.setLanguage(language: Language) {
     value = value.copy(language = language)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setHallOfFame(hallOfFame: List<HallOfFame>) {
+    value = value.copy(hallOfFame = hallOfFame)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setIsHallOfFameLoading(isHallOfFameLoading: Boolean) {
+    value = value.copy(isHallOfFameLoading = isHallOfFameLoading)
 }
 
 fun MutableStateFlow<RallyScreenUIState>.setTheme(theme: Theme) {
