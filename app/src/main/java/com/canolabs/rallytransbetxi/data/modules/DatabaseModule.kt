@@ -10,6 +10,7 @@ import com.canolabs.rallytransbetxi.data.sources.local.dao.AppSettingsDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.CategoryDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.HallOfFameDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.NewsDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.RestaurantDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.ResultDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.StagesDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.TeamDao
@@ -117,5 +118,10 @@ object DatabaseModule {
     @Provides
     fun provideHallOfFameDao(appDatabase: AppDatabase): HallOfFameDao {
         return appDatabase.hallOfFameDao()
+    }
+
+    @Provides
+    fun provideRestaurantDao(appDatabase: AppDatabase): RestaurantDao {
+        return appDatabase.restaurantDao()
     }
 }
