@@ -2,7 +2,6 @@ package com.canolabs.rallytransbetxi.ui.teams
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.data.models.responses.Team
 import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
@@ -23,7 +22,7 @@ fun TeamsContent(
 
         val filteredTeamsByCategory = sortedTeamsByNumber.filter { teams ->
             state.selectedRacingCategories.any { selectedCategory ->
-                teams.category.name == stringResource(id = selectedCategory.getName())
+                teams.category.name == selectedCategory.getApiName()
             }
         }
 
