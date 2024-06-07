@@ -230,7 +230,13 @@ fun BottomSheetStageResults(
             LazyColumn {
                 items(sortedResultsByTime) { result ->
                     if (filteredResultsBySearchBar.contains(result)) {
-                        ResultCard(result = result, position = sortedResultsByTime.indexOf(result) + 1)
+                        if (navController != null) {
+                            ResultCard(
+                                result = result,
+                                position = sortedResultsByTime.indexOf(result) + 1,
+                                navController = navController
+                            )
+                        }
                     }
                 }
             }

@@ -71,6 +71,22 @@ fun TeamDetailScreen(
     onBackClick: () -> Unit
 ) {
     val state = teamsViewModel.state.collectAsState()
+
+    val hasFetchedGlobalResult = remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        teamsViewModel.fetchTeams()
+
+        teamsViewModel.state.collect { uiState ->
+            if (hasFetchedGlobalResult.value) return@collect
+            val team = uiState.teams.find { it.number == teamNumber }
+            if (team != null) {
+                teamsViewModel.fetchGlobalResultOfATeam(team)
+                hasFetchedGlobalResult.value = true
+            }
+        }
+    }
+
     val team = state.value.teams.find { it.number == teamNumber }
 
     val scrollBehavior =

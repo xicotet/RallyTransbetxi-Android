@@ -1,6 +1,7 @@
 package com.canolabs.rallytransbetxi.ui.results
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 
@@ -9,7 +10,8 @@ import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 fun GlobalResultsTab(
     results: List<Result>,
     isLoading: Boolean,
-    state: ResultsScreenUIState
+    state: ResultsScreenUIState,
+    navController: NavController
 ) {
     if (isLoading) {
         for (i in 0..3) {
@@ -38,7 +40,11 @@ fun GlobalResultsTab(
 
         sortedResultsByTime.forEachIndexed { index, result ->
             if (filteredResultsBySearchBar.contains(result)) {
-                ResultCard(result = result, position = index + 1)
+                ResultCard(
+                    result = result,
+                    position = index + 1,
+                    navController = navController
+                )
             }
         }
     }

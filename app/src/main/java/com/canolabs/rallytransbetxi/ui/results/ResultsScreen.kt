@@ -86,7 +86,8 @@ fun ResultsScreen(
                         GlobalResultsTab(
                             results = state.globalResults,
                             isLoading = state.isLoading,
-                            state = state
+                            state = state,
+                            navController = navController
                         )
                     }
                 }
