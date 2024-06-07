@@ -157,7 +157,12 @@ fun MapContent(
 
             AssistChip(
                 onClick = { mapsViewModel.setIsResultsBottomSheetVisible(true) },
-                label = { Text(text = stringResource(id = R.string.results)) },
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.results),
+                        fontFamily = robotoFamily
+                    )
+                },
                 leadingIcon = {
                     Icon(
                         painterResource(id = R.drawable.sports_score),
@@ -321,7 +326,7 @@ fun MapContent(
                     )
                 }
             }
-            
+
             if (state.hasPressedDirectionsButton) {
                 Surface(
                     shadowElevation = 4.dp,

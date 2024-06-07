@@ -40,6 +40,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,7 +91,7 @@ fun MapsScreen(
     }
 
     // Fast actions from swiping left/right the stages card
-    LaunchedEffect(stageAcronym, fastAction) {
+    LaunchedEffect(state.locationPermissionIsGranted) {
         if (fastAction == "getDirections") {
             permissionLauncher.launch(
                 arrayOf(
@@ -99,6 +100,7 @@ fun MapsScreen(
                 ),
             )
             if (state.locationPermissionIsGranted) {
+                delay(1000)
                 mapsViewModel.setHasPressedDirectionsButton(true)
                 mapsViewModel.getDirections()
             }
