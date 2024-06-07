@@ -9,11 +9,11 @@ import com.canolabs.rallytransbetxi.data.models.responses.Restaurant
 @Dao
 interface RestaurantDao {
     @Query("SELECT * FROM restaurant")
-    fun getAll(): List<Restaurant>
+    suspend fun getAll(): List<Restaurant>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(restaurants: List<Restaurant>)
+    suspend fun insertAll(restaurants: List<Restaurant>)
 
     @Query("DELETE FROM restaurant")
-    fun deleteAll()
+    suspend fun deleteAll()
 }

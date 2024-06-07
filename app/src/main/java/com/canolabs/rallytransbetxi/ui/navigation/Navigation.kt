@@ -1,14 +1,8 @@
 package com.canolabs.rallytransbetxi.ui.navigation
-import androidx.compose.animation.AnimatedVisibility
+
+import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -20,19 +14,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreen
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
-import com.canolabs.rallytransbetxi.ui.rally.EatScreen
-import com.canolabs.rallytransbetxi.ui.rally.HallOfFameScreen
-import com.canolabs.rallytransbetxi.ui.rally.NewsDetailScreen
-import com.canolabs.rallytransbetxi.ui.rally.RallyScreen
-import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
-import com.canolabs.rallytransbetxi.ui.rally.SponsorsScreen
+import com.canolabs.rallytransbetxi.ui.rally.*
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreen
@@ -71,34 +57,34 @@ fun Navigation(
                     containerColor = MaterialTheme.colorScheme.surface,
                     tonalElevation = 3.dp,
                 ) {
-                screens.forEach { screen ->
-                    NavigationBarItem(
-                        icon = {
-                            val iconResource =
-                                if (currentRoute == screen.route) screen.iconSelected else screen.iconUnselected
-                            Icon(painterResource(id = iconResource!!), contentDescription = null)
-                        },
-                        label = {
-                            Text(
-                                text = stringResource(id = screen.title!!),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                fontFamily = robotoFamily
-                            )
-                        },
-                        selected = currentRoute == screen.route,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+                    screens.forEach { screen ->
+                        NavigationBarItem(
+                            icon = {
+                                val iconResource =
+                                    if (currentRoute == screen.route) screen.iconSelected else screen.iconUnselected
+                                Icon(painterResource(id = iconResource!!), contentDescription = null)
+                            },
+                            label = {
+                                Text(
+                                    text = stringResource(id = screen.title!!),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    fontFamily = robotoFamily
+                                )
+                            },
+                            selected = currentRoute == screen.route,
+                            onClick = {
+                                navController.navigate(screen.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
-                        }
-                    )
+                        )
+                    }
                 }
-            }
             }
         }
     ) { innerPadding ->
@@ -107,33 +93,33 @@ fun Navigation(
             startDestination = Screens.Rally.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screens.Rally.route) {
-                RallyScreen(
-                    viewModel = rallyScreenViewModel,
-                    darkThemeState = darkThemeState,
-                    fontScaleState = fontScaleState,
-                    changeLocale = changeLocale,
-                    navController = navController
-                )
+            screens.forEach { screen ->
+                composable(screen.route) {
+                    when (screen) {
+                        Screens.Rally -> RallyScreen(
+                            viewModel = rallyScreenViewModel,
+                            darkThemeState = darkThemeState,
+                            fontScaleState = fontScaleState,
+                            changeLocale = changeLocale,
+                            navController = navController
+                        )
+                        Screens.Stages -> StagesScreen(
+                            stagesViewModel = stagesScreenViewModel,
+                            navController = navController
+                        )
+                        Screens.Results -> ResultsScreen(
+                            viewModel = resultsScreenViewModel,
+                            navController = navController
+                        )
+                        Screens.Teams -> TeamsScreen(
+                            viewModel = teamsScreenViewModel,
+                            navController = navController
+                        )
+                        else -> { }
+                    }
+                }
             }
-            composable(Screens.Stages.route) {
-                StagesScreen(
-                    stagesViewModel = stagesScreenViewModel,
-                    navController = navController
-                )
-            }
-            composable(Screens.Results.route) {
-                ResultsScreen(
-                    viewModel = resultsScreenViewModel,
-                    navController = navController
-                )
-            }
-            composable(Screens.Teams.route) {
-                TeamsScreen(
-                    viewModel = teamsScreenViewModel,
-                    navController = navController
-                )
-            }
+
             composable(
                 route = "${Screens.Maps.route}/{stageAcronym}/{fastAction}",
                 arguments = listOf(
@@ -150,8 +136,8 @@ fun Navigation(
 
                 AnimatedVisibility(
                     visible = isVisible,
-                    enter = slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
-                    exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
+                    enter = fadeIn(animationSpec = tween(500)) + slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
+                    exit = fadeOut(animationSpec = tween(500)) + slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
                 ) {
                     MapsScreen(
                         mapsViewModel = mapsScreenViewModel,
@@ -174,14 +160,14 @@ fun Navigation(
 
                 AnimatedVisibility(
                     visible = isVisible,
-                    enter = slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
-                    exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
+                    enter = fadeIn(animationSpec = tween(500)) + slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
+                    exit = fadeOut(animationSpec = tween(500)) + slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
                 ) {
-                   TeamDetailScreen(
-                       teamNumber = it.arguments?.getString("teamNumber") ?: "",
-                       teamsViewModel = teamsScreenViewModel,
-                       onBackClick = { navController.popBackStack() }
-                   )
+                    TeamDetailScreen(
+                        teamNumber = it.arguments?.getString("teamNumber") ?: "",
+                        teamsViewModel = teamsScreenViewModel,
+                        onBackClick = { navController.popBackStack() }
+                    )
                 }
             }
             composable(
@@ -195,8 +181,8 @@ fun Navigation(
 
                 AnimatedVisibility(
                     visible = isVisible,
-                    enter = slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
-                    exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
+                    enter = fadeIn(animationSpec = tween(500)) + slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
+                    exit = fadeOut(animationSpec = tween(500)) + slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
                 ) {
                     NewsDetailScreen(
                         newsNumber = it.arguments?.getString("newsNumber") ?: "",
@@ -213,8 +199,8 @@ fun Navigation(
 
                 AnimatedVisibility(
                     visible = isVisible,
-                    enter = slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
-                    exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
+                    enter = fadeIn(animationSpec = tween(500)) + slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
+                    exit = fadeOut(animationSpec = tween(500)) + slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
                 ) {
                     HallOfFameScreen(
                         viewModel = rallyScreenViewModel,
@@ -230,8 +216,8 @@ fun Navigation(
 
                 AnimatedVisibility(
                     visible = isVisible,
-                    enter = slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
-                    exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
+                    enter = fadeIn(animationSpec = tween(500)) + slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
+                    exit = fadeOut(animationSpec = tween(500)) + slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
                 ) {
                     SponsorsScreen(
                         onBackClick = { navController.popBackStack() }
@@ -246,10 +232,10 @@ fun Navigation(
 
                 AnimatedVisibility(
                     visible = isVisible,
-                    enter = slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
-                    exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
+                    enter = fadeIn(animationSpec = tween(500)) + slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(700)),
+                    exit = fadeOut(animationSpec = tween(500)) + slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(700))
                 ) {
-                    EatScreen (
+                    EatScreen(
                         viewModel = rallyScreenViewModel,
                         onBackClick = { navController.popBackStack() },
                         darkThemeState = darkThemeState
