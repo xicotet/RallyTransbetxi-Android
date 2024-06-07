@@ -52,6 +52,7 @@ import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.canolabs.rallytransbetxi.ui.miscellaneous.bitmapDescriptorFromVector
 import com.canolabs.rallytransbetxi.ui.results.BottomSheetStageResults
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
+import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -332,13 +333,20 @@ fun MapContent(
                 ) {
                     ExtendedFloatingActionButton(
                         onClick = {
-                            val gmmIntentUri = Uri.parse("google.navigation:q=${state.directions.last()[1]},${state.directions.last()[0]}")
-                            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                            mapIntent.setPackage("com.google.android.apps.maps")
-                            context.startActivity(mapIntent)
+                            if (state.directions.isNotEmpty()) {
+                                val gmmIntentUri = Uri.parse("google.navigation:q=${state.directions.last()[1]},${state.directions.last()[0]}")
+                                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                                mapIntent.setPackage("com.google.android.apps.maps")
+                                context.startActivity(mapIntent)
+                            } else {
+                                // Directions are not available yet
+                            }
                         },
                         icon = { Icon(painterResource(id = R.drawable.navigation), "Extended floating action button.") },
-                        text = { Text(text = stringResource(id = R.string.navigate)) },
+                        text = { Text(
+                            text = stringResource(id = R.string.navigate),
+                            fontFamily = robotoFamily
+                        ) },
                     )
                 }
             } else {
