@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ButtonColors
@@ -51,129 +50,133 @@ fun BottomSheetStageResults(
     isComingFromMaps: Boolean = false,
     navController: NavController? = null
 ) {
-    Column(
+    LazyColumn(
         modifier = Modifier.padding(bottom = 32.dp),
     ) {
-        Row(
-            modifier = Modifier
-                .height(IntrinsicSize.Min)
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column (
+        item {
+            Row(
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .height(IntrinsicSize.Min)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = if (isComingFromMaps) mapsState?.stage?.acronym + " - " + mapsState?.stage?.name
-                        else resultsState.stageSelected.acronym + " - " + resultsState.stageSelected.name,
-                    fontFamily = robotoFamily,
-                    style = MaterialTheme.typography.headlineMedium,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                Column(
                     modifier = Modifier
-                        .padding(horizontal = 8.dp, vertical = 16.dp)
-                )
-                if (resultsState.isBottomSheetSearchBarVisible) {
-                    Row(
+                        .weight(1f)
+                        .padding(horizontal = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = if (isComingFromMaps) mapsState?.stage?.acronym + " - " + mapsState?.stage?.name
+                        else resultsState.stageSelected.acronym + " - " + resultsState.stageSelected.name,
+                        fontFamily = robotoFamily,
+                        style = MaterialTheme.typography.headlineMedium,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
                         modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        IconButton(
-                            onClick = { viewModel.setIsBottomSheetSearchBarVisible(false) },
+                            .padding(horizontal = 8.dp, vertical = 16.dp)
+                    )
+                    if (resultsState.isBottomSheetSearchBarVisible) {
+                        Row(
                             modifier = Modifier
-                                .padding(
-                                    top = PaddingLarge,
-                                    bottom = PaddingLarge,
-                                    start = PaddingMedium
-                                )
-                                .size(24.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                        TextField(
-                            value = resultsState.searchText,
-                            onValueChange = viewModel::setSearchText,
-                            modifier = Modifier
-                                .padding(vertical = PaddingLarge, horizontal = PaddingMedium)
-                                .fillMaxWidth()
-                                .height(56.dp)
-                                .clip(MaterialTheme.shapes.extraLarge)
-                                .border(
-                                    2.dp,
-                                    MaterialTheme.colorScheme.onSurface,
-                                    MaterialTheme.shapes.extraLarge
-                                ),
-                            colors = TextFieldDefaults.colors().copy(
-                                focusedContainerColor = MaterialTheme.colorScheme.surface,
-                                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                                focusedIndicatorColor = Color.Transparent,
-                                unfocusedIndicatorColor = Color.Transparent,
-                                cursorColor = MaterialTheme.colorScheme.onSurface
-                            ),
-                            shape = MaterialTheme.shapes.small,
-                            singleLine = true,
-                            placeholder = { Text(stringResource(id = R.string.search)) },
-                            leadingIcon = {
+                            IconButton(
+                                onClick = { viewModel.setIsBottomSheetSearchBarVisible(false) },
+                                modifier = Modifier
+                                    .padding(
+                                        top = PaddingLarge,
+                                        bottom = PaddingLarge,
+                                        start = PaddingMedium
+                                    )
+                                    .size(24.dp)
+                            ) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.search),
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp)
                                 )
-                            },
-                            trailingIcon = {
-                                IconButton(
-                                    onClick = { viewModel.setSearchText("") },
-                                    modifier = Modifier.size(24.dp)
-                                ) {
+                            }
+                            TextField(
+                                value = resultsState.searchText,
+                                onValueChange = viewModel::setSearchText,
+                                modifier = Modifier
+                                    .padding(vertical = PaddingLarge, horizontal = PaddingMedium)
+                                    .fillMaxWidth()
+                                    .height(56.dp)
+                                    .clip(MaterialTheme.shapes.extraLarge)
+                                    .border(
+                                        2.dp,
+                                        MaterialTheme.colorScheme.onSurface,
+                                        MaterialTheme.shapes.extraLarge
+                                    ),
+                                colors = TextFieldDefaults.colors().copy(
+                                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent,
+                                    cursorColor = MaterialTheme.colorScheme.onSurface
+                                ),
+                                shape = MaterialTheme.shapes.small,
+                                singleLine = true,
+                                placeholder = { Text(stringResource(id = R.string.search)) },
+                                leadingIcon = {
                                     Icon(
-                                        painter = painterResource(id = R.drawable.close),
+                                        painter = painterResource(id = R.drawable.search),
                                         contentDescription = null,
                                         modifier = Modifier.size(24.dp)
                                     )
+                                },
+                                trailingIcon = {
+                                    IconButton(
+                                        onClick = { viewModel.setSearchText("") },
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.close),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                    }
                                 }
-                            }
-                        )
-                    }
+                            )
+                        }
 
-                } else {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        if (!isComingFromMaps)
-                            OutlinedButton(
-                                shape = MaterialTheme.shapes.extraLarge,
-                                colors = ButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.primary,
-                                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                                    disabledContainerColor = MaterialTheme.colorScheme.primary,
-                                    disabledContentColor = MaterialTheme.colorScheme.primary
-                                ),
-                                border = BorderStroke(2.dp, MaterialTheme.colorScheme.scrim),
-                                onClick = {
-                                    val fastAction: String? = null
-                                    navController?.navigate("${Screens.Maps.route}/${resultsState.stageSelected.acronym}/${fastAction}")
+                    } else {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            if (!isComingFromMaps)
+                                OutlinedButton(
+                                    shape = MaterialTheme.shapes.extraLarge,
+                                    colors = ButtonColors(
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                                        disabledContainerColor = MaterialTheme.colorScheme.primary,
+                                        disabledContentColor = MaterialTheme.colorScheme.primary
+                                    ),
+                                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.scrim),
+                                    onClick = {
+                                        val fastAction: String? = null
+                                        navController?.navigate("${Screens.Maps.route}/${resultsState.stageSelected.acronym}/${fastAction}")
+                                    }
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.map_outlined),
+                                        contentDescription = null
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = stringResource(id = R.string.location),
+                                        fontFamily = robotoFamily,
+                                    )
                                 }
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.map_outlined),
-                                    contentDescription = null
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(text = stringResource(id = R.string.location))
-                            }
                             IconButton(
                                 onClick = { viewModel.setIsBottomSheetSearchBarVisible(true) },
                                 modifier = Modifier
@@ -186,50 +189,64 @@ fun BottomSheetStageResults(
                                     modifier = Modifier.size(48.dp)
                                 )
                             }
+                        }
                     }
                 }
             }
-        }
 
-        RacingCategorySegmentedButton(
-            selectedRacingCategories = resultsState.selectedRacingCategories,
-            onSelectedTabIndexChange = { tabIndex ->
-                if (resultsState.selectedRacingCategories.any { it.getTabIndex() == tabIndex }) {
-                    viewModel.removeSelectedRacingCategoryWithIndex(tabIndex)
-                } else {
-                    viewModel.addSelectedRacingCategoryWithIndex(tabIndex)
+            RacingCategorySegmentedButton(
+                selectedRacingCategories = resultsState.selectedRacingCategories,
+                onSelectedTabIndexChange = { tabIndex ->
+                    if (resultsState.selectedRacingCategories.any { it.getTabIndex() == tabIndex }) {
+                        viewModel.removeSelectedRacingCategoryWithIndex(tabIndex)
+                    } else {
+                        viewModel.addSelectedRacingCategoryWithIndex(tabIndex)
+                    }
                 }
-            }
-        )
+            )
 
-        if (resultsState.isBottomSheetLoading) {
-            for (i in 0..3) {
-                ResultsCardShimmer()
-            }
-        } else {
-            val filteredResultsByCategory = resultsState.stageResults.filter { result ->
-                resultsState.selectedRacingCategories.any { selectedCategory ->
-                    result.team.category.name == selectedCategory.getApiName()
-                }
-            }
-
-            val sortedResultsByTime = filteredResultsByCategory.sortedBy { it.time }
-
-            val filteredResultsBySearchBar = if (resultsState.isBottomSheetSearchBarVisible) {
-                sortedResultsByTime.filter { result ->
-                    result.team.driver.removeDiacriticalMarks().contains(resultsState.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
-                        result.team.codriver.removeDiacriticalMarks().contains(resultsState.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
-                        result.team.name.removeDiacriticalMarks().contains(resultsState.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
-                        result.time.removeDiacriticalMarks().contains(resultsState.searchText.removeDiacriticalMarks(), ignoreCase = true) ||
-                        result.team.number.removeDiacriticalMarks().contains(resultsState.searchText.removeDiacriticalMarks(), ignoreCase = true)
+            if (resultsState.isBottomSheetLoading) {
+                for (i in 0..3) {
+                    ResultsCardShimmer()
                 }
             } else {
-                sortedResultsByTime
-            }
+                val filteredResultsByCategory = resultsState.stageResults.filter { result ->
+                    resultsState.selectedRacingCategories.any { selectedCategory ->
+                        result.team.category.name == selectedCategory.getApiName()
+                    }
+                }
 
-            LazyColumn {
-                items(sortedResultsByTime) { result ->
-                    if (filteredResultsBySearchBar.contains(result)) {
+                val sortedResultsByTime = filteredResultsByCategory.sortedBy { it.time }
+
+                val filteredResultsBySearchBar = if (resultsState.isBottomSheetSearchBarVisible) {
+                    sortedResultsByTime.filter { result ->
+                        result.team.driver.removeDiacriticalMarks().contains(
+                            resultsState.searchText.removeDiacriticalMarks(),
+                            ignoreCase = true
+                        ) ||
+                            result.team.codriver.removeDiacriticalMarks().contains(
+                                resultsState.searchText.removeDiacriticalMarks(),
+                                ignoreCase = true
+                            ) ||
+                            result.team.name.removeDiacriticalMarks().contains(
+                                resultsState.searchText.removeDiacriticalMarks(),
+                                ignoreCase = true
+                            ) ||
+                            result.time.removeDiacriticalMarks().contains(
+                                resultsState.searchText.removeDiacriticalMarks(),
+                                ignoreCase = true
+                            ) ||
+                            result.team.number.removeDiacriticalMarks().contains(
+                                resultsState.searchText.removeDiacriticalMarks(),
+                                ignoreCase = true
+                            )
+                    }
+                } else {
+                    sortedResultsByTime
+                }
+
+                Column {
+                    filteredResultsBySearchBar.forEach { result ->
                         if (navController != null) {
                             ResultCard(
                                 result = result,
