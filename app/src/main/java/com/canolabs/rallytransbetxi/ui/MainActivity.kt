@@ -1,13 +1,10 @@
 package com.canolabs.rallytransbetxi.ui
 
-import android.app.LocaleManager
 import android.content.Context
-import android.os.Build
+import android.content.res.Configuration
 import android.os.Bundle
-import android.os.LocaleList
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -25,15 +22,15 @@ import com.canolabs.rallytransbetxi.ui.teams.TeamsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.RallyTransbetxiTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.core.os.LocaleListCompat
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @Inject lateinit var viewModelFactory: MainActivityViewModelFactory
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
@@ -91,10 +88,10 @@ class MainActivity : ComponentActivity() {
 }
 
 fun changeLocale(context: Context, localeString: String) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        context.getSystemService(LocaleManager::class.java)
-            .applicationLocales = LocaleList.forLanguageTags(localeString)
-    } else {
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(localeString))
-    }
+    val locale = Locale(localeString)
+    Locale.setDefault(locale)
+    val config = Configuration(context.resources.configuration)
+    config.setLocale(locale)
+    context.createConfigurationContext(config)
+    context.resources.updateConfiguration(config, context.resources.displayMetrics)
 }
