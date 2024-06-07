@@ -38,6 +38,8 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
+import com.canolabs.rallytransbetxi.data.models.responses.News
+import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
@@ -59,6 +61,25 @@ fun NewsDetailScreen(
 
     val scrollState = rememberScrollState()
 
+    fun getNewsTitleByLanguage(news: News, language: Language?): String {
+        return when (language) {
+            Language.SPANISH -> news.titleEs
+            Language.CATALAN -> news.titleCa
+            Language.ENGLISH -> news.titleEn
+            Language.GERMAN -> news.titleDe
+            null -> news.titleEs
+        }
+    }
+
+    fun getNewsContentByLanguage(news: News, language: Language?): String {
+        return when (language) {
+            Language.SPANISH -> news.contentEs
+            Language.CATALAN -> news.contentCa
+            Language.ENGLISH -> news.contentEn
+            Language.GERMAN -> news.contentDe
+            null -> news.contentEs
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -101,7 +122,7 @@ fun NewsDetailScreen(
             )
 
             Text(
-                text = news.title,
+                text = getNewsTitleByLanguage(news, state.value.language),
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
                 textAlign = TextAlign.Center,
@@ -129,18 +150,17 @@ fun NewsDetailScreen(
                 )
             }
 
-            Log.d("News", "Content contains \n ${news.content.split("\n").size} paragraphs")
-
-            news.content.split("\\n").forEach { paragraph ->
-                Text(
-                    text = paragraph,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    fontFamily = robotoFamily
-                )
-            }
+            getNewsContentByLanguage(news, state.value.language)
+                .split("\\n").forEach { paragraph ->
+                    Text(
+                        text = paragraph,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.White,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        fontFamily = robotoFamily
+                    )
+                }
         }
     }
 }

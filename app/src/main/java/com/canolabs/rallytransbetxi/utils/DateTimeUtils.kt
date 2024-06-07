@@ -24,11 +24,21 @@ object DateTimeUtils {
     private val apiDateFormatter = SimpleDateFormat(API_DATE_FORMAT, Locale.getDefault())
     private val timeFormatter = SimpleDateFormat(TIME_FORMAT, Locale.getDefault())
 
-    fun secondsToDateInSpanish(seconds: Long): String {
+    fun secondsToDate(seconds: Long, language: String, country: String): String {
         val date = Date(seconds * 1000) // Convert seconds to milliseconds
-        val format = SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", Locale("es", "ES"))
+        val format = SimpleDateFormat(getDateFormat(language), Locale(language, country))
         val dateString = format.format(date)
         return dateString[0].uppercaseChar() + dateString.substring(1)
+    }
+
+    private fun getDateFormat(language: String): String {
+        return when (language) {
+            "es" -> "EEEE d 'de' MMMM 'de' yyyy"
+            "ca" -> "EEEE d MMMM 'de' yyyy"
+            "en" -> "EEEE d 'of' MMMM 'of' yyyy"
+            "de" -> "EEEE d. MMMM yyyy"
+            else -> "EEEE d 'of' MMMM 'of' yyyy"
+        }
     }
 
     fun monthOfADateInSpanish(seconds: Long): String {

@@ -58,12 +58,16 @@ class RallyViewModelFactory @Inject constructor(
 
 @Suppress("UNCHECKED_CAST")
 class StagesViewModelFactory @Inject constructor(
-    private val getStagesUseCase: GetStagesUseCase
+    private val getStagesUseCase: GetStagesUseCase,
+    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StagesScreenViewModel::class.java)) {
-            return StagesScreenViewModel(getStagesUseCase) as T
+            return StagesScreenViewModel(
+                getStagesUseCase,
+                getLanguageSettingsUseCase
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

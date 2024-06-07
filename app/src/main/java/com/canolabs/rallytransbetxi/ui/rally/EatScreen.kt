@@ -47,7 +47,6 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,7 +97,7 @@ fun EatScreen(
                 ),
                 title = {
                     Text(
-                        text = stringResource(id = R.string.where_to_eat).uppercase(Locale.ROOT),
+                        text = stringResource(id = R.string.where_to_eat),
                         fontFamily = ezraFamily,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Start,

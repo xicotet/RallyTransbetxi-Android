@@ -41,13 +41,15 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.data.models.responses.News
+import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_NEWS
-import com.canolabs.rallytransbetxi.utils.DateTimeUtils.secondsToDateInSpanish
+import com.canolabs.rallytransbetxi.utils.DateTimeUtils.secondsToDate
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
@@ -59,6 +61,16 @@ fun BreakingNewsSection(
     viewModel: RallyScreenViewModel,
     navController: NavController
 ) {
+    fun getNewsTitleByLanguage(news: News, language: Language?): String {
+        return when (language) {
+            Language.SPANISH -> news.titleEs
+            Language.CATALAN -> news.titleCa
+            Language.ENGLISH -> news.titleEn
+            Language.GERMAN -> news.titleDe
+            null -> news.titleEs
+        }
+    }
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,14 +189,18 @@ fun BreakingNewsSection(
                                     }
 
                                     Text(
-                                        text = secondsToDateInSpanish(news.date?.seconds ?: 0),
+                                        text = secondsToDate(
+                                            seconds = news.date?.seconds ?: 0,
+                                            language = state.language?.getLanguageCode() ?: "es",
+                                            country = state.language?.getCountryCode() ?: "ES"
+                                        ),
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontFamily = robotoFamily,
                                         color = MaterialTheme.colorScheme.onSurface,
                                     )
 
                                     Text(
-                                        text = news.title,
+                                        text = getNewsTitleByLanguage(news, state.language),
                                         style = MaterialTheme.typography.titleMedium,
                                         fontFamily = robotoFamily,
                                         color = MaterialTheme.colorScheme.onSurface,

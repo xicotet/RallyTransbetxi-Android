@@ -48,7 +48,6 @@ import com.canolabs.rallytransbetxi.utils.Constants.Companion.SPONSORS_IMAGE_PRE
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,7 +92,7 @@ fun SponsorsScreen(
                 ),
                 title = {
                     Text(
-                        stringResource(id = R.string.sponsors).uppercase(Locale.ROOT),
+                        stringResource(id = R.string.sponsors),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontSize = 24.sp,

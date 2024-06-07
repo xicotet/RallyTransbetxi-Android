@@ -49,7 +49,6 @@ import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,7 +77,7 @@ fun HallOfFameScreen(
                 ),
                 title = {
                     Text(
-                        stringResource(id = R.string.hall_of_fame).uppercase(Locale.ROOT),
+                        stringResource(id = R.string.hall_of_fame),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontSize = 24.sp,
@@ -100,7 +99,7 @@ fun HallOfFameScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-    ) { it ->
+    ) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()

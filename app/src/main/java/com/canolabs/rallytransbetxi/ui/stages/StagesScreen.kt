@@ -33,6 +33,7 @@ fun StagesScreen(
 
     LaunchedEffect(Unit) {
         stagesViewModel.fetchStages()
+        stagesViewModel.fetchLanguageSettings()
     }
 
     Surface(
@@ -51,7 +52,11 @@ fun StageList(
     val sortedStagesByStartTime = state.stages.sortedBy { it.startTime }
     val groupedStagesByDate = sortedStagesByStartTime.groupBy {
         it.startTime?.let { timestamp ->
-            DateTimeUtils.secondsToDateInSpanish(timestamp.seconds)
+            DateTimeUtils.secondsToDate(
+                seconds = timestamp.seconds,
+                language = state.language?.getLanguageCode() ?: "es",
+                country = state.language?.getCountryCode() ?: "ES"
+            )
         }
     }
 
