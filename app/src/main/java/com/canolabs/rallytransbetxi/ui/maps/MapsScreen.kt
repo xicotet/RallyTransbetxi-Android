@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
+import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
@@ -50,7 +51,8 @@ fun MapsScreen(
     onBackClick: () -> Unit,
     darkThemeState: MutableState<Boolean>,
     stageAcronym: String,
-    fastAction: String
+    fastAction: String,
+    navController: NavController
 ) {
     val state by mapsViewModel.state.collectAsState()
 
@@ -177,7 +179,8 @@ fun MapsScreen(
             scaffoldPadding = it,
             mapsViewModel = mapsViewModel,
             resultsViewModel = resultsViewModel,
-            darkThemeState = darkThemeState
+            darkThemeState = darkThemeState,
+            navController = navController
         )
     }
 }

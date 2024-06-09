@@ -33,9 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.data.models.responses.Result
-import com.canolabs.rallytransbetxi.ui.navigation.Screens
 import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
@@ -44,7 +42,7 @@ import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 fun ResultCard(
     result: Result,
     position: Int,
-    navController: NavController
+    onClick: () -> Unit
 ) {
     Column {
         if (result.disqualified) {
@@ -63,9 +61,7 @@ fun ResultCard(
                 .fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = cardsElevation),
             shape = RoundedCornerShape(8.dp),
-            onClick = { navController.navigate(
-                "${Screens.TeamDetail.route}/${result.team.number}"
-            )}
+            onClick = onClick
         ) {
 
             val gradient = Brush.linearGradient(

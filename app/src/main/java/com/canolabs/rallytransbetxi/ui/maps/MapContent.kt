@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.canolabs.rallytransbetxi.ui.miscellaneous.bitmapDescriptorFromVector
@@ -78,7 +79,8 @@ fun MapContent(
     darkThemeState: MutableState<Boolean>,
     scaffoldPadding: PaddingValues,
     mapsViewModel: MapsScreenViewModel,
-    resultsViewModel: ResultsScreenViewModel
+    resultsViewModel: ResultsScreenViewModel,
+    navController: NavController
 ) {
     val bottomSheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
@@ -407,6 +409,7 @@ fun MapContent(
                     mapsState = state,
                     viewModel = resultsViewModel,
                     isComingFromMaps = true,
+                    navController = navController
                 )
             }
         } else if (state.isPermissionDeniedBottomSheetVisible) {

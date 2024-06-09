@@ -48,7 +48,7 @@ fun BottomSheetStageResults(
     mapsState: MapsScreenUIState? = null,
     viewModel: ResultsScreenViewModel,
     isComingFromMaps: Boolean = false,
-    navController: NavController? = null
+    navController: NavController
 ) {
     LazyColumn(
         modifier = Modifier.padding(bottom = 32.dp),
@@ -164,7 +164,7 @@ fun BottomSheetStageResults(
                                     border = BorderStroke(2.dp, MaterialTheme.colorScheme.scrim),
                                     onClick = {
                                         val fastAction: String? = null
-                                        navController?.navigate("${Screens.Maps.route}/${resultsState.stageSelected.acronym}/${fastAction}")
+                                        navController.navigate("${Screens.Maps.route}/${resultsState.stageSelected.acronym}/${fastAction}")
                                     }
                                 ) {
                                     Icon(
@@ -247,13 +247,15 @@ fun BottomSheetStageResults(
 
                 Column {
                     filteredResultsBySearchBar.forEach { result ->
-                        if (navController != null) {
-                            ResultCard(
-                                result = result,
-                                position = sortedResultsByTime.indexOf(result) + 1,
-                                navController = navController
-                            )
-                        }
+                        ResultCard(
+                            result = result,
+                            position = sortedResultsByTime.indexOf(result) + 1,
+                            onClick = {
+                                navController.navigate(
+                                    "${Screens.TeamDetail.route}/${result.team.number}"
+                                )
+                            }
+                        )
                     }
                 }
             }

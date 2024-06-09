@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
+import com.canolabs.rallytransbetxi.ui.navigation.Screens
 
 
 @Composable
@@ -43,7 +44,11 @@ fun GlobalResultsTab(
                 ResultCard(
                     result = result,
                     position = index + 1,
-                    navController = navController
+                    onClick = {
+                        navController.navigate(
+                            "${Screens.TeamDetail.route}/${result.team.number}"
+                        )
+                    }
                 )
             }
         }

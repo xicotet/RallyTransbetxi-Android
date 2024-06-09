@@ -145,7 +145,8 @@ fun Navigation(
                         onBackClick = { navController.popBackStack() },
                         darkThemeState = darkThemeState,
                         stageAcronym = it.arguments?.getString("stageAcronym") ?: "",
-                        fastAction = it.arguments?.getString("fastAction") ?: ""
+                        fastAction = it.arguments?.getString("fastAction") ?: "",
+                        navController = navController
                     )
                 }
             }
