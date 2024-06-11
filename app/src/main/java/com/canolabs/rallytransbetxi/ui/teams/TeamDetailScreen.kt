@@ -600,13 +600,13 @@ fun TeamDetailScreen(
                 }
             )
 
-            Row (
+            Row(
                 modifier = Modifier
                     .padding(horizontal = 32.dp, vertical = 16.dp)
                     .height(IntrinsicSize.Min)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ){
                 Column (
                     horizontalAlignment = Alignment.CenterHorizontally,

@@ -15,6 +15,7 @@ import com.canolabs.rallytransbetxi.data.sources.local.dao.ResultDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.StagesDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.TeamDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.VersionsDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.WarningDao
 import com.canolabs.rallytransbetxi.data.sources.local.database.AppDatabase
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DATABASE_NAME
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_FONT_SIZE_FACTOR
@@ -123,5 +124,10 @@ object DatabaseModule {
     @Provides
     fun provideRestaurantDao(appDatabase: AppDatabase): RestaurantDao {
         return appDatabase.restaurantDao()
+    }
+
+    @Provides
+    fun provideWarningDao(appDatabase: AppDatabase): WarningDao {
+        return appDatabase.warningsDao()
     }
 }

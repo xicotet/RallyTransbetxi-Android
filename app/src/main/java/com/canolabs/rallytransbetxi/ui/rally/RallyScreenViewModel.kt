@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui.rally
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.canolabs.rallytransbetxi.data.models.responses.Warning
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 import com.canolabs.rallytransbetxi.domain.entities.FontSizeFactor
 import com.canolabs.rallytransbetxi.domain.entities.Language
@@ -77,8 +78,12 @@ class RallyScreenViewModel @Inject constructor(
             _state.setIsLoading(true)
 
             val warnings = getWarningsUseCase.invoke()
-            val warningOrderedByDate = warnings.sortedByDescending { it.date }
-            _state.setWarnings(warningOrderedByDate)
+            _state.setWarnings(warnings)
+
+            if (warnings.any { it.needsToBePromptedAsDialog }) {
+                _state.setIsDialogShowing(true)
+                _state.setWarningShownOnDialog(warnings.first { it.needsToBePromptedAsDialog })
+            }
 
             _state.setIsLoading(false)
         }
@@ -182,6 +187,14 @@ class RallyScreenViewModel @Inject constructor(
 
     fun toggleShowAllBreakingNews() {
         _state.setIsShowAllBreakingNewsEnabled(!_state.value.isShowAllBreakingNewsEnabled)
+    }
+
+    fun setIsDialogShowing(isVisible: Boolean) {
+        _state.setIsDialogShowing(isVisible)
+    }
+
+    fun setWarningShownOnDialog(warning: Warning) {
+        _state.setWarningShownOnDialog(warning)
     }
 
     fun setIsSettingsBottomSheetVisible(isVisible: Boolean) {

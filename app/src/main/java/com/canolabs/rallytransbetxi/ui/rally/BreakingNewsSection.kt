@@ -163,7 +163,7 @@ fun BreakingNewsSection(
                                     modifier = Modifier
                                         .padding(16.dp)
                                         .fillMaxWidth(),
-                                    horizontalAlignment = Alignment.CenterHorizontally
+                                    horizontalAlignment = Alignment.Start
                                 ) {
                                     val newsImagePath = news.imageName
 
@@ -212,6 +212,7 @@ fun BreakingNewsSection(
 
                                     Row (
                                         horizontalArrangement = Arrangement.Center,
+                                        modifier = Modifier.padding(vertical = 4.dp)
                                     ){
                                         Icon(
                                             imageVector = Icons.Default.DateRange,
@@ -236,7 +237,7 @@ fun BreakingNewsSection(
                                         fontFamily = robotoFamily,
                                         color = MaterialTheme.colorScheme.onSurface,
                                         modifier = Modifier.padding(vertical = 8.dp),
-                                        textAlign = TextAlign.Center
+                                        textAlign = TextAlign.Start
                                     )
                                 }
                             }

@@ -119,17 +119,18 @@ fun WarningsSection(
                 AnimatedVisibility(visible = state.areWarningsCollapsed.not()) {
                     Column {
                         val warningsToShow =
-                            if (state.isShowAllWarningsEnabled) state.warnings.filter { it.visible }
-                            else state.warnings.filter {
-                                it.visible
-                            }.take(Constants.DEFAULT_WARNINGS)
+                            if (state.isShowAllWarningsEnabled) state.warnings
+                            else state.warnings.take(Constants.DEFAULT_WARNINGS)
 
                         warningsToShow.forEach { warning ->
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .wrapContentHeight(),
-                                onClick = {},
+                                onClick = {
+                                    viewModel.setWarningShownOnDialog(warning)
+                                    viewModel.setIsDialogShowing(true)
+                                },
                                 colors = CardColors(
                                     containerColor = Color.Transparent,
                                     contentColor = MaterialTheme.colorScheme.onSurface,
@@ -181,7 +182,7 @@ fun WarningsSection(
                             }
                         }
 
-                        if (state.warnings.filter { it.visible }.size > Constants.DEFAULT_WARNINGS) {
+                        if (state.warnings.size > Constants.DEFAULT_WARNINGS) {
                             ClickableText(
                                 text = AnnotatedString(
                                     if (state.isShowAllWarningsEnabled) stringResource(id = R.string.show_less)

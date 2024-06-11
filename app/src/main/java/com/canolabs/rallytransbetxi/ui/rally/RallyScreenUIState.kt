@@ -23,6 +23,8 @@ data class RallyScreenUIState(
     val theme: Theme? = null,
     val directionsProfile: DirectionsProfile? = null,
     val fontSizeFactor: FontSizeFactor? = null,
+    val isDialogShowing: Boolean = false,
+    val warningShownOnDialog: Warning? = null,
     val areWarningsCollapsed: Boolean = true,
     val isShowAllWarningsEnabled: Boolean = false,
     val areBreakingNewsCollapsed: Boolean = false,
@@ -56,6 +58,14 @@ fun MutableStateFlow<RallyScreenUIState>.setDirectionsProfile(directionsProfile:
 
 fun MutableStateFlow<RallyScreenUIState>.setLanguage(language: Language) {
     value = value.copy(language = language)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setIsDialogShowing(isDialogShowing: Boolean) {
+    value = value.copy(isDialogShowing = isDialogShowing)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setWarningShownOnDialog(warning: Warning) {
+    value = value.copy(warningShownOnDialog = warning)
 }
 
 fun MutableStateFlow<RallyScreenUIState>.setRestaurants(restaurants: List<Restaurant>) {

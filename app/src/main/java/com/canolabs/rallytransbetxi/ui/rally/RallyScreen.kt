@@ -59,6 +59,12 @@ fun RallyScreen(
         verticalArrangement = Arrangement.Center
     ) {
         item {
+            if (state.isDialogShowing) {
+                WarningDialog(
+                    viewModel = viewModel,
+                )
+            }
+
             Image(
                 painter = painterResource(id = R.drawable.transbetxi_header),
                 contentDescription = null
