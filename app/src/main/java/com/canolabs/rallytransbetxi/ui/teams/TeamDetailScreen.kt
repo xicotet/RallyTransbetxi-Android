@@ -7,8 +7,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -84,6 +87,7 @@ fun TeamDetailScreen(
             val team = uiState.teams.find { it.number == teamNumber }
             if (team != null) {
                 teamsViewModel.fetchGlobalResultOfATeam(team)
+                teamsViewModel.fetchStageResultsOfATeam(team)
                 hasFetchedGlobalResult.value = true
             }
         }
@@ -120,6 +124,7 @@ fun TeamDetailScreen(
         }
 
         teamsViewModel.fetchGlobalResultOfATeam(team ?: return@LaunchedEffect)
+        teamsViewModel.fetchStageResultsOfATeam(team)
     }
 
     val teamPainter = rememberAsyncImagePainter(
@@ -188,6 +193,7 @@ fun TeamDetailScreen(
                 .padding(innerPadding)
                 .background(brush = gradient)
                 .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (teamImageUrl.value == null) {
                 Shimmer { brush ->
@@ -408,6 +414,117 @@ fun TeamDetailScreen(
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
                         )
+                    }
+                }
+            }
+
+            Text(
+                text = stringResource(id = R.string.stages),
+                modifier = Modifier.padding(top = 32.dp, bottom = 8.dp, start = 32.dp, end = 32.dp),
+                fontSize = 24.sp,
+                fontFamily = ezraFamily,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
+            Row (
+                modifier = Modifier
+                    .padding(horizontal = 32.dp, vertical = 16.dp)
+                    .height(IntrinsicSize.Min)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Column (
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+                ){
+                    Text(
+                        text = stringResource(id = R.string.stage_victories),
+                        fontSize = 20.sp,
+                        fontFamily = ezraFamily,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                    if (state.value.isLoadingStageVictories) {
+                        Shimmer { brush ->
+                            Box(
+                                modifier = Modifier
+                                    .clip(RectangleShape)
+                                    .height(20.dp)
+                                    .width(80.dp)
+                                    .background(brush = brush)
+                            )
+                        }
+                    } else {
+                        Text(
+                            text = state.value.stageVictories.toString(),
+                            fontSize = 32.sp,
+                            fontFamily = ezraFamily,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                VerticalDivider(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(vertical = 8.dp)
+                        .width(4.dp),
+                    thickness = 4.dp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+                ){
+                    Text(
+                        text = stringResource(id = R.string.best_stage_position),
+                        fontSize = 20.sp,
+                        fontFamily = ezraFamily,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+
+                    if (state.value.isLoadingBestStagePosition) {
+                        Shimmer { brush ->
+                            Box(
+                                modifier = Modifier
+                                    .clip(RectangleShape)
+                                    .height(20.dp)
+                                    .width(80.dp)
+                                    .background(brush = brush)
+                            )
+                        }
+                    } else {
+                        Row(
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            Text(
+                                text = state.value.bestStagePosition.toString(),
+                                fontSize = 32.sp,
+                                fontFamily = ezraFamily,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(8.dp)
+                            )
+                            if (state.value.numberOfTimesBestPosition > 1) {
+                                Text(
+                                    text = "x" + state.value.numberOfTimesBestPosition.toString(),
+                                    modifier = Modifier.padding(bottom = 6.dp),
+                                    fontSize = 16.sp,
+                                    fontFamily = ezraFamily,
+                                    fontWeight = FontWeight.Normal
+                                )
+                            }
+                        }
                     }
                 }
             }

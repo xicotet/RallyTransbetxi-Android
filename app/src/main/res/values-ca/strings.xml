@@ -62,6 +62,8 @@
     <string name="category_position">Posició categoria</string>
     <string name="overall_position">Posició general</string>
     <string name="overall_time">Temps acumulat</string>
+    <string name="stage_victories">Victories</string>
+    <string name="best_stage_position">Millor posició</string>
 
     // Segmented button
     <string name="agria">Agria</string>

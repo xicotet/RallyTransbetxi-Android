@@ -8,10 +8,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 data class TeamsScreenUIState(
     val teams: List<Team> = emptyList(),
     val categoryResult: Int = 0,
-    val isLoadingCategoryResult: Boolean = false,
     val globalResult: Int = 0,
-    val isLoadingGlobalResult: Boolean = false,
     val globalTime: String = "",
+    val stageVictories: Int = 0,
+    val bestStagePosition: Int = 0,
+    val numberOfTimesBestPosition: Int = 0,
+    val isLoadingStageVictories: Boolean = false,
+    val isLoadingBestStagePosition: Boolean = false,
+    val isLoadingCategoryResult: Boolean = false,
+    val isLoadingGlobalResult: Boolean = false,
     val isLoadingGlobalTime: Boolean = false,
     val isSearchBarVisible: Boolean = false,
     val searchText: String = "",
@@ -38,6 +43,26 @@ fun MutableStateFlow<TeamsScreenUIState>.setCategoryResult(globalResults: Int) {
 
 fun MutableStateFlow<TeamsScreenUIState>.setIsLoadingCategoryResult(isLoadingGlobalResult: Boolean) {
     value = value.copy(isLoadingCategoryResult = isLoadingGlobalResult)
+}
+
+fun MutableStateFlow<TeamsScreenUIState>.setStageVictories(stageVictories: Int) {
+    value = value.copy(stageVictories = stageVictories)
+}
+
+fun MutableStateFlow<TeamsScreenUIState>.setIsLoadingStageVictories(isLoadingStageVictories: Boolean) {
+    value = value.copy(isLoadingStageVictories = isLoadingStageVictories)
+}
+
+fun MutableStateFlow<TeamsScreenUIState>.setBestStagePosition(bestStagePosition: Int) {
+    value = value.copy(bestStagePosition = bestStagePosition)
+}
+
+fun MutableStateFlow<TeamsScreenUIState>.setIsLoadingBestStagePosition(isLoadingBestStagePosition: Boolean) {
+    value = value.copy(isLoadingBestStagePosition = isLoadingBestStagePosition)
+}
+
+fun MutableStateFlow<TeamsScreenUIState>.setNumberOfTimesBestPosition(numberOfTimesBestPosition: Int) {
+    value = value.copy(numberOfTimesBestPosition = numberOfTimesBestPosition)
 }
 
 fun MutableStateFlow<TeamsScreenUIState>.setGlobalResult(globalResult: Int) {

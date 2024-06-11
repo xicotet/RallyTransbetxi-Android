@@ -62,6 +62,8 @@
     <string name="category_position">Posición categoría</string>
     <string name="overall_position">Posición general</string>
     <string name="overall_time">Tiempo acumulado</string>
+    <string name="stage_victories">Victorias</string>
+    <string name="best_stage_position">Mejor posición</string>
 
     // Segmented button
     <string name="agria">Agria</string>

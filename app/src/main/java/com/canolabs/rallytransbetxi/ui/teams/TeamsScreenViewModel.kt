@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.data.models.responses.Team
 import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetTeamsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,9 @@ import javax.inject.Inject
 @HiltViewModel
 class TeamsScreenViewModel @Inject constructor(
     private val getTeamsUseCase: GetTeamsUseCase,
-    private val getGlobalResultsUseCase: GetGlobalResultsUseCase
+    private val getGlobalResultsUseCase: GetGlobalResultsUseCase,
+    private val getStagesUseCase: GetStagesUseCase,
+    private val getStagesResultsUseCase: GetStagesResultsUseCase
 ): ViewModel() {
     private var _state = MutableStateFlow(TeamsScreenUIState())
     val state: StateFlow<TeamsScreenUIState> = _state.asStateFlow()
@@ -60,6 +64,39 @@ class TeamsScreenViewModel @Inject constructor(
             val globalTime = sortedResultsByTimeGlobal.firstOrNull { it.team.number == team.number }?.time ?: "00:00:00"
             _state.setGlobalTime(globalTime)
             _state.setIsLoadingGlobalTime(false)
+        }
+    }
+
+    // Fetch the number of victories and best positions of a team in each stage
+    fun fetchStageResultsOfATeam(team: Team) {
+        viewModelScope.launch {
+            _state.setIsLoadingStageVictories(true)
+            _state.setIsLoadingBestStagePosition(true)
+
+            // For every stage, get the ID of the stage
+            val stageIds = getStagesUseCase.invoke().map { it.acronym }
+            val stageResults = mutableListOf<Int>()
+            for (stageId in stageIds) {
+                val stageResultsByTeam = getStagesResultsUseCase.invoke(stageId)
+                val stageResultsByCategory = stageResultsByTeam.filter {
+                    it.team.category.name == team.category.name
+                }
+                val stageResultsByTime = stageResultsByCategory.sortedBy { it.time }
+                val stagePosition = stageResultsByTime.indexOfFirst { it.team.number == team.number }
+                stageResults.add(stagePosition + 1)
+            }
+
+            // Number of victories
+            val stageVictories = stageResults.count { it == 1 }
+            _state.setStageVictories(stageVictories)
+            _state.setIsLoadingStageVictories(false)
+
+            // Best stage position and the number of times it has been achieved
+            val bestPosition = stageResults.minOrNull() ?: 0
+            val numberOfTimesBestPosition = stageResults.count { it == bestPosition }
+            _state.setBestStagePosition(bestPosition)
+            _state.setNumberOfTimesBestPosition(numberOfTimesBestPosition)
+            _state.setIsLoadingBestStagePosition(false)
         }
     }
 
