@@ -281,6 +281,15 @@ fun TeamDetailScreen(
 
             val onBackgroundColor = MaterialTheme.colorScheme.onBackground
 
+            Text(
+                text = stringResource(id = R.string.global_literal),
+                modifier = Modifier.padding(top = 32.dp, bottom = 8.dp, start = 32.dp, end = 32.dp),
+                fontSize = 24.sp,
+                fontFamily = ezraFamily,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -525,6 +534,156 @@ fun TeamDetailScreen(
                                 )
                             }
                         }
+                    }
+                }
+            }
+
+            Text(
+                text = stringResource(id = R.string.team),
+                modifier = Modifier.padding(top = 32.dp, bottom = 8.dp, start = 32.dp, end = 32.dp),
+                fontSize = 24.sp,
+                fontFamily = ezraFamily,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
+            val driverImagePath = "${Constants.DRIVER_IMAGE_PREFIX}${teamNumber}${Constants.DRIVER_IMAGE_EXTENSION}"
+            val codriverImagePath = "${Constants.CODRIVER_IMAGE_PREFIX}${teamNumber}${Constants.DRIVER_IMAGE_EXTENSION}"
+
+            val storage = Firebase.storage
+            val driverStorageRef = storage.reference.child("${Constants.DRIVERS_FOLDER}${driverImagePath}")
+            val codriverStorageRef = storage.reference.child("${Constants.DRIVERS_FOLDER}${codriverImagePath}")
+
+            val driverImageUrl = remember { mutableStateOf<String?>(null) }
+            val codriverImageUrl = remember { mutableStateOf<String?>(null) }
+
+            val firstImageIsLoaded = remember { mutableStateOf(false) }
+            val secondImageIsLoaded = remember { mutableStateOf(false) }
+
+            LaunchedEffect(teamNumber) {
+                try {
+                    val driverUrl = driverStorageRef.downloadUrl.await()
+                    driverImageUrl.value = driverUrl.toString()
+
+                    val codriverUrl = codriverStorageRef.downloadUrl.await()
+                    codriverImageUrl.value = codriverUrl.toString()
+                } catch (e: Exception) {
+                    Log.d("DriverImagesPager", "Error: $e")
+                }
+            }
+
+            val driverPainter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(driverImageUrl.value ?: "")
+                    .size(Size.ORIGINAL)
+                    .build(),
+                onState = { state ->
+                    if (state is AsyncImagePainter.State.Success) {
+                        firstImageIsLoaded.value = true
+                    } else if (state is AsyncImagePainter.State.Loading) {
+                        firstImageIsLoaded.value = false
+                    }
+                }
+            )
+
+            val codriverPainter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(codriverImageUrl.value ?: "")
+                    .size(Size.ORIGINAL)
+                    .build(),
+                onState = { state ->
+                    if (state is AsyncImagePainter.State.Success) {
+                        secondImageIsLoaded.value = true
+                    } else if (state is AsyncImagePainter.State.Loading) {
+                        secondImageIsLoaded.value = false
+                    }
+                }
+            )
+
+            Row (
+                modifier = Modifier
+                    .padding(horizontal = 32.dp, vertical = 16.dp)
+                    .height(IntrinsicSize.Min)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Column (
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+                ){
+                    if (!firstImageIsLoaded.value) {
+                        Shimmer { brush ->
+                            Box(
+                                modifier = Modifier
+                                    .clip(RectangleShape)
+                                    .height(170.dp)
+                                    .width(144.dp)
+                                    .background(brush = brush)
+                            )
+                        }
+                    } else {
+                        Image(
+                            painter = driverPainter,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RectangleShape)
+                                .height(170.dp)
+                                .width(144.dp)
+                        )
+                        Text(
+                            text = team?.driver ?: "",
+                            fontSize = 20.sp,
+                            fontFamily = antaFamily,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                VerticalDivider(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(vertical = 8.dp)
+                        .width(4.dp),
+                    thickness = 4.dp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+                ){
+                    if (!secondImageIsLoaded.value) {
+                        Shimmer { brush ->
+                            Box(
+                                modifier = Modifier
+                                    .clip(RectangleShape)
+                                    .height(170.dp)
+                                    .width(144.dp)
+                                    .background(brush = brush)
+                            )
+                        }
+                    } else {
+                        Image(
+                            painter = codriverPainter,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RectangleShape)
+                                .height(170.dp)
+                                .width(144.dp)
+                        )
+                        Text(
+                            text = team?.codriver ?: "",
+                            fontSize = 20.sp,
+                            fontFamily = antaFamily,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }

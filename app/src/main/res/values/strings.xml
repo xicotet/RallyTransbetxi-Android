@@ -64,6 +64,8 @@
     <string name="overall_time">Tiempo acumulado</string>
     <string name="stage_victories">Victorias</string>
     <string name="best_stage_position">Mejor posición</string>
+    <string name="team">Equipo</string>
+    <string name="global_literal">Global</string>
 
     // Segmented button
     <string name="agria">Agria</string>
