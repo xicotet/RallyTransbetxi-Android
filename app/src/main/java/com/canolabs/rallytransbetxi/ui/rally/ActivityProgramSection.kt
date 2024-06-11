@@ -109,14 +109,19 @@ fun ActivityProgramSection(
                                 fontFamily = robotoFamily,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(start = 16.dp).align(Alignment.CenterHorizontally)
+                                modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp, bottom = 4.dp)
+                            )
+
+                            HorizontalDivider(
+                                modifier = Modifier.fillMaxWidth(),
+                                thickness = 2.dp,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
 
                         val activitiesToShow =
-                            if (state.isShowAllActivitiesEnabled) state.activities else state.activities.take(
-                                DEFAULT_ACTIVITIES
-                            )
+                            if (state.isShowAllActivitiesEnabled) state.activities
+                            else state.activities.take(DEFAULT_ACTIVITIES)
 
                         activitiesToShow.forEach { activity ->
                             Card(

@@ -49,6 +49,7 @@ fun RallyScreen(
     LaunchedEffect(Unit) {
         viewModel.fetchNews()
         viewModel.fetchActivities()
+        viewModel.fetchWarnings()
 
         // Get the initial theme state
         viewModel.updateInitialThemeState(darkThemeState, isSystemInDarkTheme)
@@ -81,6 +82,11 @@ fun RallyScreen(
             FeaturedSection(
                 viewModel = viewModel,
                 navController = navController
+            )
+
+            WarningsSection(
+                state = state,
+                viewModel = viewModel,
             )
 
             BreakingNewsSection(

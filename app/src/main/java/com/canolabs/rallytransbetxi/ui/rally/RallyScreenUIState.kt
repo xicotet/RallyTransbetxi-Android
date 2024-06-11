@@ -4,6 +4,7 @@ import com.canolabs.rallytransbetxi.data.models.responses.Activity
 import com.canolabs.rallytransbetxi.data.models.responses.HallOfFame
 import com.canolabs.rallytransbetxi.data.models.responses.News
 import com.canolabs.rallytransbetxi.data.models.responses.Restaurant
+import com.canolabs.rallytransbetxi.data.models.responses.Warning
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 import com.canolabs.rallytransbetxi.domain.entities.FontSizeFactor
 import com.canolabs.rallytransbetxi.domain.entities.Language
@@ -16,11 +17,14 @@ data class RallyScreenUIState(
     val activities: List<Activity>  = emptyList(),
     val hallOfFame: List<HallOfFame> = emptyList(),
     val restaurants: List<Restaurant> = emptyList(),
+    val warnings: List<Warning> = emptyList(),
     val isHallOfFameLoading: Boolean = false,
     val language: Language? = null,
     val theme: Theme? = null,
     val directionsProfile: DirectionsProfile? = null,
     val fontSizeFactor: FontSizeFactor? = null,
+    val areWarningsCollapsed: Boolean = true,
+    val isShowAllWarningsEnabled: Boolean = false,
     val areBreakingNewsCollapsed: Boolean = false,
     val isShowAllBreakingNewsEnabled: Boolean = false,
     val areActivitiesCollapsed: Boolean = false,
@@ -56,6 +60,18 @@ fun MutableStateFlow<RallyScreenUIState>.setLanguage(language: Language) {
 
 fun MutableStateFlow<RallyScreenUIState>.setRestaurants(restaurants: List<Restaurant>) {
     value = value.copy(restaurants = restaurants)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setWarnings(warnings: List<Warning>) {
+    value = value.copy(warnings = warnings)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setAreWarningsCollapsed(areWarningsCollapsed: Boolean) {
+    value = value.copy(areWarningsCollapsed = areWarningsCollapsed)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setIsShowAllWarningsEnabled(isShowAllWarningsEnabled: Boolean) {
+    value = value.copy(isShowAllWarningsEnabled = isShowAllWarningsEnabled)
 }
 
 fun MutableStateFlow<RallyScreenUIState>.setHallOfFame(hallOfFame: List<HallOfFame>) {

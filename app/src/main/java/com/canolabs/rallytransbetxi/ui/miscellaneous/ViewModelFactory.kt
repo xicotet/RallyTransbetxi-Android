@@ -17,6 +17,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetTeamsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetThemeSettingsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetWarningsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.InsertSettingsUseCase
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
@@ -27,6 +28,7 @@ import javax.inject.Inject
 
 class RallyViewModelFactory @Inject constructor(
     private val getNewsUseCase: GetNewsUseCase,
+    private val getWarningsUseCase: GetWarningsUseCase,
     private val getRestaurantsUseCase: GetRestaurantsUseCase,
     private val getHallOfFameUseCase: GetHallOfFameUseCase,
     private val getActivitiesUseCase: GetActivitiesUseCase,
@@ -41,6 +43,7 @@ class RallyViewModelFactory @Inject constructor(
             modelClass.isAssignableFrom(RallyScreenViewModel::class.java) -> {
                 RallyScreenViewModel(
                     getNewsUseCase,
+                    getWarningsUseCase,
                     getRestaurantsUseCase,
                     getHallOfFameUseCase,
                     getActivitiesUseCase,

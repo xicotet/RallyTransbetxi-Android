@@ -10,6 +10,7 @@ class Constants {
 
         // Defaul number of elements to show in the home screen
         const val DEFAULT_NEWS = 2
+        const val DEFAULT_WARNINGS = 1
         const val DEFAULT_ACTIVITIES = 5
 
         // Categories API names

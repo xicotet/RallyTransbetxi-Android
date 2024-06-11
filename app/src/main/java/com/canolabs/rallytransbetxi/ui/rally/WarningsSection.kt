@@ -1,15 +1,10 @@
 package com.canolabs.rallytransbetxi.ui.rally
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -25,67 +20,50 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import coil.size.Size
 import com.canolabs.rallytransbetxi.R
-import com.canolabs.rallytransbetxi.data.models.responses.News
+import com.canolabs.rallytransbetxi.data.models.responses.Warning
 import com.canolabs.rallytransbetxi.domain.entities.Language
-import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
-import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_NEWS
-import com.canolabs.rallytransbetxi.utils.DateTimeUtils.secondsToDate
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.tasks.await
+import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 import java.util.Locale
 
+
 @Composable
-fun BreakingNewsSection(
+fun WarningsSection(
     state: RallyScreenUIState,
     viewModel: RallyScreenViewModel,
-    navController: NavController
 ) {
-    fun getNewsTitleByLanguage(news: News, language: Language?): String {
+    fun getWarningTitleByLanguage(warning: Warning, language: Language?): String {
         return when (language) {
-            Language.SPANISH -> news.titleEs
-            Language.CATALAN -> news.titleCa
-            Language.ENGLISH -> news.titleEn
-            Language.GERMAN -> news.titleDe
-            null -> news.titleEs
+            Language.SPANISH -> warning.titleEs
+            Language.CATALAN -> warning.titleCa
+            Language.ENGLISH -> warning.titleEn
+            Language.GERMAN -> warning.titleDe
+            null -> warning.titleEs
         }
     }
 
-    val gradient = Brush.linearGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-            MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f)
-        ),
-        start = Offset(0f, 0f),
-        end = Offset(1000f, 1000f)
-    )
+    fun getWarningContentByLanguage(warning: Warning, language: Language?): String {
+        return when (language) {
+            Language.SPANISH -> warning.contentEs
+            Language.CATALAN -> warning.contentCa
+            Language.ENGLISH -> warning.contentEn
+            Language.GERMAN -> warning.contentDe
+            null -> warning.contentEs
+        }
+    }
 
     Surface(
         modifier = Modifier
@@ -93,16 +71,16 @@ fun BreakingNewsSection(
             .padding(16.dp),
         shape = RoundedCornerShape(8.dp),
         shadowElevation = cardsElevation,
-        onClick = { viewModel.toggleBreakingNews() }
+        onClick = { viewModel.toggleWarnings() }
     ) {
         Column(
             modifier = Modifier
-                .background(brush = gradient)
+                .background(color = MaterialTheme.colorScheme.errorContainer)
                 .padding(16.dp)
         ) {
             Row {
                 Text(
-                    text = stringResource(id = R.string.breaking_news).uppercase(Locale.ROOT),
+                    text = stringResource(id = R.string.warnings).uppercase(Locale.ROOT),
                     style = MaterialTheme.typography.headlineMedium,
                     fontFamily = ezraFamily,
                     fontWeight = FontWeight.Bold,
@@ -112,8 +90,8 @@ fun BreakingNewsSection(
                         .padding(start = 12.dp)
                         .weight(5f)
                 )
-                IconButton(onClick = { viewModel.toggleBreakingNews() }) {
-                    if (!state.areBreakingNewsCollapsed) {
+                IconButton(onClick = { viewModel.toggleWarnings() }) {
+                    if (!state.areWarningsCollapsed) {
                         Icon(
                             painter = painterResource(id = R.drawable.collapse_all),
                             modifier = Modifier
@@ -138,89 +116,50 @@ fun BreakingNewsSection(
             }
 
             if (!state.isLoading) {
-                AnimatedVisibility(visible = state.areBreakingNewsCollapsed.not()) {
+                AnimatedVisibility(visible = state.areWarningsCollapsed.not()) {
                     Column {
-                        val newsToShow =
-                            if (state.isShowAllBreakingNewsEnabled) state.news
-                            else state.news.take(DEFAULT_NEWS)
+                        val warningsToShow =
+                            if (state.isShowAllWarningsEnabled) state.warnings.filter { it.visible }
+                            else state.warnings.filter {
+                                it.visible
+                            }.take(Constants.DEFAULT_WARNINGS)
 
-                        newsToShow.forEach { news ->
+                        warningsToShow.forEach { warning ->
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .wrapContentHeight(),
-                                onClick = {
-                                    navController.navigate("newsDetail/${news.number}")
-                                },
+                                onClick = {},
                                 colors = CardColors(
                                     containerColor = Color.Transparent,
                                     contentColor = MaterialTheme.colorScheme.onSurface,
                                     disabledContainerColor = Color.Transparent,
                                     disabledContentColor = MaterialTheme.colorScheme.onSurface,
-                                )
+                                ),
                             ) {
                                 Column(
                                     modifier = Modifier
                                         .padding(16.dp)
                                         .fillMaxWidth(),
-                                    horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                    val newsImagePath = news.imageName
-
-                                    val storage = Firebase.storage
-                                    val newsStorageRef =
-                                        storage.reference.child("${Constants.NEWS_FOLDER}${newsImagePath}")
-
-                                    val newsImageUrl = remember { mutableStateOf<String?>(null) }
-
-                                    LaunchedEffect(Unit) {
-                                        try {
-                                            val imageUrl = newsStorageRef.downloadUrl.await()
-                                            newsImageUrl.value = imageUrl.toString()
-                                        } catch (e: Exception) {
-                                            Log.d("News", "Error: $e")
-                                        }
-                                    }
-
-                                    val newsPainter = rememberAsyncImagePainter(
-                                        model = ImageRequest.Builder(LocalContext.current)
-                                            .data(newsImageUrl.value ?: "")
-                                            .size(Size.ORIGINAL)
-                                            .build(),
+                                    Text(
+                                        text = getWarningTitleByLanguage(warning, state.language),
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontFamily = robotoFamily,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        modifier = Modifier.padding(vertical = 8.dp),
+                                        textAlign = TextAlign.Start
                                     )
 
-                                    if (newsPainter.state is AsyncImagePainter.State.Loading) {
-                                        Shimmer { brush ->
-                                            Box(
-                                                modifier = Modifier
-                                                    .clip(RectangleShape)
-                                                    .fillMaxWidth()
-                                                    .height(200.dp)
-                                                    .background(brush = brush)
-                                            )
-                                        }
-                                    } else {
-                                        Image(
-                                            painter = newsPainter,
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .clip(RectangleShape)
-                                                .padding(vertical = 8.dp)
-                                                .fillMaxWidth()
-                                        )
-                                    }
-
-                                    Row (
-                                        horizontalArrangement = Arrangement.Center,
-                                    ){
+                                    Row {
                                         Icon(
                                             imageVector = Icons.Default.DateRange,
                                             modifier = Modifier.padding(end = 4.dp),
                                             contentDescription = null
                                         )
                                         Text(
-                                            text = secondsToDate(
-                                                seconds = news.date?.seconds ?: 0,
+                                            text = DateTimeUtils.secondsToDate(
+                                                seconds = warning.date?.seconds ?: 0,
                                                 language = state.language?.getLanguageCode() ?: "es",
                                                 country = state.language?.getCountryCode() ?: "ES"
                                             ),
@@ -231,24 +170,24 @@ fun BreakingNewsSection(
                                     }
 
                                     Text(
-                                        text = getNewsTitleByLanguage(news, state.language),
-                                        style = MaterialTheme.typography.titleMedium,
+                                        text = getWarningContentByLanguage(warning, state.language),
+                                        style = MaterialTheme.typography.bodyMedium,
                                         fontFamily = robotoFamily,
                                         color = MaterialTheme.colorScheme.onSurface,
                                         modifier = Modifier.padding(vertical = 8.dp),
-                                        textAlign = TextAlign.Center
+                                        textAlign = TextAlign.Start
                                     )
                                 }
                             }
                         }
 
-                        if (state.news.size > DEFAULT_NEWS) {
+                        if (state.warnings.filter { it.visible }.size > Constants.DEFAULT_WARNINGS) {
                             ClickableText(
                                 text = AnnotatedString(
-                                    if (state.isShowAllBreakingNewsEnabled) stringResource(id = R.string.show_less)
+                                    if (state.isShowAllWarningsEnabled) stringResource(id = R.string.show_less)
                                     else stringResource(id = R.string.show_all)
                                 ),
-                                onClick = { viewModel.toggleShowAllBreakingNews() },
+                                onClick = { viewModel.toggleShowAllWarnings() },
                                 modifier = Modifier
                                     .padding(8.dp)
                                     .align(Alignment.CenterHorizontally),

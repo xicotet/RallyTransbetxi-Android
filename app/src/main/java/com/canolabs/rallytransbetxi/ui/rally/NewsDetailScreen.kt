@@ -3,8 +3,10 @@ package com.canolabs.rallytransbetxi.ui.rally
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,6 +46,7 @@ import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
+import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
@@ -147,6 +151,27 @@ fun NewsDetailScreen(
                         .clip(RectangleShape)
                         .padding(vertical = 16.dp)
                         .fillMaxWidth()
+                )
+            }
+
+            Row (
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier.padding(top = 4.dp, start = 8.dp, bottom = 8.dp)
+            ){
+                Icon(
+                    imageVector = Icons.Default.DateRange,
+                    modifier = Modifier.padding(end = 4.dp),
+                    contentDescription = null
+                )
+                Text(
+                    text = DateTimeUtils.secondsToDate(
+                        seconds = news.date?.seconds ?: 0,
+                        language = state.value.language?.getLanguageCode() ?: "es",
+                        country = state.value.language?.getCountryCode() ?: "ES"
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontFamily = robotoFamily,
+                    color = Color.White,
                 )
             }
 

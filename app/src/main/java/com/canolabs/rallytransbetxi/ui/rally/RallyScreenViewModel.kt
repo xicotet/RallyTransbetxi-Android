@@ -15,6 +15,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetThemeSettingsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetWarningsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.InsertSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -27,6 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RallyScreenViewModel @Inject constructor(
     private val getNewsUseCase: GetNewsUseCase,
+    private val getWarningsUseCase: GetWarningsUseCase,
     private val getRestaurantsUseCase: GetRestaurantsUseCase,
     private val getHallOfFameUseCase: GetHallOfFameUseCase,
     private val getActivitiesUseCase: GetActivitiesUseCase,
@@ -66,6 +68,18 @@ class RallyScreenViewModel @Inject constructor(
             _state.setActivities(activitiesOrderedByIndex)
 
             _state.setAreActivitiesCollapsed(false)
+            _state.setIsLoading(false)
+        }
+    }
+
+    fun fetchWarnings() {
+        viewModelScope.launch {
+            _state.setIsLoading(true)
+
+            val warnings = getWarningsUseCase.invoke()
+            val warningOrderedByDate = warnings.sortedByDescending { it.date }
+            _state.setWarnings(warningOrderedByDate)
+
             _state.setIsLoading(false)
         }
     }
@@ -146,12 +160,20 @@ class RallyScreenViewModel @Inject constructor(
         }
     }
 
+    fun toggleWarnings() {
+        _state.setAreWarningsCollapsed(!_state.value.areWarningsCollapsed)
+    }
+
     fun toggleBreakingNews() {
         _state.setAreBreakingNewsCollapsed(!_state.value.areBreakingNewsCollapsed)
     }
 
     fun toggleActivities() {
         _state.setAreActivitiesCollapsed(!_state.value.areActivitiesCollapsed)
+    }
+
+    fun toggleShowAllWarnings() {
+        _state.setIsShowAllWarningsEnabled(!_state.value.isShowAllWarningsEnabled)
     }
 
     fun toggleShowAllActivities() {
