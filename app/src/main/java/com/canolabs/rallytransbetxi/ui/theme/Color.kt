@@ -32,7 +32,6 @@ val md_theme_light_shadow = Color(0xFF000000)
 val md_theme_light_surfaceTint = Color(0xFF735C00)
 val md_theme_light_outlineVariant = Color(0xFFCEC6B4)
 val md_theme_light_scrim = Color(0xFF000000)
-val ruralColor = Color(0xFF315742)
 
 val md_theme_dark_primary = Color(0xFFE8C349)
 val md_theme_dark_onPrimary = Color(0xFF3C2F00)
@@ -67,3 +66,9 @@ val md_theme_dark_scrim = Color(0xFF000000)
 
 
 val seed = Color(0xFFEDCF75)
+val ruralColor = Color(0xFF315742)
+val onboardingBackground = Color(0xFF191408)
+val onboardingCardBackground = Color(0xFF241e09)
+val onboardingText = Color(0xFFFCFCFB)
+val onboardingButtonDisabledBackground = Color(0xFF4C4639)
+val onboardingButtonDisabledContent = Color(0xFFEBE2CF)

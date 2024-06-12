@@ -79,6 +79,16 @@
     <string name="prototype">Prototipo</string>
     <string name="serie">Serie</string>
 
+    // Onboarding
+    <string name="welcome">¡Bienvenido al Evento de Automovilismo Más Salvaje y Único del Mundo!</string>
+    <string name="letsGetStarted">¡Empecemos!</string>
+    <string name="welcome_to_transbetxi">Bienvenido al Rally Transbetxí</string>
+    <string name="welcome_to_transbetxi_description">Estamos encantados de tenerte por aquí. Descubre la mejor experiencia del rally en la palma de tu mano:</string>
+    <string name="live_results">Resultados en directo</string>
+    <string name="stages_maps">Mapas de los tramos</string>
+    <string name="directions">Cómo llegar</string>
+    <string name="pick_a_language">Elige un idioma</string>
+
     // General
     <string name="yes">Sí</string>
     <string name="no">No</string>
@@ -90,4 +100,6 @@
     <string name="hour">Hora</string>
     <string name="hours">Horas</string>
     <string name="omit">Omitir</string>
+    <string name="next">Siguiente</string>
+    <string name="end">Finalizar</string>
 </resources>

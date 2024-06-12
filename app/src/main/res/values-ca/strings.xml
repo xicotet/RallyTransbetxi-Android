@@ -79,6 +79,16 @@
     <string name="prototype">Prototip</string>
     <string name="serie">Sèrie</string>
 
+    // Onboarding
+    <string name="welcome">Benvingut a l\'Esdeveniment d\'Automobilisme Més Salvatge i Únic del Món!</string>
+    <string name="letsGetStarted">Comencem!</string>
+    <string name="welcome_to_transbetxi">Benvingut al Ral·li Transbetxí</string>
+    <string name="welcome_to_transbetxi_description">Estem encantats de tenir-te per aquí. Descobreix la millor experiència del ral·li al palma de la mà:</string>
+    <string name="live_results">Resultats en directe</string>
+    <string name="stages_maps">Mapes dels trams</string>
+    <string name="directions">Com arribar</string>
+    <string name="pick_a_language">Tria un idioma</string>
+
     // General
     <string name="yes">Sí</string>
     <string name="no">No</string>
@@ -90,4 +100,6 @@
     <string name="hour">Hora</string>
     <string name="hours">Hores</string>
     <string name="omit">Ometre</string>
+    <string name="next">Següent</string>
+    <string name="end">Finalitzar</string>
 </resources>

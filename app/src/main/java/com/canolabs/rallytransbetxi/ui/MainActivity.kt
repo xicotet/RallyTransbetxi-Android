@@ -84,6 +84,9 @@ class MainActivity : ComponentActivity() {
                         changeLocale(this, locale)
                     }
 
+                    val sharedPreferences = applicationContext.getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+                    val finishedOnboarding = remember { mutableStateOf(sharedPreferences.getBoolean("FinishedOnboarding", false)) }
+
                     Navigation(
                         stagesScreenViewModel = stagesScreenViewModel,
                         teamsScreenViewModel = teamsScreenViewModel,
@@ -92,7 +95,9 @@ class MainActivity : ComponentActivity() {
                         rallyScreenViewModel = rallyScreenViewModel,
                         darkThemeState = darkThemeState,
                         fontScaleState = fontScaleState,
-                        changeLocale = ::changeLocale
+                        changeLocale = ::changeLocale,
+                        finishedOnboarding = finishedOnboarding,
+                        sharedPreferences = sharedPreferences
                     )
 
                     val networkStatus by connectivityObserver.observe().collectAsState(

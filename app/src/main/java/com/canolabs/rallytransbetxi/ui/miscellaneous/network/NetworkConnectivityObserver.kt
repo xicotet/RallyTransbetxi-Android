@@ -2,7 +2,6 @@ package com.canolabs.rallytransbetxi.ui.miscellaneous.network
 
 import android.content.Context
 import android.net.ConnectivityManager
-import com.canolabs.rallytransbetxi.ui.miscellaneous.network.ConnectivityObserver
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -10,7 +9,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 class NetworkConnectivityObserver(
-    private val context: Context
+    context: Context
 ) : ConnectivityObserver {
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
