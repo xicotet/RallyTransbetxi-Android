@@ -50,7 +50,10 @@
     <string name="permission_denied_title">Permís de localització</string>
     <string name="permission_denied_message">Per poder obtindre la teua ubicació, necessitem que actives el permís en configuració</string>
     <string name="open_settings">Obrir configuració</string>
-    <string name="omit">Ometre</string>
+
+    // Wifi connection lost bottom sheet
+    <string name="connection_lost_title">Conexión a internet</string>
+    <string name="connection_lost_message">Parece que has perdido la conexión a internet. Recomendamos reestablecerla para una mejor experiencia</string>
 
     // Tabs inside Results fragment
     <string name="global">General</string>
@@ -86,4 +89,5 @@
     <string name="days">Dies</string>
     <string name="hour">Hora</string>
     <string name="hours">Hores</string>
+    <string name="omit">Ometre</string>
 </resources>
