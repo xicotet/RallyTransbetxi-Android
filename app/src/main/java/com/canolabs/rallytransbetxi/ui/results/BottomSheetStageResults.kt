@@ -246,7 +246,7 @@ fun BottomSheetStageResults(
                     sortedResultsByTime
                 }
 
-                if (sortedResultsByTime.isEmpty()) {
+                if (resultsState.stageResults.isEmpty()) {
                     // Show a placeholder indicating when the results will be available
                     val (startTime, languageCode, countryCode) = if (isComingFromMaps) {
                         Triple(

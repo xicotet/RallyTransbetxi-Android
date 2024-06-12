@@ -35,8 +35,7 @@ class VersionsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getApiVersion(name: String): Timestamp {
-        val versions = versionsServiceImpl.fetchVersions()
-        return versions.find { it.name == name }?.timestamp ?: Timestamp.now()
+        return versionsServiceImpl.fetchVersion(name)?.timestamp ?: Timestamp.now()
     }
 
 }

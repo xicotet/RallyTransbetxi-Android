@@ -7,27 +7,23 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface VersionsService {
-    suspend fun fetchVersions(): List<Version>
+    suspend fun fetchVersion(name: String): Version?
 }
 
 class VersionsServiceImpl @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore
 ) : VersionsService {
-    override suspend fun fetchVersions(): List<Version> {
+    override suspend fun fetchVersion(name: String): Version? {
         return try {
-            val versions = mutableListOf<Version>()
-            val querySnapshot = firebaseFirestore.collection("versions").get().await()
-            for (document in querySnapshot.documents) {
-                val version = document.toObject(Version::class.java)
-                version?.let {
-                    version.name = document.id
-                    versions.add(it)
-                }
+            val documentSnapshot = firebaseFirestore.collection("versions").document(name).get().await()
+            val version = documentSnapshot.toObject(Version::class.java)
+            version?.let {
+                it.name = documentSnapshot.id
             }
-            versions
+            version
         } catch (e: Exception) {
-            Log.d("ActivitiesServiceImpl", "Error fetching activities: ${e.message}")
-            emptyList()
+            Log.d("VersionsServiceImpl", "Error fetching version: ${e.message}")
+            null
         }
     }
 }
