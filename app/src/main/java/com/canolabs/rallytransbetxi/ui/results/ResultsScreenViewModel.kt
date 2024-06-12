@@ -3,8 +3,10 @@ package com.canolabs.rallytransbetxi.ui.results
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
+import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetLanguageSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +20,7 @@ import javax.inject.Inject
 class ResultsScreenViewModel @Inject constructor(
     private val getGlobalResultsUseCase: GetGlobalResultsUseCase,
     private val getStagesResultsUseCase: GetStagesResultsUseCase,
+    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
     private val getStagesUseCase: GetStagesUseCase
 ): ViewModel() {
     private var _state = MutableStateFlow(ResultsScreenUIState())
@@ -42,6 +45,17 @@ class ResultsScreenViewModel @Inject constructor(
     fun fetchStages() {
         viewModelScope.launch {
             _state.setStages(getStagesUseCase.invoke())
+        }
+    }
+
+    fun fetchLanguage() {
+        viewModelScope.launch {
+            val language = getLanguageSettingsUseCase.invoke()
+            _state.setLanguage(
+                Language.entries.find {
+                    it.getDatabaseName() == language
+                }!!
+            )
         }
     }
 

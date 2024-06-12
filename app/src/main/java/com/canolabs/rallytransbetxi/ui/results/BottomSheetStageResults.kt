@@ -41,6 +41,7 @@ import com.canolabs.rallytransbetxi.ui.theme.PaddingLarge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
 import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
+import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 
 @Composable
 fun BottomSheetStageResults(
@@ -243,6 +244,39 @@ fun BottomSheetStageResults(
                     }
                 } else {
                     sortedResultsByTime
+                }
+
+                if (sortedResultsByTime.isEmpty()) {
+                    // Show a placeholder indicating when the results will be available
+                    val (startTime, languageCode, countryCode) = if (isComingFromMaps) {
+                        Triple(
+                            mapsState?.stage?.startTime?.seconds ?: 0,
+                            mapsState?.language?.getLanguageCode() ?: "es",
+                            mapsState?.language?.getCountryCode() ?: "ES"
+                        )
+                    } else {
+                        Triple(
+                            resultsState.stageSelected.startTime?.seconds ?: 0,
+                            resultsState.language?.getLanguageCode() ?: "es",
+                            resultsState.language?.getCountryCode() ?: "ES"
+                        )
+                    }
+
+                    val startDate = DateTimeUtils.secondsToDate(
+                        seconds = startTime,
+                        language = languageCode,
+                        country = countryCode
+                    )
+                    val startingHour = DateTimeUtils.formatTimeFromSeconds(startTime)
+
+                    Text(
+                        text = stringResource(id = R.string.results_available) + ' ' +
+                            startDate + ' ' + stringResource(id = R.string.at_hour) + ' ' +
+                            startingHour + '.',
+                        style = MaterialTheme.typography.titleMedium,
+                        fontFamily = robotoFamily,
+                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 24.dp)
+                    )
                 }
 
                 Column {

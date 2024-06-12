@@ -41,6 +41,7 @@ fun ResultsScreen(
     LaunchedEffect(Unit) {
         viewModel.fetchGlobalResults()
         viewModel.fetchStages()
+        viewModel.fetchLanguage()
     }
 
     Column(

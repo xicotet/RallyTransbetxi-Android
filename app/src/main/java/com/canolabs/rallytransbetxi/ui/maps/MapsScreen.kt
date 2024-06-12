@@ -60,6 +60,7 @@ fun MapsScreen(
         mapsViewModel.fetchStage(stageAcronym)
         mapsViewModel.cleanDirections()
         mapsViewModel.cleanLocation()
+        mapsViewModel.fetchLanguage()
     }
 
     val context = LocalContext.current

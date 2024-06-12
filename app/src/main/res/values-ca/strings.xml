@@ -57,6 +57,8 @@
 
     // Results card
     <string name="disqualified">Desqualificat</string>
+    <string name="results_available">Els resultats estaran disponibles poc després del</string>
+    <string name="at_hour">a les</string>
 
     // Team details
     <string name="category">Categoria</string>

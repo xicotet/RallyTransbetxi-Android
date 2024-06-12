@@ -9,7 +9,9 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.BuildConfig
+import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetLanguageSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStageByAcronymUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -30,6 +32,7 @@ class MapsScreenViewModel @Inject constructor(
     private val getStageByAcronymUseCase: GetStageByAcronymUseCase,
     private val getDirectionsUseCase: GetDirectionsUseCase,
     private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
+    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
     private val application: Application
 ): ViewModel() {
     private var _state = MutableStateFlow(MapsScreenUIState())
@@ -87,6 +90,15 @@ class MapsScreenViewModel @Inject constructor(
             _state.setIsLoading(true)
             _state.setStage(getStageByAcronymUseCase.invoke(acronym))
             _state.setIsLoading(false)
+        }
+    }
+
+    fun fetchLanguage() {
+        viewModelScope.launch {
+            val language = getLanguageSettingsUseCase.invoke()
+            _state.setLanguage(Language.entries.find {
+                it.getDatabaseName() == language
+            }!!)
         }
     }
 

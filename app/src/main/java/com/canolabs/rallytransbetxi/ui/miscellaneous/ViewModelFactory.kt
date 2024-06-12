@@ -81,6 +81,7 @@ class MapsViewModelFactory @Inject constructor(
     private val getStageByAcronymUseCase: GetStageByAcronymUseCase,
     private val getDirectionsUseCase: GetDirectionsUseCase,
     private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
+    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
     private val application: Application
 ) : ViewModelProvider.Factory {
 
@@ -90,6 +91,7 @@ class MapsViewModelFactory @Inject constructor(
                 getStageByAcronymUseCase,
                 getDirectionsUseCase,
                 getProfileSettingsUseCase,
+                getLanguageSettingsUseCase,
                 application
             ) as T
         }
@@ -122,6 +124,7 @@ class TeamsViewModelFactory @Inject constructor(
 class ResultsViewModelFactory @Inject constructor(
     private val getGlobalResultsUseCase: GetGlobalResultsUseCase,
     private val getStagesResultsUseCase: GetStagesResultsUseCase,
+    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
     private val getStagesUseCase: GetStagesUseCase
 ) : ViewModelProvider.NewInstanceFactory() {
 
@@ -130,6 +133,7 @@ class ResultsViewModelFactory @Inject constructor(
             return ResultsScreenViewModel(
                 getGlobalResultsUseCase,
                 getStagesResultsUseCase,
+                getLanguageSettingsUseCase,
                 getStagesUseCase
             ) as T
         }

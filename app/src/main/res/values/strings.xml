@@ -55,8 +55,10 @@
     // Tabs inside Results fragment
     <string name="global">General</string>
 
-    // Results card
+    // Results
     <string name="disqualified">Descalificado</string>
+    <string name="results_available">Los resultados estarán disponibles poco después del </string>
+    <string name="at_hour">a las</string>
 
     // Team details
     <string name="category">Categoría</string>

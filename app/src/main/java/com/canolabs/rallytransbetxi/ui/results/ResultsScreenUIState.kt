@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui.results
 import com.canolabs.rallytransbetxi.ui.miscellaneous.UIState
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
+import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -10,6 +11,7 @@ data class ResultsScreenUIState(
     val globalResults: List<Result> = emptyList(),
     val stageResults: List<Result> = emptyList(),
     val stages: List<Stage> = emptyList(),
+    val language: Language? = null,
     val stageSelected: Stage = Stage(),
     val isSearchBarVisible: Boolean = false,
     val isBottomSheetSearchBarVisible: Boolean = false,
@@ -43,6 +45,10 @@ fun MutableStateFlow<ResultsScreenUIState>.removeSelectedRacingCategory(selected
 
 fun MutableStateFlow<ResultsScreenUIState>.setSearchText(searchText: String) {
     value = value.copy(searchText = searchText)
+}
+
+fun MutableStateFlow<ResultsScreenUIState>.setLanguage(language: Language) {
+    value = value.copy(language = language)
 }
 
 fun MutableStateFlow<ResultsScreenUIState>.setIsSearchBarVisible(isSearchBarVisible: Boolean) {
