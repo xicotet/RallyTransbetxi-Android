@@ -186,7 +186,7 @@ fun WarningsSection(
                             ClickableText(
                                 text = AnnotatedString(
                                     if (state.isShowAllWarningsEnabled) stringResource(id = R.string.show_less)
-                                    else stringResource(id = R.string.show_all)
+                                    else stringResource(id = R.string.show_all_male)
                                 ),
                                 onClick = { viewModel.toggleShowAllWarnings() },
                                 modifier = Modifier

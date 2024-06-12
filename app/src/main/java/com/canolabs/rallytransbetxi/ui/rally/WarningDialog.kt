@@ -13,6 +13,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -98,7 +99,8 @@ fun WarningDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
-                        .height(1.dp)
+                        .height(1.dp),
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 TextButton(
