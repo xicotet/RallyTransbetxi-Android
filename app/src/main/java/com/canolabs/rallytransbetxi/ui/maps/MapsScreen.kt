@@ -101,7 +101,7 @@ fun MapsScreen(
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ),
             )
-            if (state.locationPermissionIsGranted) {
+            if (state.locationPermissionIsGranted && state.stage.geoPoints != null) {
                 delay(1000)
                 mapsViewModel.setHasPressedDirectionsButton(true)
                 mapsViewModel.getDirections()

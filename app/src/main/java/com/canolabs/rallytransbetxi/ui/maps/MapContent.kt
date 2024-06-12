@@ -146,14 +146,25 @@ fun MapContent(
                 PrintDirections(directions = state.directions)
 
                 if (state.directions.isEmpty())
-                    AnimateCameraToUserLocation(location = state.location, cameraPositionState = cameraPositionState)
+                    AnimateCameraToUserLocation(
+                        location = state.location,
+                        cameraPositionState = cameraPositionState
+                    )
                 else
-                    AnimateCameraToDirections(directions = state.directions, cameraPositionState = cameraPositionState)
+                    AnimateCameraToDirections(
+                        directions = state.directions,
+                        cameraPositionState = cameraPositionState
+                    )
 
 
-                if (state.location == null && state.directions.isEmpty()) {
+                if (state.stage.geoPoints == null) {
+                    AnimateCameraToBetxi(betxi = betxi, cameraPositionState = cameraPositionState)
+                } else if (state.location == null && state.directions.isEmpty()) {
                     // Animate the camera to the first geo point of the stage
-                    AnimateCameraToFirstStagePoint(stage = state.stage, cameraPositionState = cameraPositionState)
+                    AnimateCameraToFirstStagePoint(
+                        stage = state.stage,
+                        cameraPositionState = cameraPositionState
+                    )
                 }
             }
 
@@ -304,7 +315,8 @@ fun MapContent(
                         // Move the camera to the user's location
                         state.location?.let {
                             val targetPosition = LatLng(it.latitude, it.longitude)
-                            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
+                            val cameraUpdate =
+                                CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
                             coroutineScope.launch {
                                 cameraPositionState.animate(cameraUpdate, durationMs = 2000)
                             }
@@ -341,7 +353,8 @@ fun MapContent(
                     ExtendedFloatingActionButton(
                         onClick = {
                             if (state.directions.isNotEmpty()) {
-                                val gmmIntentUri = Uri.parse("google.navigation:q=${state.directions.last()[1]},${state.directions.last()[0]}")
+                                val gmmIntentUri =
+                                    Uri.parse("google.navigation:q=${state.directions.last()[1]},${state.directions.last()[0]}")
                                 val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                                 mapIntent.setPackage("com.google.android.apps.maps")
                                 context.startActivity(mapIntent)
@@ -349,11 +362,18 @@ fun MapContent(
                                 // Directions are not available yet
                             }
                         },
-                        icon = { Icon(painterResource(id = R.drawable.navigation), "Extended floating action button.") },
-                        text = { Text(
-                            text = stringResource(id = R.string.navigate),
-                            fontFamily = robotoFamily
-                        ) },
+                        icon = {
+                            Icon(
+                                painterResource(id = R.drawable.navigation),
+                                "Extended floating action button."
+                            )
+                        },
+                        text = {
+                            Text(
+                                text = stringResource(id = R.string.navigate),
+                                fontFamily = robotoFamily
+                            )
+                        },
                     )
                 }
             } else {
@@ -373,7 +393,7 @@ fun MapContent(
                                     Manifest.permission.ACCESS_COARSE_LOCATION
                                 )
                             )
-                            if (state.locationPermissionIsGranted) {
+                            if (state.locationPermissionIsGranted && state.stage.geoPoints != null) {
                                 mapsViewModel.setHasPressedDirectionsButton(true)
                                 mapsViewModel.getDirections()
                             }
@@ -437,6 +457,19 @@ fun MapContent(
 }
 
 @Composable
+fun AnimateCameraToBetxi(
+    betxi: LatLng,
+    cameraPositionState: CameraPositionState
+) {
+    val targetPosition = LatLng(betxi.latitude, betxi.longitude)
+    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
+    LaunchedEffect(cameraUpdate) {
+        delay(500)
+        cameraPositionState.animate(cameraUpdate, durationMs = 2000)
+    }
+}
+
+@Composable
 fun AnimateCameraToFirstStagePoint(
     stage: Stage,
     cameraPositionState: CameraPositionState
@@ -486,14 +519,14 @@ fun PrintUserLocation(
     Marker(
         state = MarkerState(
             LatLng(
-            location?.latitude ?: 0.0,
+                location?.latitude ?: 0.0,
                 location?.longitude ?: 0.0
             )
         ),
         title = "User Location",
         icon = icon,
 
-    )
+        )
 }
 
 @Composable

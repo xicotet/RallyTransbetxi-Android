@@ -64,12 +64,20 @@ class MapsScreenViewModel @Inject constructor(
             while (_state.value.location == null) {
                 delay(100)
             }
+
+            val startPointLongitude = _state.value.location?.longitude.toString()
+            val startPointLatitude = _state.value.location?.latitude.toString()
+
+            val endPointLongitude = _state.value.stage.geoPoints?.first()?.longitude.toString()
+            val endPointLatitude = _state.value.stage.geoPoints?.first()?.latitude.toString()
+
             val directions = getDirectionsUseCase.execute(
                 getProfileSettingsUseCase.invoke(),
                 BuildConfig.DIRECTIONS_API_KEY,
-                _state.value.location?.longitude.toString() + "," + _state.value.location?.latitude.toString(),
-                _state.value.stage.geoPoints?.first()?.longitude.toString() + "," + _state.value.stage.geoPoints?.first()?.latitude.toString()
+                "$startPointLongitude,$startPointLatitude",
+                "$endPointLongitude,$endPointLatitude"
             )
+
             _state.setDirections(directions)
         }
     }
