@@ -111,13 +111,13 @@ fun StageCard(
                             .padding(PaddingMedium)
                             .size(36.dp)
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = "${stage.distance} km",
                         fontFamily = robotoFamily,
                         style = MaterialTheme.typography.titleMedium,
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.width(12.dp))
                     Icon(
                         painter = painterResource(id = R.drawable.schedule_filled),
                         contentDescription = "Clock icon",
@@ -128,7 +128,7 @@ fun StageCard(
                             )
                             .size(24.dp),
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
 
                     Text(
                         text = DateTimeUtils.formatTimeFromSeconds(stage.startTime?.seconds ?: 0),

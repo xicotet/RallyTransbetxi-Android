@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
@@ -30,8 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
-import com.canolabs.rallytransbetxi.data.models.responses.Warning
-import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
@@ -45,26 +44,6 @@ fun WarningsSection(
     state: RallyScreenUIState,
     viewModel: RallyScreenViewModel,
 ) {
-    fun getWarningTitleByLanguage(warning: Warning, language: Language?): String {
-        return when (language) {
-            Language.SPANISH -> warning.titleEs
-            Language.CATALAN -> warning.titleCa
-            Language.ENGLISH -> warning.titleEn
-            Language.GERMAN -> warning.titleDe
-            null -> warning.titleEs
-        }
-    }
-
-    fun getWarningContentByLanguage(warning: Warning, language: Language?): String {
-        return when (language) {
-            Language.SPANISH -> warning.contentEs
-            Language.CATALAN -> warning.contentCa
-            Language.ENGLISH -> warning.contentEn
-            Language.GERMAN -> warning.contentDe
-            null -> warning.contentEs
-        }
-    }
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -78,7 +57,13 @@ fun WarningsSection(
                 .background(color = MaterialTheme.colorScheme.errorContainer)
                 .padding(16.dp)
         ) {
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Info, contentDescription = null,
+                    modifier = Modifier.size(36.dp)
+                )
                 Text(
                     text = stringResource(id = R.string.warnings).uppercase(Locale.ROOT),
                     style = MaterialTheme.typography.headlineMedium,
@@ -87,7 +72,7 @@ fun WarningsSection(
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
-                        .padding(start = 12.dp)
+                        .padding(start = 12.dp, top = 4.dp)
                         .weight(5f)
                 )
                 IconButton(onClick = { viewModel.toggleWarnings() }) {
@@ -161,7 +146,8 @@ fun WarningsSection(
                                         Text(
                                             text = DateTimeUtils.secondsToDate(
                                                 seconds = warning.date?.seconds ?: 0,
-                                                language = state.language?.getLanguageCode() ?: "es",
+                                                language = state.language?.getLanguageCode()
+                                                    ?: "es",
                                                 country = state.language?.getCountryCode() ?: "ES"
                                             ),
                                             style = MaterialTheme.typography.bodyMedium,

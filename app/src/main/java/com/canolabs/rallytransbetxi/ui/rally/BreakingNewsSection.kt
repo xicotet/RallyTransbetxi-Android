@@ -100,7 +100,14 @@ fun BreakingNewsSection(
                 .background(brush = gradient)
                 .padding(16.dp)
         ) {
-            Row {
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+            )  {
+                Icon(
+                    painter = painterResource(id = R.drawable.campaign_outlined),
+                    contentDescription = null,
+                    modifier = Modifier.size(36.dp)
+                )
                 Text(
                     text = stringResource(id = R.string.breaking_news).uppercase(Locale.ROOT),
                     style = MaterialTheme.typography.headlineMedium,
@@ -109,7 +116,7 @@ fun BreakingNewsSection(
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
-                        .padding(start = 12.dp)
+                        .padding(start = 12.dp, top = 4.dp)
                         .weight(5f)
                 )
                 IconButton(onClick = { viewModel.toggleBreakingNews() }) {
@@ -210,10 +217,10 @@ fun BreakingNewsSection(
                                         )
                                     }
 
-                                    Row (
+                                    Row(
                                         horizontalArrangement = Arrangement.Center,
                                         modifier = Modifier.padding(vertical = 4.dp)
-                                    ){
+                                    ) {
                                         Icon(
                                             imageVector = Icons.Default.DateRange,
                                             modifier = Modifier.padding(end = 4.dp),
@@ -222,7 +229,8 @@ fun BreakingNewsSection(
                                         Text(
                                             text = secondsToDate(
                                                 seconds = news.date?.seconds ?: 0,
-                                                language = state.language?.getLanguageCode() ?: "es",
+                                                language = state.language?.getLanguageCode()
+                                                    ?: "es",
                                                 country = state.language?.getCountryCode() ?: "ES"
                                             ),
                                             style = MaterialTheme.typography.bodyMedium,

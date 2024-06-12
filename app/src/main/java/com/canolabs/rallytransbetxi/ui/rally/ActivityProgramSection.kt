@@ -60,7 +60,14 @@ fun ActivityProgramSection(
                 .background(brush = getRallyScreenCardsGradient())
                 .padding(16.dp)
         ) {
-            Row {
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+            )  {
+                Icon(
+                    painter = painterResource(id = R.drawable.explore_outlined),
+                    contentDescription = null,
+                    modifier = Modifier.size(36.dp)
+                )
                 Text(
                     text = stringResource(id = R.string.activity_program).uppercase(Locale.ROOT),
                     style = MaterialTheme.typography.headlineMedium,
@@ -69,7 +76,7 @@ fun ActivityProgramSection(
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
-                        .padding(start = 12.dp)
+                        .padding(start = 12.dp, top = 4.dp)
                         .weight(5f)
                 )
                 IconButton(onClick = { viewModel.toggleActivities() }) {
