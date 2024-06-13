@@ -41,7 +41,9 @@ class WarningsRepositoryImpl @Inject constructor(
 
             // The latest non-seen warning needs to be prompted as a dialog
             val shortedWarningsByDate = warnings.sortedByDescending { it.date }
-            shortedWarningsByDate.first().needsToBePromptedAsDialog = true
+            if (shortedWarningsByDate.isNotEmpty()) {
+                shortedWarningsByDate.first().needsToBePromptedAsDialog = true
+            }
 
             warningsDao.insertWarnings(shortedWarningsByDate)
             Log.d(TAG, "Inserted fetched warnings into local storage")
@@ -66,7 +68,9 @@ class WarningsRepositoryImpl @Inject constructor(
 
             // The latest non-seen warning needs to be prompted as a dialog
             val shortedWarningsByDate = warnings.sortedByDescending { it.date }
-            shortedWarningsByDate.first().needsToBePromptedAsDialog = true
+            if (shortedWarningsByDate.isNotEmpty()) {
+                shortedWarningsByDate.first().needsToBePromptedAsDialog = true
+            }
 
             warningsDao.deleteAll()
             Log.d(TAG, "Deleted all local warnings")
