@@ -51,8 +51,8 @@ class ResultsRepositoryImpl @Inject constructor(
         val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
         Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
-        return if (apiVersion > localVersion) {
-            Log.d(TAG, "API version is newer. Fetching data from API.")
+        return if (apiVersion != localVersion) {
+            Log.d(TAG, "API version is different. Fetching data from API.")
 
             val results = resultsServiceImpl.fetchGlobalResults().map { it.copy(isGlobal = true) }
             Log.d(TAG, "Fetched global results from API: ${results.size} results")
@@ -112,8 +112,8 @@ class ResultsRepositoryImpl @Inject constructor(
         val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
         Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
-        return if (apiVersion > localVersion) {
-            Log.d(TAG, "API version is newer. Fetching data from API.")
+        return if (apiVersion != localVersion) {
+            Log.d(TAG, "API version is different. Fetching data from API.")
 
             val results = resultsServiceImpl.fetchStageResults(stageId).map { it.copy(stageId = stageId) }
             Log.d(TAG, "Fetched stage results from API: ${results.size} results")

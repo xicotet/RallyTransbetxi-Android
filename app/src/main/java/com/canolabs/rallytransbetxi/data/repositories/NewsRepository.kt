@@ -53,8 +53,8 @@ class NewsRepositoryImpl @Inject constructor(
         Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
         // Compare versions
-        return if (apiVersion > localVersion) {
-            Log.d(TAG, "API version is newer. Fetching data from API.")
+        return if (apiVersion != localVersion) {
+            Log.d(TAG, "API version is different. Fetching data from API.")
 
             // If API version is newer, fetch from API and update local version
             val news = newsServiceImpl.fetchNews()
