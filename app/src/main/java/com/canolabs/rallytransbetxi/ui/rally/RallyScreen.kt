@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.rally
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +39,8 @@ fun RallyScreen(
     darkThemeState: MutableState<Boolean>,
     fontScaleState: MutableState<Float>,
     navController: NavController,
-    changeLocale: (String) -> Unit
+    changeLocale: (String) -> Unit,
+    sharedPreferences: SharedPreferences
 ) {
     val state by viewModel.state.collectAsState()
     val bottomSheetState = rememberModalBottomSheetState()
@@ -53,6 +55,8 @@ fun RallyScreen(
 
         // Get the initial theme state
         viewModel.updateInitialThemeState(darkThemeState, isSystemInDarkTheme)
+        // Get the initial font size factor
+        viewModel.updateInitialFontSizeFactor(fontScaleState)
     }
 
     LazyColumn(
@@ -121,7 +125,8 @@ fun RallyScreen(
                         viewModel = viewModel,
                         darkThemeState = darkThemeState,
                         fontScaleState = fontScaleState,
-                        changeLocale = changeLocale
+                        changeLocale = changeLocale,
+                        sharedPreferences = sharedPreferences
                     )
                 }
             }

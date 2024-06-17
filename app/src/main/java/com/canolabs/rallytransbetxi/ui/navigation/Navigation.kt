@@ -10,6 +10,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,8 +45,8 @@ fun Navigation(
     darkThemeState: MutableState<Boolean>,
     fontScaleState: MutableState<Float>,
     changeLocale: (String) -> Unit,
-    finishedOnboarding: MutableState<Boolean>,
-    sharedPreferences: SharedPreferences
+    sharedPreferences: SharedPreferences,
+    recomposeNavbar: MutableState<Boolean>
 ) {
     val navController = rememberNavController()
     val screens = listOf(
@@ -54,13 +56,25 @@ fun Navigation(
         Screens.Teams
     )
 
+    val finishedOnboarding = remember {
+        mutableStateOf(
+            sharedPreferences.getBoolean(
+                "FinishedOnboarding",
+                false
+            )
+        )
+    }
+
     if (finishedOnboarding.value.not()) {
         val pagerState = rememberPagerState(pageCount = { 3 })
 
         OnboardingFlow(
             pagerState = pagerState,
             finishedOnboarding = finishedOnboarding,
-            sharedPreferences = sharedPreferences
+            sharedPreferences = sharedPreferences,
+            changeLanguage = { language ->
+                changeLocale(language)
+            }
         )
     } else {
         Scaffold(
@@ -73,6 +87,10 @@ fun Navigation(
                         containerColor = MaterialTheme.colorScheme.surface,
                         tonalElevation = 3.dp,
                     ) {
+                        if (recomposeNavbar.value) {
+                            recomposeNavbar.value = false
+                        }
+
                         screens.forEach { screen ->
                             NavigationBarItem(
                                 icon = {
@@ -120,7 +138,8 @@ fun Navigation(
                                 darkThemeState = darkThemeState,
                                 fontScaleState = fontScaleState,
                                 changeLocale = changeLocale,
-                                navController = navController
+                                navController = navController,
+                                sharedPreferences = sharedPreferences
                             )
 
                             Screens.Stages -> StagesScreen(

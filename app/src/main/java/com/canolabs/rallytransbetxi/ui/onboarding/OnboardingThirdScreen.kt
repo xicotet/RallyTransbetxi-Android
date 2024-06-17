@@ -37,10 +37,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -67,11 +64,10 @@ import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 @Composable
 fun OnboardingThirdScreen(
     pagerState: PagerState,
+    selectedLanguage: MutableState<Language?>,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit
 ) {
-    var selectedLanguage by remember { mutableStateOf<Language?>(null) }
-
     Surface(
         color = onboardingBackground,
         modifier = Modifier.fillMaxSize()
@@ -108,11 +104,16 @@ fun OnboardingThirdScreen(
                                 .size(100.dp)
                                 .padding(8.dp)
                                 .clickable {
-                                    selectedLanguage = language
+                                    // If it's already selected, deselect it
+                                    if (selectedLanguage.value == language) {
+                                        selectedLanguage.value = null
+                                        return@clickable
+                                    }
+                                    selectedLanguage.value = language
                                 }
                                 .border(
                                     width = 2.dp,
-                                    color = if (selectedLanguage == language)
+                                    color = if (selectedLanguage.value == language)
                                         MaterialTheme.colorScheme.secondary
                                     else Color.Transparent,
                                     shape = MaterialTheme.shapes.medium
@@ -196,7 +197,7 @@ fun OnboardingThirdScreen(
                         disabledContainerColor = onboardingButtonDisabledBackground,
                         disabledContentColor = onboardingButtonDisabledContent
                     ),
-                    enabled = selectedLanguage != null,
+                    enabled = selectedLanguage.value != null,
                     modifier = Modifier
                         .clip(RectangleShape)
                         .fillMaxWidth()

@@ -102,7 +102,7 @@ fun OnboardingSecondScreen(
             )
 
             val squareItems = listOf(
-                SquareItem(R.drawable.sports_score, stringResource(R.string.live_results)),
+                SquareItem(R.drawable.sports_score, stringResource(R.string.results)),
                 SquareItem(R.drawable.group_outlined, stringResource(R.string.teams)),
                 SquareItem(R.drawable.map_outlined, stringResource(R.string.stages_maps)),
                 SquareItem(R.drawable.directions_outlined, stringResource(R.string.directions))

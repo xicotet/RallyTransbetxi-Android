@@ -33,7 +33,6 @@ class RallyViewModelFactory @Inject constructor(
     private val getHallOfFameUseCase: GetHallOfFameUseCase,
     private val getActivitiesUseCase: GetActivitiesUseCase,
     private val insertSettingsUseCase: InsertSettingsUseCase,
-    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
     private val getThemeSettingsUseCase: GetThemeSettingsUseCase,
     private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
     private val getFontSizeFactorSettingsUseCase: GetFontSizeFactorSettingsUseCase
@@ -48,7 +47,6 @@ class RallyViewModelFactory @Inject constructor(
                     getHallOfFameUseCase,
                     getActivitiesUseCase,
                     insertSettingsUseCase,
-                    getLanguageSettingsUseCase,
                     getThemeSettingsUseCase,
                     getProfileSettingsUseCase,
                     getFontSizeFactorSettingsUseCase

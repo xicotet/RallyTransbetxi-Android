@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.rally
 
+import android.content.SharedPreferences
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +12,6 @@ import com.canolabs.rallytransbetxi.domain.entities.Theme
 import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetHallOfFameUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetLanguageSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetRestaurantsUseCase
@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +35,6 @@ class RallyScreenViewModel @Inject constructor(
     private val getHallOfFameUseCase: GetHallOfFameUseCase,
     private val getActivitiesUseCase: GetActivitiesUseCase,
     private val insertSettingsUseCase: InsertSettingsUseCase,
-    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
     private val getThemeSettingsUseCase: GetThemeSettingsUseCase,
     private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
     private val getFontSizeFactorSettingsUseCase: GetFontSizeFactorSettingsUseCase
@@ -132,6 +132,15 @@ class RallyScreenViewModel @Inject constructor(
         }
     }
 
+    fun fetchLanguageSettings(sharedPreferences: SharedPreferences) {
+        viewModelScope.launch {
+            val language = sharedPreferences.getString("SelectedLanguage", Locale.getDefault().language)
+            if (language != null) {
+                _state.setLanguage(Language.entries.find { it.getLanguageCode() == language }!!)
+            }
+        }
+    }
+
     suspend fun updateInitialThemeState(darkThemeState: MutableState<Boolean>, isSystemInDarkTheme: Boolean) {
         fetchThemeSettings()
         while (state.value.theme == null) {
@@ -145,13 +154,12 @@ class RallyScreenViewModel @Inject constructor(
         }
     }
 
-    fun fetchLanguageSettings() {
-        viewModelScope.launch {
-            val language = getLanguageSettingsUseCase.invoke()
-            _state.setLanguage(Language.entries.find {
-               it.getDatabaseName() == language
-            }!!)
+    suspend fun updateInitialFontSizeFactor(fontScaleState: MutableState<Float>) {
+        fetchFontSizeFactorSettings()
+        while (state.value.fontSizeFactor == null) {
+            delay(100)
         }
+        fontScaleState.value = state.value.fontSizeFactor?.value() ?: 1f
     }
 
     fun insertSettings() {

@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.rally
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,13 +43,14 @@ fun BottomSheetAppSettings(
     viewModel: RallyScreenViewModel,
     darkThemeState: MutableState<Boolean>,
     fontScaleState: MutableState<Float>,
-    changeLocale: (String) -> Unit
+    changeLocale: (String) -> Unit,
+    sharedPreferences: SharedPreferences
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchThemeSettings()
-        viewModel.fetchLanguageSettings()
         viewModel.fetchProfileSettings()
         viewModel.fetchFontSizeFactorSettings()
+        viewModel.fetchLanguageSettings(sharedPreferences)
     }
 
     if (state.language == null || state.theme == null || state.directionsProfile == null

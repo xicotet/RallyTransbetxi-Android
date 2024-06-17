@@ -6,17 +6,28 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import com.canolabs.rallytransbetxi.domain.entities.Language
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingFlow(
     pagerState: PagerState,
     finishedOnboarding: MutableState<Boolean>,
-    sharedPreferences: SharedPreferences
+    sharedPreferences: SharedPreferences,
+    changeLanguage: (String) -> Unit
 ) {
-    val corroutineScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
+
+    val selectedLanguage = remember { mutableStateOf<Language?>(null) }
+    val language = sharedPreferences.getString("SelectedLanguage", Locale.getDefault().language)
+    if (language != null) {
+        selectedLanguage.value = Language.entries.find { it.getLanguageCode() == language }
+    }
 
     HorizontalPager(
         state = pagerState,
@@ -25,7 +36,7 @@ fun OnboardingFlow(
             0 -> OnboardingFirstScreen(
                 pagerState,
                 onNextClick = {
-                    corroutineScope.launch {
+                    coroutineScope.launch {
                         pagerState.animateScrollToPage(1)
                     }
                 },
@@ -33,27 +44,31 @@ fun OnboardingFlow(
             1 -> OnboardingSecondScreen(
                 pagerState,
                 onPreviousClick = {
-                    corroutineScope.launch {
+                    coroutineScope.launch {
                         pagerState.animateScrollToPage(0)
                     }
                 },
                 onNextClick = {
-                    corroutineScope.launch {
+                    coroutineScope.launch {
                         pagerState.animateScrollToPage(2)
                     }
                 },
             )
             2 -> OnboardingThirdScreen(
                 pagerState,
+                selectedLanguage = selectedLanguage,
                 onPreviousClick = {
-                    corroutineScope.launch {
+                    coroutineScope.launch {
                         pagerState.animateScrollToPage(1)
                     }
                 },
                 onNextClick = {
-                    corroutineScope.launch {
+                    coroutineScope.launch {
                         sharedPreferences.edit().putBoolean("FinishedOnboarding", true).apply()
                         finishedOnboarding.value = true
+                        selectedLanguage.value?.let { language ->
+                            changeLanguage(language.getLanguageCode())
+                        }
                     }
                 }
             )

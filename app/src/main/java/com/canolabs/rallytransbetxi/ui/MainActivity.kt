@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -39,17 +40,28 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject lateinit var viewModelFactory: MainActivityViewModelFactory
+    @Inject
+    lateinit var viewModelFactory: MainActivityViewModelFactory
     private lateinit var connectivityObserver: ConnectivityObserver
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
+
+        // Load the selected language from SharedPreferences and apply it
+        val sharedPreferences = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+        val selectedLanguage =
+            sharedPreferences.getString("SelectedLanguage", Locale.getDefault().language)
+        if (selectedLanguage != null) {
+            changeAppLocale(this, selectedLanguage)
+        }
+
         connectivityObserver = NetworkConnectivityObserver(applicationContext)
         setContent {
             val darkThemeState = remember { mutableStateOf(false) }
             val fontScaleState = remember { mutableFloatStateOf(1f) }
+            val recomposeNavbar = remember { mutableStateOf(false) }
 
             RallyTransbetxiTheme(
                 darkTheme = darkThemeState,
@@ -81,11 +93,8 @@ class MainActivity : ComponentActivity() {
                     )
 
                     fun changeLocale(locale: String) {
-                        changeLocale(this, locale)
+                        changeAppLocale(this, locale, recomposeNavbar )
                     }
-
-                    val sharedPreferences = applicationContext.getSharedPreferences("MyApp", Context.MODE_PRIVATE)
-                    val finishedOnboarding = remember { mutableStateOf(sharedPreferences.getBoolean("FinishedOnboarding", false)) }
 
                     Navigation(
                         stagesScreenViewModel = stagesScreenViewModel,
@@ -96,8 +105,8 @@ class MainActivity : ComponentActivity() {
                         darkThemeState = darkThemeState,
                         fontScaleState = fontScaleState,
                         changeLocale = ::changeLocale,
-                        finishedOnboarding = finishedOnboarding,
-                        sharedPreferences = sharedPreferences
+                        sharedPreferences = sharedPreferences,
+                        recomposeNavbar = recomposeNavbar
                     )
 
                     val networkStatus by connectivityObserver.observe().collectAsState(
@@ -131,11 +140,24 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun changeLocale(context: Context, localeString: String) {
+fun changeAppLocale(
+    context: Context,
+    localeString: String,
+    recomposeNavbar: MutableState<Boolean>? = null
+) {
     val locale = Locale(localeString)
     Locale.setDefault(locale)
     val config = Configuration(context.resources.configuration)
     config.setLocale(locale)
     context.createConfigurationContext(config)
     context.resources.updateConfiguration(config, context.resources.displayMetrics)
+
+    // Save the selected language in SharedPreferences
+    val sharedPreferences = context.getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+    val editor = sharedPreferences.edit()
+    editor.putString("SelectedLanguage", localeString)
+    editor.apply()
+
+    // Trigger navbar recomposition
+    recomposeNavbar?.value = true
 }
