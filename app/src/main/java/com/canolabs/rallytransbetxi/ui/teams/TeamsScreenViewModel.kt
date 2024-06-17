@@ -83,7 +83,9 @@ class TeamsScreenViewModel @Inject constructor(
                 }
                 val stageResultsByTime = stageResultsByCategory.sortedBy { it.time }
                 val stagePosition = stageResultsByTime.indexOfFirst { it.team.number == team.number }
-                stageResults.add(stagePosition + 1)
+                if (stagePosition != -1) {
+                    stageResults.add(stagePosition + 1)
+                }
             }
 
             // Number of victories
