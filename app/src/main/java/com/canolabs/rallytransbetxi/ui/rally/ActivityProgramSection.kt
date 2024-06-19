@@ -35,6 +35,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.data.models.responses.Activity
+import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
@@ -60,9 +62,9 @@ fun ActivityProgramSection(
                 .background(brush = getRallyScreenCardsGradient())
                 .padding(16.dp)
         ) {
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
-            )  {
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.explore_outlined),
                     contentDescription = null,
@@ -111,12 +113,20 @@ fun ActivityProgramSection(
                     Column {
                         if (state.activities.isNotEmpty()) {
                             Text(
-                                text = DateTimeUtils.yearOfADateInSpanish(state.activities.first().date?.seconds ?: 0),
+                                text = DateTimeUtils.yearOfADate(
+                                    seconds = DateTimeUtils.timestampFromFormattedDate(
+                                        state.activities.first().date ?: "0"
+                                    ) ?: 0,
+                                    language = state.language?.getLanguageCode() ?: "es",
+                                    country = state.language?.getCountryCode() ?: "ES"
+                                ),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontFamily = robotoFamily,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp, bottom = 4.dp)
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .padding(top = 8.dp, bottom = 4.dp)
                             )
 
                             HorizontalDivider(
@@ -156,8 +166,13 @@ fun ActivityProgramSection(
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
                                         Text(
-                                            text = DateTimeUtils.dayOfADateInSpanish(
-                                                activity.date?.seconds ?: 0
+                                            text = DateTimeUtils.dayOfADate(
+                                                seconds = DateTimeUtils.timestampFromFormattedDate(
+                                                    activity.date ?: "0"
+                                                ) ?: 0,
+                                                language = state.language?.getLanguageCode()
+                                                    ?: "es",
+                                                country = state.language?.getCountryCode() ?: "ES"
                                             ),
                                             style = MaterialTheme.typography.bodyMedium,
                                             fontFamily = robotoFamily,
@@ -165,8 +180,13 @@ fun ActivityProgramSection(
                                         )
 
                                         Text(
-                                            text = DateTimeUtils.monthOfADateInSpanish(
-                                                activity.date?.seconds ?: 0
+                                            text = DateTimeUtils.monthOfADate(
+                                                seconds = DateTimeUtils.timestampFromFormattedDate(
+                                                    activity.date ?: "0"
+                                                ) ?: 0,
+                                                language = state.language?.getLanguageCode()
+                                                    ?: "es",
+                                                country = state.language?.getCountryCode() ?: "ES"
                                             ),
                                             style = MaterialTheme.typography.titleMedium,
                                             fontFamily = robotoFamily,
@@ -201,7 +221,10 @@ fun ActivityProgramSection(
                                             )
                                         }
                                         Text(
-                                            text = activity.activity,
+                                            text = getActivityByLanguage(
+                                                activity,
+                                                state.language ?: Language.SPANISH
+                                            ),
                                             style = MaterialTheme.typography.bodyMedium,
                                             fontFamily = robotoFamily,
                                             color = MaterialTheme.colorScheme.onSurface,
@@ -260,5 +283,14 @@ fun ActivityProgramSection(
                 }
             }
         }
+    }
+}
+
+fun getActivityByLanguage(activity: Activity, language: Language): String {
+    return when (language) {
+        Language.SPANISH -> activity.activityEs ?: ""
+        Language.CATALAN -> activity.activityCa ?: ""
+        Language.GERMAN -> activity.activityDe ?: ""
+        Language.ENGLISH -> activity.activityEn ?: ""
     }
 }
