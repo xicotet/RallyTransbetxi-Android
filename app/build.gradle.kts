@@ -83,6 +83,7 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics") // Firebase Crashlytics
     implementation("com.google.firebase:firebase-storage-ktx") // Firebase Storage
     implementation("com.google.firebase:firebase-firestore") // Cloud Firestore
+    implementation("com.google.firebase:firebase-messaging") // Firebase Messaging
 
     implementation("com.google.android.gms:play-services-location:21.2.0") // Location services
 
