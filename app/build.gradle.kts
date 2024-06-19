@@ -68,7 +68,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
     implementation("androidx.activity:activity-compose:1.8.2") // Compose
-    implementation(platform("androidx.compose:compose-bom:2024.02.01")) // Compose
+    implementation(platform("androidx.compose:compose-bom:2024.06.00")) // Compose
     implementation("androidx.compose.ui:ui") // Compose
     implementation("androidx.compose.ui:ui-graphics") // Compose
     implementation("androidx.compose.ui:ui-tooling-preview") // Compose
