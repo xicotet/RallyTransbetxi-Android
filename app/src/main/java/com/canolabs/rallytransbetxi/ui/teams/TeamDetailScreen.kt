@@ -122,9 +122,6 @@ fun TeamDetailScreen(
         } catch (e: Exception) {
             Log.d("DriverImagesPager", "Error: $e")
         }
-
-        teamsViewModel.fetchGlobalResultOfATeam(team ?: return@LaunchedEffect)
-        teamsViewModel.fetchStageResultsOfATeam(team)
     }
 
     val teamPainter = rememberAsyncImagePainter(
