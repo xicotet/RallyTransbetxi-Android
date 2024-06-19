@@ -65,6 +65,8 @@ fun RallyScreen(
         viewModel.updateInitialThemeState(darkThemeState, isSystemInDarkTheme)
         // Get the initial font size factor
         viewModel.updateInitialFontSizeFactor(fontScaleState)
+        // Get the initial language
+        viewModel.fetchLanguageSettings(sharedPreferences)
     }
 
     if (pullRefreshState.isRefreshing) {
@@ -144,8 +146,7 @@ fun RallyScreen(
                             viewModel = viewModel,
                             darkThemeState = darkThemeState,
                             fontScaleState = fontScaleState,
-                            changeLocale = changeLocale,
-                            sharedPreferences = sharedPreferences
+                            changeLocale = changeLocale
                         )
                     }
                 }
