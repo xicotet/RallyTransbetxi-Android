@@ -1,4 +1,4 @@
-package com.canolabs.rallytransbetxi.utils
+package com.canolabs.rallytransbetxi.ui.miscellaneous
 
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService

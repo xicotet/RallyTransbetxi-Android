@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name="com.canolabs.rallytransbetxi.utils.FcmListenerService"
+            android:name="com.canolabs.rallytransbetxi.ui.miscellaneous.FcmListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
