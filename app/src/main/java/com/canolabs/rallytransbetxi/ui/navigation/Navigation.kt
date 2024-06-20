@@ -239,12 +239,12 @@ fun Navigation(
 
                     AnimatedVisibility(
                         visible = isVisible,
-                        enter = fadeIn(animationSpec = tween(500)) + slideInHorizontally(
-                            initialOffsetX = { it },
+                        enter = fadeIn(animationSpec = tween(500)) + scaleIn(
+                            initialScale = 0.8f,
                             animationSpec = tween(700)
                         ),
-                        exit = fadeOut(animationSpec = tween(500)) + slideOutHorizontally(
-                            targetOffsetX = { -it },
+                        exit = fadeOut(animationSpec = tween(500)) + scaleOut(
+                            targetScale = 1.2f,
                             animationSpec = tween(700)
                         )
                     ) {
