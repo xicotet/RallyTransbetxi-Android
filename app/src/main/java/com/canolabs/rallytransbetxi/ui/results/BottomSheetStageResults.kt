@@ -279,6 +279,15 @@ fun BottomSheetStageResults(
                     )
                 }
 
+                if (filteredResultsBySearchBar.isEmpty() && resultsState.stageResults.isNotEmpty()) {
+                    Text(
+                        text = stringResource(id = R.string.results_are_hidden),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontFamily = robotoFamily,
+                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 24.dp)
+                    )
+                }
+
                 Column {
                     filteredResultsBySearchBar.forEach { result ->
                         ResultCard(

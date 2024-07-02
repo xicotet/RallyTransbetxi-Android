@@ -144,12 +144,14 @@ fun Navigation(
 
                             Screens.Stages -> StagesScreen(
                                 stagesViewModel = stagesScreenViewModel,
-                                navController = navController
+                                navController = navController,
+                                sharedPreferences = sharedPreferences
                             )
 
                             Screens.Results -> ResultsScreen(
                                 viewModel = resultsScreenViewModel,
-                                navController = navController
+                                navController = navController,
+                                sharedPreferences = sharedPreferences
                             )
 
                             Screens.Teams -> TeamsScreen(
@@ -195,7 +197,8 @@ fun Navigation(
                             darkThemeState = darkThemeState,
                             stageAcronym = it.arguments?.getString("stageAcronym") ?: "",
                             fastAction = it.arguments?.getString("fastAction") ?: "",
-                            navController = navController
+                            navController = navController,
+                            sharedPreferences = sharedPreferences
                         )
                     }
                 }

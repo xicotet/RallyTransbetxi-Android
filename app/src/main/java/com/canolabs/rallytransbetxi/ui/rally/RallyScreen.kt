@@ -61,11 +61,11 @@ fun RallyScreen(
         viewModel.fetchActivities()
         viewModel.fetchWarnings()
 
-        // Get the initial theme state
+        // Get the initial theme state. It will take some ms to initialize
         viewModel.updateInitialThemeState(darkThemeState, isSystemInDarkTheme)
-        // Get the initial font size factor
+        // Get the initial font size factor. It will take some ms to initialize
         viewModel.updateInitialFontSizeFactor(fontScaleState)
-        // Get the initial language
+        // Get the initial language. It will be applied immediately
         viewModel.fetchLanguage(sharedPreferences)
     }
 

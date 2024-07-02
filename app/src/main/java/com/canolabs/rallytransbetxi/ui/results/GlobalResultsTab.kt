@@ -74,6 +74,15 @@ fun GlobalResultsTab(
             )
         }
 
+        if (state.globalResults.isNotEmpty() && filteredResultsBySearchBar.isEmpty()) {
+            Text(
+                text = stringResource(id = R.string.results_are_hidden),
+                style = MaterialTheme.typography.titleMedium,
+                fontFamily = robotoFamily,
+                modifier = Modifier.padding(vertical = 16.dp, horizontal = 24.dp)
+            )
+        }
+
         sortedResultsByTime.forEachIndexed { index, result ->
             if (filteredResultsBySearchBar.contains(result)) {
                 ResultCard(

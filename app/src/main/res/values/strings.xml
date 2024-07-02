@@ -61,6 +61,7 @@
     // Results
     <string name="disqualified">Descalificado</string>
     <string name="results_available">Los resultados estarán disponibles poco después del </string>
+    <string name="results_are_hidden">Los resultados están ocultos por alguno de los filtros</string>
     <string name="global_results_available">Los resultados generales estarán disponibles poco después del </string>
     <string name="at_hour">a las</string>
 

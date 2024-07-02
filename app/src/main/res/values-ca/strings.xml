@@ -61,6 +61,7 @@
     // Results card
     <string name="disqualified">Desqualificat</string>
     <string name="results_available">Els resultats estaran disponibles poc després del</string>
+    <string name="results_are_hidden">Els resultats estan ocults per algun dels filtres</string>
     <string name="global_results_available">Els resultats generals estaran disponibles poc després del</string>
     <string name="at_hour">a les</string>
 
