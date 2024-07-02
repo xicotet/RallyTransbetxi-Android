@@ -17,6 +17,12 @@ interface ResultDao {
     @Query("DELETE FROM result WHERE stageId = :stageId")
     suspend fun deleteStageResults(stageId: String)
 
+    @Query("SELECT COUNT(*) FROM result WHERE isGlobal = 1")
+    suspend fun countGlobalResults(): Int
+
+    @Query("SELECT COUNT(*) FROM result WHERE stageId = :stageId")
+    suspend fun countStageResults(stageId: String): Int
+
     @Query("SELECT * FROM result WHERE isGlobal = 1")
     suspend fun getGlobalResults(): List<Result>
 

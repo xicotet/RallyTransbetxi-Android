@@ -51,8 +51,15 @@ class ResultsRepositoryImpl @Inject constructor(
         val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
         Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
-        return if (apiVersion != localVersion) {
-            Log.d(TAG, "API version is different. Fetching data from API.")
+        val resultsCount = resultsDao.countGlobalResults()
+
+        return if (apiVersion != localVersion || resultsCount == 0) {
+            if (resultsCount == 0) {
+                Log.w(TAG, "No local results found global results " +
+                    "despite of having a local version stored.")
+            } else {
+                Log.d(TAG, "API version is different. Fetching data from API.")
+            }
 
             val results = resultsServiceImpl.fetchGlobalResults().map { it.copy(isGlobal = true) }
             Log.d(TAG, "Fetched global results from API: ${results.size} results")
@@ -112,8 +119,15 @@ class ResultsRepositoryImpl @Inject constructor(
         val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
         Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
-        return if (apiVersion != localVersion) {
-            Log.d(TAG, "API version is different. Fetching data from API.")
+        val resultsCount = resultsDao.countStageResults(stageId)
+
+        return if (apiVersion != localVersion || resultsCount == 0) {
+            if (resultsCount == 0) {
+                Log.w(TAG, "No local results found for stageId: $stageId " +
+                    "despite of having a local version stored.")
+            } else {
+                Log.d(TAG, "API version is different. Fetching data from API.")
+            }
 
             val results = resultsServiceImpl.fetchStageResults(stageId).map { it.copy(stageId = stageId) }
             Log.d(TAG, "Fetched stage results from API: ${results.size} results")
