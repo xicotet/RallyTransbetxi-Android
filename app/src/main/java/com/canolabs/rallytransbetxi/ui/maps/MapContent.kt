@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.ui.platform.LocalContext
@@ -387,15 +388,22 @@ fun MapContent(
                 ) {
                     IconButton(
                         onClick = {
-                            permissionLauncher.launch(
-                                arrayOf(
-                                    Manifest.permission.ACCESS_FINE_LOCATION,
-                                    Manifest.permission.ACCESS_COARSE_LOCATION
+                            coroutineScope.launch {
+                                Log.d("MapContent", "Directions button pressed")
+                                permissionLauncher.launch(
+                                    arrayOf(
+                                        Manifest.permission.ACCESS_FINE_LOCATION,
+                                        Manifest.permission.ACCESS_COARSE_LOCATION
+                                    )
                                 )
-                            )
-                            if (state.locationPermissionIsGranted && state.stage.geoPoints != null) {
-                                mapsViewModel.setHasPressedDirectionsButton(true)
-                                mapsViewModel.getDirections()
+                                if (state.locationPermissionIsGranted && state.stage.geoPoints != null) {
+                                    Log.d("MapContent", "Directions button pressed and location permission granted")
+                                    delay(1000)
+                                    mapsViewModel.setHasPressedDirectionsButton(true)
+                                    mapsViewModel.getDirections()
+                                } else {
+                                    Log.d("MapContent", "Directions button pressed but location permission denied")
+                                }
                             }
 
                         },
