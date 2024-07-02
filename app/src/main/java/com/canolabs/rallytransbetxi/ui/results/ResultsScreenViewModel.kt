@@ -1,12 +1,12 @@
 package com.canolabs.rallytransbetxi.ui.results
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetLanguageSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,13 +14,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class ResultsScreenViewModel @Inject constructor(
     private val getGlobalResultsUseCase: GetGlobalResultsUseCase,
     private val getStagesResultsUseCase: GetStagesResultsUseCase,
-    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
     private val getStagesUseCase: GetStagesUseCase
 ): ViewModel() {
     private var _state = MutableStateFlow(ResultsScreenUIState())
@@ -48,14 +48,12 @@ class ResultsScreenViewModel @Inject constructor(
         }
     }
 
-    fun fetchLanguage() {
+    fun fetchLanguage(sharedPreferences: SharedPreferences) {
         viewModelScope.launch {
-            val language = getLanguageSettingsUseCase.invoke()
-            _state.setLanguage(
-                Language.entries.find {
-                    it.getDatabaseName() == language
-                }!!
-            )
+            val language = sharedPreferences.getString("SelectedLanguage", Locale.getDefault().language)
+            if (language != null) {
+                _state.setLanguage(Language.entries.find { it.getLanguageCode() == language }!!)
+            }
         }
     }
 

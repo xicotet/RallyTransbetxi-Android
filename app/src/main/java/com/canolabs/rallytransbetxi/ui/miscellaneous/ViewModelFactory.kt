@@ -8,7 +8,6 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetHallOfFameUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetLanguageSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetRestaurantsUseCase
@@ -60,14 +59,12 @@ class RallyViewModelFactory @Inject constructor(
 @Suppress("UNCHECKED_CAST")
 class StagesViewModelFactory @Inject constructor(
     private val getStagesUseCase: GetStagesUseCase,
-    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StagesScreenViewModel::class.java)) {
             return StagesScreenViewModel(
                 getStagesUseCase,
-                getLanguageSettingsUseCase
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
@@ -79,7 +76,6 @@ class MapsViewModelFactory @Inject constructor(
     private val getStageByAcronymUseCase: GetStageByAcronymUseCase,
     private val getDirectionsUseCase: GetDirectionsUseCase,
     private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
-    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
     private val application: Application
 ) : ViewModelProvider.Factory {
 
@@ -89,7 +85,6 @@ class MapsViewModelFactory @Inject constructor(
                 getStageByAcronymUseCase,
                 getDirectionsUseCase,
                 getProfileSettingsUseCase,
-                getLanguageSettingsUseCase,
                 application
             ) as T
         }
@@ -122,7 +117,6 @@ class TeamsViewModelFactory @Inject constructor(
 class ResultsViewModelFactory @Inject constructor(
     private val getGlobalResultsUseCase: GetGlobalResultsUseCase,
     private val getStagesResultsUseCase: GetStagesResultsUseCase,
-    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
     private val getStagesUseCase: GetStagesUseCase
 ) : ViewModelProvider.NewInstanceFactory() {
 
@@ -131,7 +125,6 @@ class ResultsViewModelFactory @Inject constructor(
             return ResultsScreenViewModel(
                 getGlobalResultsUseCase,
                 getStagesResultsUseCase,
-                getLanguageSettingsUseCase,
                 getStagesUseCase
             ) as T
         }

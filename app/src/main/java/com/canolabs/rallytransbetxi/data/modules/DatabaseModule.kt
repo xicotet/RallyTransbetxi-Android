@@ -19,7 +19,6 @@ import com.canolabs.rallytransbetxi.data.sources.local.dao.WarningDao
 import com.canolabs.rallytransbetxi.data.sources.local.database.AppDatabase
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DATABASE_NAME
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_FONT_SIZE_FACTOR
-import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_LANGUAGE
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_PROFILE
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_THEME
 import dagger.Module
@@ -48,7 +47,6 @@ object DatabaseModule {
                     appDatabase.settingsDao().insertSetting(
                         AppSetting(
                             1,
-                            DEFAULT_LANGUAGE,
                             DEFAULT_THEME,
                             DEFAULT_PROFILE,
                             DEFAULT_FONT_SIZE_FACTOR

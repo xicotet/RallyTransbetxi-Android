@@ -66,7 +66,7 @@ fun RallyScreen(
         // Get the initial font size factor
         viewModel.updateInitialFontSizeFactor(fontScaleState)
         // Get the initial language
-        viewModel.fetchLanguageSettings(sharedPreferences)
+        viewModel.fetchLanguage(sharedPreferences)
     }
 
     if (pullRefreshState.isRefreshing) {

@@ -132,7 +132,7 @@ class RallyScreenViewModel @Inject constructor(
         }
     }
 
-    fun fetchLanguageSettings(sharedPreferences: SharedPreferences) {
+    fun fetchLanguage(sharedPreferences: SharedPreferences) {
         viewModelScope.launch {
             val language = sharedPreferences.getString("SelectedLanguage", Locale.getDefault().language)
             if (language != null) {
@@ -164,12 +164,11 @@ class RallyScreenViewModel @Inject constructor(
 
     fun insertSettings() {
         viewModelScope.launch {
-            val language = _state.value.language?.getDatabaseName()!!
             val theme = _state.value.theme?.getDatabaseName()!!
             val profile = _state.value.directionsProfile?.getDatabaseName()!!
             val fontSizeFactor = _state.value.fontSizeFactor?.value()!!
 
-            insertSettingsUseCase.invoke(language, theme, profile, fontSizeFactor)
+            insertSettingsUseCase.invoke(theme, profile, fontSizeFactor)
         }
     }
 

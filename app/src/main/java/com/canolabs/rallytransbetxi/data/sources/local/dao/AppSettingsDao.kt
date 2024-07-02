@@ -8,9 +8,6 @@ import com.canolabs.rallytransbetxi.data.models.responses.AppSetting
 
 @Dao
 interface AppSettingsDao {
-    @Query("SELECT language FROM appsetting WHERE id = 1")
-    suspend fun getLanguage(): String
-
     @Query("SELECT theme FROM appsetting WHERE id = 1")
     suspend fun getTheme(): String
 

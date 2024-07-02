@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
                     )
 
                     fun changeLocale(locale: String) {
-                        changeAppLocale(this, locale, recomposeNavbar )
+                        changeAppLocale(this, locale, recomposeNavbar)
                     }
 
                     Navigation(

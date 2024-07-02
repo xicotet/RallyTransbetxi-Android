@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.results
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,7 +41,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun ResultsScreen(
     viewModel: ResultsScreenViewModel,
-    navController: NavController
+    navController: NavController,
+    sharedPreferences: SharedPreferences
 ) {
     val state by viewModel.state.collectAsState()
     val titles = listOf(R.string.global, R.string.stages)
@@ -52,7 +54,7 @@ fun ResultsScreen(
     LaunchedEffect(Unit) {
         viewModel.fetchGlobalResults()
         viewModel.fetchStages()
-        viewModel.fetchLanguage()
+        viewModel.fetchLanguage(sharedPreferences)
     }
 
     if (pullRefreshState.isRefreshing) {
@@ -60,7 +62,7 @@ fun ResultsScreen(
             delay(1500)
             viewModel.fetchGlobalResults()
             viewModel.fetchStages()
-            viewModel.fetchLanguage()
+            viewModel.fetchLanguage(sharedPreferences)
             pullRefreshState.endRefresh()
         }
     }

@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.stages
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -34,21 +35,22 @@ import kotlinx.coroutines.delay
 @Composable
 fun StagesScreen(
     stagesViewModel: StagesScreenViewModel,
-    navController: NavController
+    navController: NavController,
+    sharedPreferences: SharedPreferences
 ) {
     val state by stagesViewModel.state.collectAsState()
     val pullRefreshState = rememberPullToRefreshState()
 
     LaunchedEffect(Unit) {
         stagesViewModel.fetchStages()
-        stagesViewModel.fetchLanguageSettings()
+        stagesViewModel.fetchLanguage(sharedPreferences)
     }
 
     if (pullRefreshState.isRefreshing) {
         LaunchedEffect(true) {
             delay(1500)
             stagesViewModel.fetchStages()
-            stagesViewModel.fetchLanguageSettings()
+            stagesViewModel.fetchLanguage(sharedPreferences)
             pullRefreshState.endRefresh()
         }
     }

@@ -2,6 +2,7 @@ package com.canolabs.rallytransbetxi.ui.maps
 
 import android.Manifest
 import android.app.Activity
+import android.content.SharedPreferences
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -52,7 +53,8 @@ fun MapsScreen(
     darkThemeState: MutableState<Boolean>,
     stageAcronym: String,
     fastAction: String,
-    navController: NavController
+    navController: NavController,
+    sharedPreferences: SharedPreferences
 ) {
     val state by mapsViewModel.state.collectAsState()
 
@@ -60,7 +62,7 @@ fun MapsScreen(
         mapsViewModel.fetchStage(stageAcronym)
         mapsViewModel.cleanDirections()
         mapsViewModel.cleanLocation()
-        mapsViewModel.fetchLanguage()
+        mapsViewModel.fetchLanguage(sharedPreferences)
     }
 
     val context = LocalContext.current

@@ -20,7 +20,6 @@ class Constants {
 
         // Room storage
         const val DATABASE_NAME = "app_database"
-        const val DEFAULT_LANGUAGE = "spanish"
         const val DEFAULT_THEME = "light"
         const val DEFAULT_PROFILE = "driving-car"
         const val DEFAULT_FONT_SIZE_FACTOR = 1.0f

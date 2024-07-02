@@ -7,12 +7,10 @@ import javax.inject.Inject
 
 interface AppSettingsRepository {
     suspend fun insertSetting(
-        language: String,
         theme: String,
         profile: String,
         fontSizeFactor: Float
     )
-    suspend fun getLanguage(): String
     suspend fun getTheme(): String
     suspend fun getProfile(): String
     suspend fun getFontSizeFactor(): Float
@@ -23,15 +21,8 @@ class AppSettingsRepositoryImpl @Inject constructor(
     private val appSettingsDao: AppSettingsDao
 )  : AppSettingsRepository {
 
-    override suspend fun insertSetting(language: String, theme: String, profile: String, fontSizeFactor: Float) {
-        appSettingsDao.insertSetting(AppSetting(1, language, theme, profile, fontSizeFactor))
-    }
-
-    override suspend fun getLanguage(): String {
-        while (!isDatabaseInitialized()) {
-            delay(500)
-        }
-        return appSettingsDao.getLanguage()
+    override suspend fun insertSetting(theme: String, profile: String, fontSizeFactor: Float) {
+        appSettingsDao.insertSetting(AppSetting(1, theme, profile, fontSizeFactor))
     }
 
     override suspend fun getTheme(): String {

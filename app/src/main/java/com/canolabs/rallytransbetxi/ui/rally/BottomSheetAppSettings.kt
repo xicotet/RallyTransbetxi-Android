@@ -93,7 +93,6 @@ fun BottomSheetAppSettings(
                         onClick = {
                             changeLocale.invoke(Language.SPANISH.getLanguageCode())
                             viewModel.setLanguage(Language.SPANISH)
-                            viewModel.insertSettings()
                         },
                         modifier = Modifier
                             .size(48.dp)
@@ -120,7 +119,6 @@ fun BottomSheetAppSettings(
                         onClick = {
                             changeLocale.invoke(Language.CATALAN.getLanguageCode())
                             viewModel.setLanguage(Language.CATALAN)
-                            viewModel.insertSettings()
                         },
                         modifier = Modifier
                             .size(60.dp, 48.dp)
@@ -146,8 +144,8 @@ fun BottomSheetAppSettings(
                     }
                     IconButton(
                         onClick = {
+                            // TODO: Add onChangeLocale when German is added to the app
                             viewModel.setLanguage(Language.GERMAN)
-                            viewModel.insertSettings()
                         },
                         modifier = Modifier
                             .size(48.dp)
@@ -173,8 +171,8 @@ fun BottomSheetAppSettings(
                     }
                     IconButton(
                         onClick = {
+                            // TODO: Add onChangeLocale when English is added to the app
                             viewModel.setLanguage(Language.ENGLISH)
-                            viewModel.insertSettings()
                         },
                         modifier = Modifier
                             .size(48.dp)

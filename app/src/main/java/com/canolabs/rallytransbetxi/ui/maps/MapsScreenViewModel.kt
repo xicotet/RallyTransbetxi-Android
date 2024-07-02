@@ -2,6 +2,7 @@ package com.canolabs.rallytransbetxi.ui.maps
 
 import android.Manifest
 import android.app.Application
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.util.Log
@@ -11,7 +12,6 @@ import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.BuildConfig
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetLanguageSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStageByAcronymUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,7 +33,6 @@ class MapsScreenViewModel @Inject constructor(
     private val getStageByAcronymUseCase: GetStageByAcronymUseCase,
     private val getDirectionsUseCase: GetDirectionsUseCase,
     private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
-    private val getLanguageSettingsUseCase: GetLanguageSettingsUseCase,
     private val application: Application
 ): ViewModel() {
     private var _state = MutableStateFlow(MapsScreenUIState())
@@ -93,12 +93,12 @@ class MapsScreenViewModel @Inject constructor(
         }
     }
 
-    fun fetchLanguage() {
+    fun fetchLanguage(sharedPreferences: SharedPreferences) {
         viewModelScope.launch {
-            val language = getLanguageSettingsUseCase.invoke()
-            _state.setLanguage(Language.entries.find {
-                it.getDatabaseName() == language
-            }!!)
+            val language = sharedPreferences.getString("SelectedLanguage", Locale.getDefault().language)
+            if (language != null) {
+                _state.setLanguage(Language.entries.find { it.getLanguageCode() == language }!!)
+            }
         }
     }
 
