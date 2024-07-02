@@ -1,10 +1,19 @@
 package com.canolabs.rallytransbetxi.ui.results
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 import com.canolabs.rallytransbetxi.ui.navigation.Screens
+import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
+import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 
 
 @Composable
@@ -37,6 +46,32 @@ fun GlobalResultsTab(
             }
         } else {
             sortedResultsByTime
+        }
+
+        if (state.globalResults.isEmpty() && state.stages.isNotEmpty()) {
+            // Show a placeholder indicating when the results will be available
+            val (startTime, languageCode, countryCode) =
+                Triple(
+                    state.stages.first().startTime?.seconds ?: 0,
+                    state.language?.getLanguageCode() ?: "es",
+                    state.language?.getCountryCode() ?: "ES"
+                )
+
+            val startDate = DateTimeUtils.secondsToDate(
+                seconds = startTime,
+                language = languageCode,
+                country = countryCode
+            )
+            val startingHour = DateTimeUtils.formatTimeFromSeconds(startTime)
+
+            Text(
+                text = stringResource(id = R.string.global_results_available) + ' ' +
+                    startDate + ' ' + stringResource(id = R.string.at_hour) + ' ' +
+                    startingHour + '.',
+                style = MaterialTheme.typography.titleMedium,
+                fontFamily = robotoFamily,
+                modifier = Modifier.padding(vertical = 16.dp, horizontal = 24.dp)
+            )
         }
 
         sortedResultsByTime.forEachIndexed { index, result ->

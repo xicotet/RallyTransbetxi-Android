@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -64,11 +65,13 @@ fun ResultsScreen(
         }
     }
 
-    Box(Modifier.fillMaxSize().nestedScroll(pullRefreshState.nestedScrollConnection)) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .nestedScroll(pullRefreshState.nestedScrollConnection)
+    ) {
         Column(
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.verticalScroll(rememberScrollState())
+            modifier = Modifier.fillMaxSize()
         ) {
 
             ResultsScreenHeader(viewModel = viewModel)
@@ -91,42 +94,62 @@ fun ResultsScreen(
                 }
             }
 
-            HorizontalPager(state = pagerState) { page ->
-                when (page) {
-                    0 -> {
-                        Column {
-                            RacingCategorySegmentedButton(
-                                selectedRacingCategories = state.selectedRacingCategories,
-                                onSelectedTabIndexChange = { tabIndex ->
-                                    if (state.selectedRacingCategories.any { it.getTabIndex() == tabIndex }) {
-                                        viewModel.removeSelectedRacingCategoryWithIndex(tabIndex)
-                                    } else {
-                                        viewModel.addSelectedRacingCategoryWithIndex(tabIndex)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+            ) {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxSize()
+                ) { page ->
+                    when (page) {
+                        0 -> {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                RacingCategorySegmentedButton(
+                                    selectedRacingCategories = state.selectedRacingCategories,
+                                    onSelectedTabIndexChange = { tabIndex ->
+                                        if (state.selectedRacingCategories.any { it.getTabIndex() == tabIndex }) {
+                                            viewModel.removeSelectedRacingCategoryWithIndex(tabIndex)
+                                        } else {
+                                            viewModel.addSelectedRacingCategoryWithIndex(tabIndex)
+                                        }
                                     }
-                                }
-                            )
-                            GlobalResultsTab(
-                                results = state.globalResults,
-                                isLoading = state.isLoading,
-                                state = state,
-                                navController = navController
-                            )
+                                )
+                                GlobalResultsTab(
+                                    results = state.globalResults,
+                                    isLoading = state.isLoading,
+                                    state = state,
+                                    navController = navController
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                            }
                         }
-                    }
-                    1 -> {
-                        Column {
-                            StagesResultsTab(
-                                stages = state.stages,
-                                isLoading = state.isLoading,
-                                state = state,
-                                viewModel = viewModel,
-                                navController = navController
-                            )
+                        1 -> {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                StagesResultsTab(
+                                    stages = state.stages,
+                                    isLoading = state.isLoading,
+                                    state = state,
+                                    viewModel = viewModel,
+                                    navController = navController
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                            }
                         }
                     }
                 }
             }
         }
+
         PullToRefreshContainer(
             modifier = Modifier.align(Alignment.TopCenter),
             state = pullRefreshState,
