@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.*
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -66,10 +65,7 @@ fun Navigation(
     }
 
     if (finishedOnboarding.value.not()) {
-        val pagerState = rememberPagerState(pageCount = { 3 })
-
         OnboardingFlow(
-            pagerState = pagerState,
             finishedOnboarding = finishedOnboarding,
             sharedPreferences = sharedPreferences,
             changeLanguage = { language ->
