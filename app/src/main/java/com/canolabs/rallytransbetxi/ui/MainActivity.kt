@@ -35,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.core.content.ContextCompat
 import android.Manifest
 import android.util.Log
+import androidx.compose.runtime.LaunchedEffect
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.BottomSheetConnectivityLost
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.ConnectivityObserver
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkConnectivityObserver
@@ -120,10 +121,22 @@ class MainActivity : ComponentActivity() {
                         initial = ConnectivityObserver.Status.Available
                     )
 
-                    val bottomSheetState = rememberModalBottomSheetState()
+                    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
                     val coroutineScope = rememberCoroutineScope()
 
-                    if (networkStatus != ConnectivityObserver.Status.Available) {
+                    LaunchedEffect(networkStatus) {
+                        if (networkStatus == ConnectivityObserver.Status.Lost) {
+                            coroutineScope.launch {
+                                bottomSheetState.show()
+                            }
+                        } else if (networkStatus == ConnectivityObserver.Status.Available) {
+                            coroutineScope.launch {
+                                bottomSheetState.hide()
+                            }
+                        }
+                    }
+
+                    if (bottomSheetState.isVisible) {
                         ModalBottomSheet(
                             sheetState = bottomSheetState,
                             onDismissRequest = {
