@@ -91,6 +91,9 @@ fun MapsScreen(
                 mapsViewModel.setIsGpsDialogVisible(true)
             } else {
                 mapsViewModel.getLocation()
+                if (state.hasPressedDirectionsButton && state.stage.geoPoints != null) {
+                    mapsViewModel.getDirections()
+                }
             }
         } else {
             mapsViewModel.setHasPressedDirectionsButton(false)

@@ -20,12 +20,17 @@ data class MapsScreenUIState(
     val isResultsBottomSheetVisible: Boolean = false,
     val isGpsDialogVisible: Boolean = false,
     val language: Language? = null,
+    val isLoadingDirections: Boolean = false,
     override val isLoading: Boolean = false,
     override val loadingMessageId: Int? = null,
 ) : UIState
 
 fun MutableStateFlow<MapsScreenUIState>.setIsLoading(isLoading: Boolean) {
     value = value.copy(isLoading = isLoading)
+}
+
+fun MutableStateFlow<MapsScreenUIState>.setIsLoadingDirections(isLoadingDirections: Boolean) {
+    value = value.copy(isLoadingDirections = isLoadingDirections)
 }
 
 fun MutableStateFlow<MapsScreenUIState>.setStage(stage: Stage) {
@@ -62,7 +67,6 @@ fun MutableStateFlow<MapsScreenUIState>.setHasPressedDirectionsButton(hasPressed
 
 fun MutableStateFlow<MapsScreenUIState>.setLocationPermissionIsGranted(locationPermissionIsGranted: Boolean) {
     value = value.copy(locationPermissionIsGranted = locationPermissionIsGranted)
-
 }
 
 fun MutableStateFlow<MapsScreenUIState>.setMapProperties(mapProperties: MapProperties) {

@@ -101,16 +101,8 @@ fun MapContent(
         resultsViewModel.fetchStagesResults(stageAcronym)
     }
 
-    // Launched effect to get the directions when the location permission is granted and ready
-    LaunchedEffect(state.locationPermissionIsGranted) {
-        if (state.hasPressedDirectionsButton && state.locationPermissionIsGranted
-            && state.stage.geoPoints != null) {
-            mapsViewModel.getDirections()
-        }
-    }
-
     Column {
-        if (state.isLoading) {
+        if (state.isLoading || state.isLoadingDirections) {
             LinearProgressIndicator(
                 // dynamic progress value
                 modifier = Modifier
@@ -405,6 +397,9 @@ fun MapContent(
                                     )
                                 )
                                 mapsViewModel.setHasPressedDirectionsButton(true)
+                                if (state.locationPermissionIsGranted) {
+                                    mapsViewModel.getDirections()
+                                }
                             }
                         },
                         modifier = Modifier.size(60.dp),

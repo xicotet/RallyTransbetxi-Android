@@ -63,6 +63,7 @@ class MapsScreenViewModel @Inject constructor(
 
     fun getDirections() {
         viewModelScope.launch(Dispatchers.IO) {
+            _state.setIsLoadingDirections(true)
             // We cannot get directions if we don't have the user location
             while (_state.value.location == null) {
                 delay(100)
@@ -84,8 +85,11 @@ class MapsScreenViewModel @Inject constructor(
                 _state.setDirections(directions)
             } catch (e: Exception) {
                 Log.e("MapsScreenViewModel", "Failed to fetch directions", e)
+                _state.setIsLoading(false)
                 return@launch
             }
+
+            _state.setIsLoadingDirections(false)
         }
     }
 
