@@ -139,6 +139,7 @@ class MainActivity : ComponentActivity() {
                     if (bottomSheetState.isVisible) {
                         ModalBottomSheet(
                             sheetState = bottomSheetState,
+                            dragHandle = {},
                             onDismissRequest = {
                                 coroutineScope.launch {
                                     bottomSheetState.hide()

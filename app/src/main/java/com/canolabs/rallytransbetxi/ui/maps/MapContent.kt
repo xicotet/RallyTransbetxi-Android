@@ -83,7 +83,7 @@ fun MapContent(
     resultsViewModel: ResultsScreenViewModel,
     navController: NavController
 ) {
-    val bottomSheetState = rememberModalBottomSheetState()
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 

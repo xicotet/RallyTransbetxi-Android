@@ -50,7 +50,7 @@ fun RallyScreen(
     sharedPreferences: SharedPreferences
 ) {
     val state by viewModel.state.collectAsState()
-    val bottomSheetState = rememberModalBottomSheetState()
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
     val pullRefreshState = rememberPullToRefreshState()
 
