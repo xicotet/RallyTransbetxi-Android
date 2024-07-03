@@ -78,6 +78,7 @@ fun MapsScreen(
             mapsViewModel.setLocationPermissionIsGranted(true)
             mapsViewModel.getLocation()
         } else {
+            mapsViewModel.setHasPressedDirectionsButton(false)
             val isFineLocationPermanentlyDenied =
                 !ActivityCompat.shouldShowRequestPermissionRationale(
                     activity,

@@ -101,6 +101,14 @@ fun MapContent(
         resultsViewModel.fetchStagesResults(stageAcronym)
     }
 
+    // Launched effect to get the directions when the location permission is granted and ready
+    LaunchedEffect(state.locationPermissionIsGranted) {
+        if (state.hasPressedDirectionsButton && state.locationPermissionIsGranted
+            && state.stage.geoPoints != null) {
+            mapsViewModel.getDirections()
+        }
+    }
+
     Column {
         if (state.isLoading) {
             LinearProgressIndicator(
@@ -396,16 +404,8 @@ fun MapContent(
                                         Manifest.permission.ACCESS_COARSE_LOCATION
                                     )
                                 )
-                                if (state.locationPermissionIsGranted && state.stage.geoPoints != null) {
-                                    Log.d("MapContent", "Directions button pressed and location permission granted")
-                                    delay(1000)
-                                    mapsViewModel.setHasPressedDirectionsButton(true)
-                                    mapsViewModel.getDirections()
-                                } else {
-                                    Log.d("MapContent", "Directions button pressed but location permission denied")
-                                }
+                                mapsViewModel.setHasPressedDirectionsButton(true)
                             }
-
                         },
                         modifier = Modifier.size(60.dp),
                     ) {
