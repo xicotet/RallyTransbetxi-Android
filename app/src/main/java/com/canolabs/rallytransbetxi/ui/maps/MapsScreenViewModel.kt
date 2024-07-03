@@ -74,14 +74,18 @@ class MapsScreenViewModel @Inject constructor(
             val endPointLongitude = _state.value.stage.geoPoints?.first()?.longitude.toString()
             val endPointLatitude = _state.value.stage.geoPoints?.first()?.latitude.toString()
 
-            val directions = getDirectionsUseCase.execute(
-                getProfileSettingsUseCase.invoke(),
-                BuildConfig.DIRECTIONS_API_KEY,
-                "$startPointLongitude,$startPointLatitude",
-                "$endPointLongitude,$endPointLatitude"
-            )
-
-            _state.setDirections(directions)
+            try{
+                val directions = getDirectionsUseCase.execute(
+                    getProfileSettingsUseCase.invoke(),
+                    BuildConfig.DIRECTIONS_API_KEY,
+                    "$startPointLongitude,$startPointLatitude",
+                    "$endPointLongitude,$endPointLatitude"
+                )
+                _state.setDirections(directions)
+            } catch (e: Exception) {
+                Log.e("MapsScreenViewModel", "Failed to fetch directions", e)
+                return@launch
+            }
         }
     }
 
