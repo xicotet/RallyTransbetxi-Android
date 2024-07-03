@@ -1,10 +1,14 @@
 package com.canolabs.rallytransbetxi.data.modules
 
+import android.content.Context
 import com.canolabs.rallytransbetxi.data.sources.remote.DirectionsService
+import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkChecker
+import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkCheckerImpl
 import com.canolabs.rallytransbetxi.utils.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -41,5 +45,17 @@ object NetworkModule {
     @Provides
     fun provideDirectionsService(retrofit: Retrofit): DirectionsService {
         return retrofit.create(DirectionsService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideContext(@ApplicationContext context: Context): Context {
+        return context
+    }
+
+    @Provides
+    @Singleton
+    fun provideNetworkChecker(@ApplicationContext context: Context): NetworkChecker {
+        return NetworkCheckerImpl(context)
     }
 }

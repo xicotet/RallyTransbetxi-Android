@@ -3,6 +3,7 @@ import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.data.sources.local.dao.ResultDao
 import com.canolabs.rallytransbetxi.data.sources.remote.ResultsServiceImpl
+import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkCheckerImpl
 import javax.inject.Inject
 
 interface ResultsRepository {
@@ -13,7 +14,8 @@ interface ResultsRepository {
 class ResultsRepositoryImpl @Inject constructor(
     private val resultsServiceImpl: ResultsServiceImpl,
     private val resultsDao: ResultDao,
-    private val versionsRepositoryImpl: VersionsRepositoryImpl
+    private val versionsRepositoryImpl: VersionsRepositoryImpl,
+    private val networkChecker: NetworkCheckerImpl
 ): ResultsRepository {
     companion object {
         private const val TAG = "ResultsRepositoryImpl"
@@ -26,6 +28,16 @@ class ResultsRepositoryImpl @Inject constructor(
 
         val localVersionCount = versionsRepositoryImpl.countLocalStoredVersionsByName(versionName)
         Log.d(TAG, "Local version count for '$versionName': $localVersionCount")
+
+        // If there is no stable network connection, fetch from local storage
+        if (!networkChecker.isNetworkAvailable()) {
+            Log.w(TAG, "Network is unavailable. Fetching data from local storage.")
+            val localResults = resultsDao.getGlobalResults()
+            Log.d(TAG, "Fetched global results from local storage: ${localResults.size} results")
+            return localResults
+        } else {
+            Log.d(TAG, "Network is available.")
+        }
 
         if (localVersionCount == 0) {
             Log.d(TAG, "No local version found. Fetching from API.")
@@ -95,6 +107,16 @@ class ResultsRepositoryImpl @Inject constructor(
 
         val localVersionCount = versionsRepositoryImpl.countLocalStoredVersionsByName(versionName)
         Log.d(TAG, "Local version count for '$versionName': $localVersionCount")
+
+        // If there is no stable network connection, fetch from local storage
+        if (!networkChecker.isNetworkAvailable()) {
+            Log.w(TAG, "Network is unavailable. Fetching data from local storage.")
+            val localResults = resultsDao.getStageResults(stageId)
+            Log.d(TAG, "Fetched stage results from local storage: ${localResults.size} results")
+            return localResults
+        } else {
+            Log.d(TAG, "Network is available.")
+        }
 
         if (localVersionCount == 0) {
             Log.d(TAG, "No local version found. Fetching from API.")

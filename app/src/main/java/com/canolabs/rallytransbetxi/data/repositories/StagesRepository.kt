@@ -4,6 +4,7 @@ import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.canolabs.rallytransbetxi.data.sources.local.dao.StagesDao
 import com.canolabs.rallytransbetxi.data.sources.remote.StagesServiceImpl
+import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkCheckerImpl
 import javax.inject.Inject
 
 interface StagesRepository {
@@ -14,7 +15,8 @@ interface StagesRepository {
 class StagesRepositoryImpl @Inject constructor(
     private val stagesServiceImpl: StagesServiceImpl,
     private val versionsRepositoryImpl: VersionsRepositoryImpl,
-    private val stagesDao: StagesDao
+    private val stagesDao: StagesDao,
+    private val networkChecker: NetworkCheckerImpl
 ) : StagesRepository {
 
     companion object {
@@ -27,6 +29,16 @@ class StagesRepositoryImpl @Inject constructor(
 
         val localVersionCount = versionsRepositoryImpl.countLocalStoredVersionsByName(versionName)
         Log.d(TAG, "Local version count for '$versionName': $localVersionCount")
+
+        // If there is no stable network connection, fetch from local storage
+        if (!networkChecker.isNetworkAvailable()) {
+            Log.w(TAG, "Network is unavailable. Fetching data from local storage.")
+            val localStages = stagesDao.getStages()
+            Log.d(TAG, "Fetched stages from local storage: ${localStages.size} stages")
+            return localStages
+        } else {
+            Log.d(TAG, "Network is available.")
+        }
 
         // If there is no local version stored, fetch from API and store the version
         if (localVersionCount == 0) {
@@ -89,6 +101,16 @@ class StagesRepositoryImpl @Inject constructor(
 
         val localVersionCount = versionsRepositoryImpl.countLocalStoredVersionsByName(versionName)
         Log.d(TAG, "Local version count for '$versionName': $localVersionCount")
+
+        // If there is no stable network connection, fetch from local storage
+        if (!networkChecker.isNetworkAvailable()) {
+            Log.w(TAG, "Network is unavailable. Fetching data from local storage.")
+            val localStage = stagesDao.getStage(acronym)
+            Log.d(TAG, "Fetched stage from local storage: $localStage")
+            return localStage
+        } else {
+            Log.d(TAG, "Network is available.")
+        }
 
         // If there is no local version stored, fetch from API and store the version
         if (localVersionCount == 0) {

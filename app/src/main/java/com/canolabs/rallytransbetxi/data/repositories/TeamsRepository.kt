@@ -4,6 +4,7 @@ import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Team
 import com.canolabs.rallytransbetxi.data.sources.local.dao.TeamDao
 import com.canolabs.rallytransbetxi.data.sources.remote.TeamsServiceImpl
+import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkCheckerImpl
 import javax.inject.Inject
 
 interface TeamsRepository {
@@ -13,7 +14,8 @@ interface TeamsRepository {
 class TeamsRepositoryImpl @Inject constructor(
     private val teamsServiceImpl: TeamsServiceImpl,
     private val teamDao: TeamDao,
-    private val versionsRepositoryImpl: VersionsRepositoryImpl
+    private val versionsRepositoryImpl: VersionsRepositoryImpl,
+    private val networkChecker: NetworkCheckerImpl
 ) : TeamsRepository {
 
     companion object {
@@ -26,6 +28,16 @@ class TeamsRepositoryImpl @Inject constructor(
 
         val localVersionCount = versionsRepositoryImpl.countLocalStoredVersionsByName(versionName)
         Log.d(TAG, "Local version count for '$versionName': $localVersionCount")
+
+        // If there is no stable network connection, fetch from local storage
+        if (!networkChecker.isNetworkAvailable()) {
+            Log.w(TAG, "Network is unavailable. Fetching data from local storage.")
+            val localTeams = teamDao.getTeams()
+            Log.d(TAG, "Fetched teams from local storage: ${localTeams.size} teams")
+            return localTeams
+        } else {
+            Log.d(TAG, "Network is available.")
+        }
 
         // If there is no local version stored, fetch from API and store the version
         if (localVersionCount == 0) {
