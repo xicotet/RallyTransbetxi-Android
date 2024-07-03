@@ -52,8 +52,12 @@
     <string name="open_settings">Obrir configuració</string>
 
     // Wifi connection lost bottom sheet
-    <string name="connection_lost_title">Conexión a internet</string>
-    <string name="connection_lost_message">Parece que has perdido la conexión a internet. Recomendamos reestablecerla para una mejor experiencia</string>
+    <string name="connection_lost_title">Connexió a internet</string>
+    <string name="connection_lost_message">Pareix que has perdut la connexió a Internet. Recomanem restablir-la per a una millor experiència</string>
+
+    // GPS not enabled dialog
+    <string name="gps_not_enabled_title">GPS desactivat</string>
+    <string name="gps_not_enabled_message">Per poder obtenir la vostra ubicació, necessitem que actives el GPS</string>
 
     // Tabs inside Results fragment
     <string name="global">General</string>

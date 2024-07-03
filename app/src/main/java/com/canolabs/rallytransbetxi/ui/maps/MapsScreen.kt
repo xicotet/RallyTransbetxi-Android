@@ -2,7 +2,11 @@ package com.canolabs.rallytransbetxi.ui.maps
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.location.LocationManager
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -12,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -34,9 +41,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
+import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
+import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -68,6 +77,8 @@ fun MapsScreen(
     val context = LocalContext.current
     val activity = context as Activity
 
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -76,7 +87,11 @@ fun MapsScreen(
 
         if (fineLocationGranted || coarseLocationGranted) {
             mapsViewModel.setLocationPermissionIsGranted(true)
-            mapsViewModel.getLocation()
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                mapsViewModel.setIsGpsDialogVisible(true)
+            } else {
+                mapsViewModel.getLocation()
+            }
         } else {
             mapsViewModel.setHasPressedDirectionsButton(false)
             val isFineLocationPermanentlyDenied =
@@ -186,5 +201,57 @@ fun MapsScreen(
             darkThemeState = darkThemeState,
             navController = navController
         )
+
+        if (state.isGpsDialogVisible) {
+            AlertDialog(
+                onDismissRequest = {
+                    mapsViewModel.setIsGpsDialogVisible(false)
+                    if (state.directions.isEmpty()) {
+                        mapsViewModel.setHasPressedDirectionsButton(false)
+                    }
+                },
+                title = {
+                    Text(
+                        stringResource(id = R.string.gps_not_enabled_title),
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontFamily = robotoFamily
+                    )
+                },
+                text = {
+                    Text(
+                        stringResource(id = R.string.gps_not_enabled_message),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontFamily = robotoFamily
+                    )
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        mapsViewModel.setIsGpsDialogVisible(false)
+                        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                        context.startActivity(intent)
+                    }) {
+                        Text(
+                            stringResource(id = R.string.ok),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontFamily = robotoFamily
+                        )
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = {
+                        mapsViewModel.setIsGpsDialogVisible(false)
+                        if (state.directions.isEmpty()) {
+                            mapsViewModel.setHasPressedDirectionsButton(false)
+                        }
+                    }) {
+                        Text(
+                            stringResource(id = R.string.omit),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontFamily = robotoFamily
+                        )
+                    }
+                }
+            )
+        }
     }
 }

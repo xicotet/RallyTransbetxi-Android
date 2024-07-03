@@ -18,6 +18,7 @@ data class MapsScreenUIState(
     val uiSettings: MapUiSettings = MapUiSettings(),
     val isPermissionDeniedBottomSheetVisible: Boolean = false,
     val isResultsBottomSheetVisible: Boolean = false,
+    val isGpsDialogVisible: Boolean = false,
     val language: Language? = null,
     override val isLoading: Boolean = false,
     override val loadingMessageId: Int? = null,
@@ -45,6 +46,10 @@ fun MutableStateFlow<MapsScreenUIState>.setIsPermissionDeniedBottomSheetVisible(
 
 fun MutableStateFlow<MapsScreenUIState>.setLanguage(language: Language) {
     value = value.copy(language = language)
+}
+
+fun MutableStateFlow<MapsScreenUIState>.setGpsDialogVisible(isGpsDialogVisible: Boolean) {
+    value = value.copy(isGpsDialogVisible = isGpsDialogVisible)
 }
 
 fun MutableStateFlow<MapsScreenUIState>.setLocation(location: Location?) {

@@ -55,6 +55,10 @@
     <string name="connection_lost_title">Conexión a internet</string>
     <string name="connection_lost_message">Parece que has perdido la conexión a internet. Recomendamos reestablecerla para una mejor experiencia</string>
 
+    // GPS not enabled dialog
+    <string name="gps_not_enabled_title">GPS desactivado</string>
+    <string name="gps_not_enabled_message">Para poder obtener tu ubicación, necesitamos que actives el GPS</string>
+
     // Tabs inside Results fragment
     <string name="global">General</string>
 

@@ -127,6 +127,10 @@ class MapsScreenViewModel @Inject constructor(
         _state.setHasPressedDirectionsButton(hasPressedDirectionsButton)
     }
 
+    fun setIsGpsDialogVisible(isGpsDialogVisible: Boolean) {
+        _state.setGpsDialogVisible(isGpsDialogVisible)
+    }
+
     fun setIsResultsBottomSheetVisible(isBottomSheetVisible: Boolean) {
         _state.setIsResultsBottomSheetVisible(isBottomSheetVisible)
     }
