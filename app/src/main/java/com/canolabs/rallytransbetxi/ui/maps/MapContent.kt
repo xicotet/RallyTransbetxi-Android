@@ -83,7 +83,8 @@ fun MapContent(
     resultsViewModel: ResultsScreenViewModel,
     navController: NavController
 ) {
-    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val resultsBottomSheetState = rememberModalBottomSheetState()
+    val permissionBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -419,11 +420,11 @@ fun MapContent(
 
         if (state.isResultsBottomSheetVisible) {
             ModalBottomSheet(
-                sheetState = bottomSheetState,
+                sheetState = resultsBottomSheetState,
                 onDismissRequest = {
                     coroutineScope.launch {
                         mapsViewModel.setIsResultsBottomSheetVisible(false)
-                        bottomSheetState.hide()
+                        resultsBottomSheetState.hide()
                     }
                 },
             ) {
@@ -437,12 +438,12 @@ fun MapContent(
             }
         } else if (state.isPermissionDeniedBottomSheetVisible) {
             ModalBottomSheet(
-                sheetState = bottomSheetState,
+                sheetState = permissionBottomSheetState,
                 dragHandle = {},
                 onDismissRequest = {
                     coroutineScope.launch {
                         mapsViewModel.setIsPermissionDeniedBottomSheetVisible(false)
-                        bottomSheetState.hide()
+                        permissionBottomSheetState.hide()
                     }
                 },
             ) {
@@ -450,7 +451,7 @@ fun MapContent(
                     onOmitButtonPressed = {
                         coroutineScope.launch {
                             mapsViewModel.setIsPermissionDeniedBottomSheetVisible(false)
-                            bottomSheetState.hide()
+                            permissionBottomSheetState.hide()
                         }
                     }
                 )
