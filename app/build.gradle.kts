@@ -64,10 +64,10 @@ android {
 dependencies {
     val roomVersion = "2.6.1"
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
 
-    implementation("androidx.activity:activity-compose:1.8.2") // Compose
+    implementation("androidx.activity:activity-compose:1.9.0") // Compose
     implementation(platform("androidx.compose:compose-bom:2024.06.00")) // Compose
     implementation("androidx.compose.ui:ui") // Compose
     implementation("androidx.compose.ui:ui-graphics") // Compose
@@ -76,16 +76,16 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7") // Compose
 
     implementation("com.google.maps.android:maps-compose:2.11.4") // Maps Compose
-    implementation("com.google.android.gms:play-services-maps:18.2.0") // Maps
+    implementation("com.google.android.gms:play-services-maps:19.0.0") // Maps
 
-    implementation(platform("com.google.firebase:firebase-bom:33.0.0")) // Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.1.1")) // Firebase BoM
     implementation("com.google.firebase:firebase-analytics") // Firebase Analytics
     implementation("com.google.firebase:firebase-crashlytics") // Firebase Crashlytics
     implementation("com.google.firebase:firebase-storage-ktx") // Firebase Storage
     implementation("com.google.firebase:firebase-firestore") // Cloud Firestore
     implementation("com.google.firebase:firebase-messaging") // Firebase Messaging
 
-    implementation("com.google.android.gms:play-services-location:21.2.0") // Location services
+    implementation("com.google.android.gms:play-services-location:21.3.0") // Location services
 
     implementation("androidx.vectordrawable:vectordrawable:1.2.0") // Vector Drawable
 
@@ -113,12 +113,12 @@ dependencies {
 
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1") // OkHttp Logging Interceptor
 
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
 
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.06.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
