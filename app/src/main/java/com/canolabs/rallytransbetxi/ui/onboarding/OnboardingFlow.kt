@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.theme.onboardingBackground
+import com.canolabs.rallytransbetxi.ui.theme.onboardingButtonDisabledBackground
+import com.canolabs.rallytransbetxi.ui.theme.onboardingButtonDisabledContent
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -102,8 +104,8 @@ fun OnboardingFlow(
                     colors = ButtonColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        disabledContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                        disabledContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        disabledContainerColor = onboardingButtonDisabledBackground,
+                        disabledContentColor = onboardingButtonDisabledContent
                     ),
                     enabled = selectedLanguage.value != null || pagerState.currentPage != 2,
                     modifier = Modifier
