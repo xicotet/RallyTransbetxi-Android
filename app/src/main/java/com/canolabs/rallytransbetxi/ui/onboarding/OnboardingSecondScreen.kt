@@ -77,13 +77,13 @@ fun OnboardingSecondScreen() {
         items(rows) { rowItems ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
                 content = {
                     rowItems.forEach { item ->
                         Card(
                             modifier = Modifier
-                                .padding(8.dp)
+                                .padding(vertical = 8.dp, horizontal = 16.dp)
                                 .size(width = 150.dp, height = 100.dp),
                             colors = CardColors(
                                 containerColor = onboardingCardBackground,
