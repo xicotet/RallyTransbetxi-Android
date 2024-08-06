@@ -20,13 +20,18 @@ This well-established competition revolves around this concept, and this year it
 
 ## Current App State
 Under construction 🚧 
-The project is currently undergoing redevelopment, with plans to utilize Kotlin, Jetpack Compose, and best practices for future enhancements and improvements.
 
 ## Screenshots
-| ![Home Screen](images/home.jpg) | ![Map Screen](images/map.jpg)  |
+| ![Home Screen](images/Home.jpg) | ![Settings BottomSheet](images/Ajustes.jpg)  |
 |:------------------------------------:|:-----------------------------:|
-| Home Screen                           |   Map Screen                |
+| Home Screen                           |   Settings                   |
 
-| ![Home Screen with an item dragged](images/home-item-scrolled.jpg) | ![Search](images/map-route.jpg) |
+| ![Home News](images/Home_Noticias.jpg) | ![Stages](images/Tramos.jpg) |
 |:------------------------------------:|:-----------------------------:|
-|            Home Screen with an item dragged                 | Map Screen displaying a route                 |
+|            Home Screen with news section        | Stages screen                 |
+
+| ![Stage detail](images/Tramos_Detalle.jpg) | ![Results](images/Resultados.jpg) |
+|:------------------------------------:|:-----------------------------:|
+|            Stage detail screen        | Results screen                 |
+
+
