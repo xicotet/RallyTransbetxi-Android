@@ -39,6 +39,10 @@ import androidx.compose.runtime.LaunchedEffect
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.BottomSheetConnectivityLost
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.ConnectivityObserver
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkConnectivityObserver
+import com.google.firebase.Firebase
+import com.google.firebase.appcheck.appCheck
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+import com.google.firebase.initialize
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -54,6 +58,21 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d("MainActivity", "Proceeding to: Firebase initialization")
+        Firebase.initialize(context = this)
+        Log.d("MainActivity", "Proceeding to: Firebase initialized")
+        Firebase.appCheck.getAppCheckToken(false).addOnSuccessListener {
+            Log.d("MainActivity", "App Check token: ${it.token}")
+        }.addOnFailureListener {
+            Log.d("MainActivity", "App Check token error: ${it.message}")
+        }
+        Firebase.appCheck.installAppCheckProviderFactory(
+            PlayIntegrityAppCheckProviderFactory.getInstance(),
+        )
+        Log.d("MainActivity", "Proceeding to: App Check provider factory installed")
+
+        
         installSplashScreen()
         askNotificationPermission()
 

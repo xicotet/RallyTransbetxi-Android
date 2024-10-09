@@ -1,3 +1,4 @@
+import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -9,6 +10,15 @@ plugins {
     id("com.google.firebase.crashlytics")
     kotlin("kapt")
 }
+
+// Create a variable called keystorePropertiesFile
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+
+// Initialize a new Properties object
+val keystoreProperties = Properties()
+
+// Load the keystore.properties file
+keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 android {
     namespace = "com.canolabs.rallytransbetxi"
@@ -31,13 +41,23 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+        }
+    }
+
     buildTypes {
-        release {
-            isMinifyEnabled = true
+        getByName("release") {
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -84,6 +104,8 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx") // Firebase Storage
     implementation("com.google.firebase:firebase-firestore") // Cloud Firestore
     implementation("com.google.firebase:firebase-messaging") // Firebase Messaging
+    implementation("com.google.firebase:firebase-appcheck-playintegrity") // Firebase App Check
+    implementation("com.google.android.play:integrity:1.4.0") // Play Integrity
 
     implementation("com.google.android.gms:play-services-location:21.3.0") // Location services
 
