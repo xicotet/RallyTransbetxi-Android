@@ -187,8 +187,9 @@ fun TeamDetailScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
                 .background(brush = gradient)
+                .padding(innerPadding)
+                .padding(bottom = 16.dp)
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
