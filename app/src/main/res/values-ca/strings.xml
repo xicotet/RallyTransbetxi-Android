@@ -1,0 +1,110 @@
+<resources>
+    <string name="app_name">Rally Transbetxi</string>
+
+    // Top level destinations
+    <string name="rally">Rally</string>
+    <string name="stages">Trams</string>
+    <string name="results">Resultats</string>
+    <string name="teams">Equips</string>
+
+    // Rally destination
+    <string name="featured_section">Destacat</string>
+    <string name="settings">Configuració</string>
+    <string name="breaking_news">Notícies</string>
+    <string name="warnings">Avisos</string>
+    <string name="hall_of_fame">Palmarès</string>
+    <string name="activity_program">Activitats</string>
+    <string name="sponsors">Patrocinadors</string>
+    <string name="where_to_eat">Menjar</string>
+    <string name="show_all_male">Veure tots</string>
+    <string name="show_all">Veure totes</string>
+    <string name="show_less">Veure menys</string>
+    <string name="weather_forecast">Previsió meteorològica</string>
+
+    // Eat destination
+    <string name="open_in_maps">Obrir a Google Maps</string>
+    <string name="do_you_want_to_open">Vols obrir-ho</string>
+    <string name="in_google_maps">en Google Maps?</string>
+
+    // Maps destination
+    <string name="navigate">Navegar</string>
+    <string name="standard_map">Estàndard</string>
+    <string name="satellite_map">Satèl·lit</string>
+    <string name="terrain_map">Terreny</string>
+
+    // App Settings Bottom Sheet
+    <string name="language">Idioma</string>
+    <string name="theme">Tema de l\'app</string>
+    <string name="light_mode">Clar</string>
+    <string name="dark_mode">Fosc</string>
+    <string name="system_default">Sistema</string>
+    <string name="directions_mode">Mode de navegació</string>
+    <string name="driving_car_mode">Cotxe</string>
+    <string name="walking_mode">A peu</string>
+    <string name="text_size">Tamany de lletra</string>
+    <string name="text_size_small">Xicoteta</string>
+    <string name="text_size_medium">Normal</string>
+    <string name="text_size_large">Gran</string>
+
+    // Permission denied bottom sheet
+    <string name="permission_denied_title">Permís de localització</string>
+    <string name="permission_denied_message">Per poder obtindre la teua ubicació, necessitem que actives el permís en configuració</string>
+    <string name="open_settings">Obrir configuració</string>
+
+    // Wifi connection lost bottom sheet
+    <string name="connection_lost_title">Connexió a internet</string>
+    <string name="connection_lost_message">Pareix que has perdut la connexió a Internet. Recomanem restablir-la per a una millor experiència</string>
+
+    // GPS not enabled dialog
+    <string name="gps_not_enabled_title">GPS desactivat</string>
+    <string name="gps_not_enabled_message">Per poder obtenir la vostra ubicació, necessitem que actives el GPS</string>
+
+    // Tabs inside Results fragment
+    <string name="global">General</string>
+
+    // Results card
+    <string name="disqualified">Desqualificat</string>
+    <string name="results_available">Els resultats estaran disponibles poc després del</string>
+    <string name="results_are_hidden">Els resultats estan ocults per algun dels filtres</string>
+    <string name="global_results_available">Els resultats generals estaran disponibles poc després del</string>
+    <string name="at_hour">a les</string>
+
+    // Team details
+    <string name="category">Categoria</string>
+    <string name="bib_number">Dorsal</string>
+    <string name="category_position">Posició categoria</string>
+    <string name="overall_position">Posició general</string>
+    <string name="overall_time">Temps acumulat</string>
+    <string name="stage_victories">Victories</string>
+    <string name="best_stage_position">Millor posició</string>
+    <string name="team">Equip</string>
+    <string name="global_literal">Global</string>
+
+    // Segmented button
+    <string name="agria">Agria</string>
+    <string name="prototype">Prototip</string>
+    <string name="serie">Sèrie</string>
+
+    // Onboarding
+    <string name="welcome">Benvingut a l\'Esdeveniment d\'Automobilisme Més Salvatge i Únic del Món!</string>
+    <string name="letsGetStarted">Comencem!</string>
+    <string name="welcome_to_transbetxi">Benvingut al Ral·li Transbetxí</string>
+    <string name="welcome_to_transbetxi_description">Estem encantats de tenir-te per aquí. Descobreix la millor experiència del ral·li a la palma de la mà:</string>
+    <string name="stages_maps">Mapes dels trams</string>
+    <string name="directions">Com arribar</string>
+    <string name="pick_a_language">Tria un idioma</string>
+
+    // General
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="search">Buscar&#8230;</string>
+    <string name="ok">Acceptar</string>
+    <string name="location">Ubicació</string>
+    <string name="day">Dia</string>
+    <string name="days">Dies</string>
+    <string name="hour">Hora</string>
+    <string name="hours">Hores</string>
+    <string name="omit">Ometre</string>
+    <string name="next">Següent</string>
+    <string name="end">Finalitzar</string>
+</resources>

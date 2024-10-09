@@ -1,3 +1,110 @@
 <resources>
-    <string name="app_name">RallyTransbetxi</string>
+    <string name="app_name">Rally Transbetxi</string>
+
+    // Top level destinations
+    <string name="rally">Rally</string>
+    <string name="stages">Tramos</string>
+    <string name="results">Resultados</string>
+    <string name="teams">Equipos</string>
+
+    // Rally destination
+    <string name="featured_section">Destacado</string>
+    <string name="settings">Ajustes</string>
+    <string name="breaking_news">Noticias</string>
+    <string name="warnings">Avisos</string>
+    <string name="hall_of_fame">Palmarés</string>
+    <string name="activity_program">Actividades</string>
+    <string name="sponsors">Patrocinadores</string>
+    <string name="where_to_eat">Comer</string>
+    <string name="show_all_male">Ver todos</string>
+    <string name="show_all">Ver todas</string>
+    <string name="show_less">Ver menos</string>
+    <string name="weather_forecast">Previsión metereológica</string>
+
+    // Eat destination
+    <string name="open_in_maps">Abrir en Google Maps</string>
+    <string name="do_you_want_to_open">¿Quieres abrir</string>
+    <string name="in_google_maps">en Google Maps?</string>
+
+    // Maps destination
+    <string name="navigate">Navegar</string>
+    <string name="standard_map">Estándar</string>
+    <string name="satellite_map">Satélite</string>
+    <string name="terrain_map">Terreno</string>
+
+    // App Settings Bottom Sheet
+    <string name="language">Idioma</string>
+    <string name="theme">Tema de la app</string>
+    <string name="light_mode">Claro</string>
+    <string name="dark_mode">Oscuro</string>
+    <string name="system_default">Sistema</string>
+    <string name="directions_mode">Modo de navegación</string>
+    <string name="driving_car_mode">Coche</string>
+    <string name="walking_mode">A pie</string>
+    <string name="text_size">Tamaño de letra</string>
+    <string name="text_size_small">Pequeña</string>
+    <string name="text_size_medium">Normal</string>
+    <string name="text_size_large">Grande</string>
+
+    // Permission denied bottom sheet
+    <string name="permission_denied_title">Permiso de ubicación</string>
+    <string name="permission_denied_message">Para poder obtener tu ubicación, necesitamos que actives el permiso en ajustes</string>
+    <string name="open_settings">Abrir ajustes</string>
+
+    // Wifi connection lost bottom sheet
+    <string name="connection_lost_title">Conexión a internet</string>
+    <string name="connection_lost_message">Parece que has perdido la conexión a internet. Recomendamos reestablecerla para una mejor experiencia</string>
+
+    // GPS not enabled dialog
+    <string name="gps_not_enabled_title">GPS desactivado</string>
+    <string name="gps_not_enabled_message">Para poder obtener tu ubicación, necesitamos que actives el GPS</string>
+
+    // Tabs inside Results fragment
+    <string name="global">General</string>
+
+    // Results
+    <string name="disqualified">Descalificado</string>
+    <string name="results_available">Los resultados estarán disponibles poco después del </string>
+    <string name="results_are_hidden">Los resultados están ocultos por alguno de los filtros</string>
+    <string name="global_results_available">Los resultados generales estarán disponibles poco después del </string>
+    <string name="at_hour">a las</string>
+
+    // Team details
+    <string name="category">Categoría</string>
+    <string name="bib_number">Dorsal</string>
+    <string name="category_position">Posición categoría</string>
+    <string name="overall_position">Posición general</string>
+    <string name="overall_time">Tiempo acumulado</string>
+    <string name="stage_victories">Victorias</string>
+    <string name="best_stage_position">Mejor posición</string>
+    <string name="team">Equipo</string>
+    <string name="global_literal">Global</string>
+
+    // Segmented button
+    <string name="agria">Agria</string>
+    <string name="prototype">Prototipo</string>
+    <string name="serie">Serie</string>
+
+    // Onboarding
+    <string name="welcome">¡Bienvenido al Evento de Automovilismo Más Salvaje y Único del Mundo!</string>
+    <string name="letsGetStarted">¡Empecemos!</string>
+    <string name="welcome_to_transbetxi">Bienvenido al Rally Transbetxí</string>
+    <string name="welcome_to_transbetxi_description">Estamos encantados de tenerte por aquí. Descubre la mejor experiencia del rally en la palma de tu mano:</string>
+    <string name="stages_maps">Mapas de los tramos</string>
+    <string name="directions">Cómo llegar</string>
+    <string name="pick_a_language">Elige un idioma</string>
+
+    // General
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="search">Buscar&#8230;</string>
+    <string name="ok">Aceptar</string>
+    <string name="location">Localización</string>
+    <string name="day">Día</string>
+    <string name="days">Días</string>
+    <string name="hour">Hora</string>
+    <string name="hours">Horas</string>
+    <string name="omit">Omitir</string>
+    <string name="next">Siguiente</string>
+    <string name="end">Finalizar</string>
 </resources>
