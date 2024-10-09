@@ -210,19 +210,6 @@ fun NewsDetailTopBar(
                 )
             }
         },
-        actions = {
-            IconButton(
-                onClick = onBackClick,
-                modifier = Modifier
-                    .padding(4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Share,
-                    tint = Color.White,
-                    contentDescription = null
-                )
-            }
-        },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.scrim,
             titleContentColor = Color.White,
