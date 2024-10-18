@@ -55,10 +55,7 @@ fun ActivityProgramSection(
             .padding(16.dp),
         shape = RoundedCornerShape(8.dp),
         shadowElevation = cardsElevation,
-        onClick = {
-            viewModel.toggleActivities()
-            viewModel.insertSettings()
-        }
+        onClick = { viewModel.toggleActivities() }
     ) {
         Column(
             modifier = Modifier
@@ -84,12 +81,7 @@ fun ActivityProgramSection(
                         .padding(start = 12.dp, top = 4.dp)
                         .weight(5f)
                 )
-                IconButton(
-                    onClick = {
-                        viewModel.toggleActivities()
-                        viewModel.insertSettings()
-                    }
-                ) {
+                IconButton(onClick = { viewModel.toggleActivities() }) {
                     if (!state.areActivitiesCollapsed) {
                         Icon(
                             painter = painterResource(id = R.drawable.collapse_all),
