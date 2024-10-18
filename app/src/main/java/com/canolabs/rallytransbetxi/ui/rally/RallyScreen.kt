@@ -65,6 +65,14 @@ fun RallyScreen(
         viewModel.updateInitialThemeState(darkThemeState, isSystemInDarkTheme)
         // Get the initial font size factor. It will take some ms to initialize
         viewModel.updateInitialFontSizeFactor(fontScaleState)
+        // Get the initial profile. It will take some ms to initialize
+        viewModel.updateInitialProfile()
+        // Get the initial state of warnings section (if it's collapsed or not)
+        viewModel.fetchAreWarningsCollapsed()
+        // Get the initial state of breaking news section (if it's collapsed or not)
+        viewModel.fetchAreNewsCollapsed()
+        // Get the initial state of activities section (if it's collapsed or not)
+        viewModel.fetchAreActivitiesCollapsed()
         // Get the initial language. It will be applied immediately
         viewModel.fetchLanguage(sharedPreferences)
     }
