@@ -18,12 +18,9 @@ import com.canolabs.rallytransbetxi.data.sources.local.dao.VersionsDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.WarningDao
 import com.canolabs.rallytransbetxi.data.sources.local.database.AppDatabase
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DATABASE_NAME
-import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_ACTIVITIES_COLLAPSED
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_FONT_SIZE_FACTOR
-import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_NEWS_COLLAPSED
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_PROFILE
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_THEME
-import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_WARNINGS_COLLAPSED
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,10 +49,7 @@ object DatabaseModule {
                             1,
                             DEFAULT_THEME,
                             DEFAULT_PROFILE,
-                            DEFAULT_FONT_SIZE_FACTOR,
-                            DEFAULT_WARNINGS_COLLAPSED,
-                            DEFAULT_NEWS_COLLAPSED,
-                            DEFAULT_ACTIVITIES_COLLAPSED
+                            DEFAULT_FONT_SIZE_FACTOR
                         )
                     )
                 }

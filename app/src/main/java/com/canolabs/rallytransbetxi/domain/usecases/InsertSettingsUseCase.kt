@@ -9,18 +9,12 @@ class InsertSettingsUseCase @Inject constructor(
     suspend operator fun invoke(
         theme: String,
         profile: String,
-        fontSizeFactor: Float,
-        areWarningsCollapsed: Boolean,
-        areNewsCollapsed: Boolean,
-        areActivitiesCollapsed: Boolean
+        fontSizeFactor: Float
     ) {
         appSettingsRepositoryImpl.insertSetting(
             theme,
             profile,
-            fontSizeFactor,
-            areWarningsCollapsed,
-            areNewsCollapsed,
-            areActivitiesCollapsed
+            fontSizeFactor
         )
     }
 }

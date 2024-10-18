@@ -20,15 +20,6 @@ interface AppSettingsDao {
     @Query("SELECT fontSizeFactor FROM appsetting WHERE id = 1")
     suspend fun getFontSizeFactor(): Float
 
-    @Query("SELECT areWarningsCollapsed FROM appsetting WHERE id = 1")
-    suspend fun getAreWarningsCollapsed(): Boolean
-
-    @Query("SELECT areNewsCollapsed FROM appsetting WHERE id = 1")
-    suspend fun getAreNewsCollapsed(): Boolean
-
-    @Query("SELECT areActivitiesCollapsed FROM appsetting WHERE id = 1")
-    suspend fun getAreActivitiesCollapsed(): Boolean
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSetting(setting: AppSetting)
 }
