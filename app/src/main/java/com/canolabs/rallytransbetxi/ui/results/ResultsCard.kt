@@ -211,8 +211,6 @@ fun ResultCard(
                     }
                 }
 
-                Log.d("ResultCard", "Image URL: ${result.team.driverImage}")
-
                 DriverImagesPager(result = result)
             }
         }
