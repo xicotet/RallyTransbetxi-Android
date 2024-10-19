@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.results
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,8 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -45,7 +45,6 @@ import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenUIState
 import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 import com.canolabs.rallytransbetxi.ui.navigation.Screens
-import com.canolabs.rallytransbetxi.ui.theme.PaddingLarge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
 import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
@@ -88,8 +87,7 @@ fun BottomSheetStageResults(
                 ) {
                     Column(
                         modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 16.dp),
+                            .weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -107,40 +105,20 @@ fun BottomSheetStageResults(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
+                                horizontalArrangement = Arrangement.SpaceEvenly,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                IconButton(
-                                    onClick = { viewModel.setIsBottomSheetSearchBarVisible(false) },
-                                    modifier = Modifier
-                                        .padding(
-                                            top = PaddingLarge,
-                                            bottom = PaddingLarge,
-                                            start = PaddingMedium
-                                        )
-                                        .size(24.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                }
                                 TextField(
                                     value = resultsState.searchText,
                                     onValueChange = viewModel::setSearchText,
                                     modifier = Modifier
-                                        .padding(
-                                            vertical = PaddingLarge,
-                                            horizontal = PaddingMedium
-                                        )
-                                        .fillMaxWidth()
+                                        .padding(end = PaddingMedium)
                                         .height(56.dp)
-                                        .clip(MaterialTheme.shapes.extraLarge)
+                                        .clip(RoundedCornerShape(32))
                                         .border(
                                             2.dp,
                                             MaterialTheme.colorScheme.onSurface,
-                                            MaterialTheme.shapes.extraLarge
+                                            RoundedCornerShape(32)
                                         ),
                                     colors = TextFieldDefaults.colors().copy(
                                         focusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -149,7 +127,7 @@ fun BottomSheetStageResults(
                                         unfocusedIndicatorColor = Color.Transparent,
                                         cursorColor = MaterialTheme.colorScheme.onSurface
                                     ),
-                                    shape = MaterialTheme.shapes.small,
+                                    shape = RoundedCornerShape(32),
                                     singleLine = true,
                                     placeholder = { Text(stringResource(id = R.string.search)) },
                                     leadingIcon = {
@@ -160,20 +138,37 @@ fun BottomSheetStageResults(
                                         )
                                     },
                                     trailingIcon = {
-                                        IconButton(
-                                            onClick = { viewModel.setSearchText("") },
-                                            modifier = Modifier.size(24.dp)
-                                        ) {
-                                            Icon(
-                                                painter = painterResource(id = R.drawable.close),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(24.dp)
-                                            )
+                                        AnimatedVisibility(visible = resultsState.searchText.isNotEmpty()) {
+                                            IconButton(
+                                                onClick = { viewModel.setSearchText("") },
+                                                modifier = Modifier.size(24.dp),
+                                            ) {
+                                                Icon(
+                                                    painter = painterResource(id = R.drawable.close),
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(24.dp)
+                                                )
+                                            }
                                         }
                                     }
                                 )
+                                IconButton(
+                                    onClick = { viewModel.setIsBottomSheetSearchBarVisible(false) },
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .border(
+                                            width = 2.dp,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            shape = RoundedCornerShape(32)
+                                        ),
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.close),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
                             }
-
                         } else {
                             Row(
                                 modifier = Modifier

@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.teams
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -7,8 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,6 +30,7 @@ import com.canolabs.rallytransbetxi.ui.theme.PaddingHuge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingLarge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
 import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
+import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 
 @Composable
@@ -40,34 +42,22 @@ fun TeamsScreenHeader(
     if (state.isSearchBarVisible) {
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+                .fillMaxWidth()
+                .padding(vertical = PaddingLarge, horizontal = PaddingMedium),
+            horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = { viewModel.setIsSearchBarVisible(false) },
-                modifier = Modifier
-                    .padding(top = PaddingLarge, bottom = PaddingLarge, start = PaddingMedium)
-                    .size(24.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-
             TextField(
                 value = state.searchText,
                 onValueChange = viewModel::setSearchText,
                 modifier = Modifier
-                    .padding(vertical = PaddingLarge, horizontal = PaddingMedium)
+                    .padding(end = PaddingSmall)
                     .height(56.dp)
-                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(32))
                     .border(
                         2.dp,
                         MaterialTheme.colorScheme.onSurface,
-                        MaterialTheme.shapes.extraLarge
+                        RoundedCornerShape(32)
                     ),
                 colors = TextFieldDefaults.colors().copy(
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -76,7 +66,7 @@ fun TeamsScreenHeader(
                     unfocusedIndicatorColor = Color.Transparent,
                     cursorColor = MaterialTheme.colorScheme.onSurface
                 ),
-                shape = MaterialTheme.shapes.small,
+                shape = RoundedCornerShape(32),
                 singleLine = true,
                 placeholder = { Text(stringResource(id = R.string.search)) },
                 leadingIcon = {
@@ -87,18 +77,37 @@ fun TeamsScreenHeader(
                     )
                 },
                 trailingIcon = {
-                    IconButton(
-                        onClick = { viewModel.setSearchText("") },
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.close),
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp)
-                        )
+                    AnimatedVisibility(visible = state.searchText.isNotEmpty()) {
+                        IconButton(
+                            onClick = { viewModel.setSearchText("") },
+                            modifier = Modifier.size(24.dp),
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.close),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                     }
                 }
             )
+
+            IconButton(
+                onClick = { viewModel.setIsSearchBarVisible(false) },
+                modifier = Modifier
+                    .size(24.dp)
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        shape = RoundedCornerShape(32)
+                    ),
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.close),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     } else {
         Row(
