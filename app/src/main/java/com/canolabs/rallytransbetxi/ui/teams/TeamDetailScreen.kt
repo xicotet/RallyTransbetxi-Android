@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -46,6 +47,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -614,9 +616,11 @@ fun TeamDetailScreen(
                             painter = driverPainter,
                             contentDescription = null,
                             modifier = Modifier
-                                .clip(RectangleShape)
+                                .padding(bottom = 8.dp)
+                                .clip(CircleShape)
                                 .height(170.dp)
-                                .width(144.dp)
+                                .width(144.dp),
+                            contentScale = ContentScale.Crop
                         )
                         Text(
                             text = team?.driver ?: "",
@@ -660,9 +664,11 @@ fun TeamDetailScreen(
                             painter = codriverPainter,
                             contentDescription = null,
                             modifier = Modifier
-                                .clip(RectangleShape)
+                                .padding(bottom = 8.dp)
+                                .clip(CircleShape)
                                 .height(170.dp)
-                                .width(144.dp)
+                                .width(144.dp),
+                            contentScale = ContentScale.Crop
                         )
                         Text(
                             text = team?.codriver ?: "",
