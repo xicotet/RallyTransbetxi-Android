@@ -30,6 +30,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -318,15 +319,17 @@ fun BottomSheetStageResults(
 
                     Column {
                         filteredResultsBySearchBar.forEach { result ->
-                            ResultCard(
-                                result = result,
-                                position = sortedResultsByTime.indexOf(result) + 1,
-                                onClick = {
-                                    navController.navigate(
-                                        "${Screens.TeamDetail.route}/${result.team.number}"
-                                    )
-                                }
-                            )
+                            key(result.team.number) {
+                                ResultCard(
+                                    result = result,
+                                    position = sortedResultsByTime.indexOf(result) + 1,
+                                    onClick = {
+                                        navController.navigate(
+                                            "${Screens.TeamDetail.route}/${result.team.number}"
+                                        )
+                                    }
+                                )
+                            }
                         }
                     }
                 }
