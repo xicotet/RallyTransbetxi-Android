@@ -4,14 +4,19 @@ import android.content.SharedPreferences
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.*
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -90,12 +95,26 @@ fun Navigation(
                         screens.forEach { screen ->
                             NavigationBarItem(
                                 icon = {
-                                    val iconResource =
-                                        if (currentRoute == screen.route) screen.iconSelected else screen.iconUnselected
-                                    Icon(
-                                        painterResource(id = iconResource!!),
-                                        contentDescription = null
-                                    )
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(
+                                                if (currentRoute == screen.route) RoundedCornerShape(
+                                                    32
+                                                ) else RoundedCornerShape(0.dp)
+                                            ) // Rounded shape for active
+                                            .background(
+                                                if (currentRoute == screen.route) MaterialTheme.colorScheme.primaryContainer
+                                                else Color.Transparent
+                                            )
+                                            .padding(vertical = 4.dp, horizontal = 16.dp)
+                                    ) {
+                                        val iconResource =
+                                            if (currentRoute == screen.route) screen.iconSelected else screen.iconUnselected
+                                        Icon(
+                                            painterResource(id = iconResource!!),
+                                            contentDescription = null
+                                        )
+                                    }
                                 },
                                 label = {
                                     Text(
@@ -105,6 +124,9 @@ fun Navigation(
                                         fontFamily = robotoFamily
                                     )
                                 },
+                                colors = NavigationBarItemDefaults.colors(
+                                    indicatorColor = Color.Transparent,
+                                ),
                                 selected = currentRoute == screen.route,
                                 onClick = {
                                     navController.navigate(screen.route) {
