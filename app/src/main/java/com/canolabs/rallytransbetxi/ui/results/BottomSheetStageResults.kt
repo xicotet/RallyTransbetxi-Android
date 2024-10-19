@@ -45,8 +45,8 @@ import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenUIState
 import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 import com.canolabs.rallytransbetxi.ui.navigation.Screens
-import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
 import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
+import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 import kotlinx.coroutines.launch
@@ -105,14 +105,14 @@ fun BottomSheetStageResults(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceEvenly,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 TextField(
                                     value = resultsState.searchText,
                                     onValueChange = viewModel::setSearchText,
                                     modifier = Modifier
-                                        .padding(end = PaddingMedium)
+                                        .weight(1f)
+                                        .padding(start = PaddingSmall, end = PaddingSmall)
                                         .height(56.dp)
                                         .clip(RoundedCornerShape(32))
                                         .border(
@@ -155,7 +155,8 @@ fun BottomSheetStageResults(
                                 IconButton(
                                     onClick = { viewModel.setIsBottomSheetSearchBarVisible(false) },
                                     modifier = Modifier
-                                        .size(24.dp)
+                                        .padding(end = PaddingSmall)
+                                        .size(56.dp)
                                         .border(
                                             width = 2.dp,
                                             color = MaterialTheme.colorScheme.onSurface,
@@ -171,8 +172,7 @@ fun BottomSheetStageResults(
                             }
                         } else {
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
+                                modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 if (!isComingFromMaps)

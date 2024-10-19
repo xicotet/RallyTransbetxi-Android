@@ -44,14 +44,14 @@ fun TeamsScreenHeader(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = PaddingLarge, horizontal = PaddingMedium),
-            horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
                 value = state.searchText,
                 onValueChange = viewModel::setSearchText,
                 modifier = Modifier
-                    .padding(end = PaddingSmall)
+                    .weight(1f)
+                    .padding(start = PaddingSmall, end = PaddingSmall)
                     .height(56.dp)
                     .clip(RoundedCornerShape(32))
                     .border(
@@ -95,7 +95,8 @@ fun TeamsScreenHeader(
             IconButton(
                 onClick = { viewModel.setIsSearchBarVisible(false) },
                 modifier = Modifier
-                    .size(24.dp)
+                    .padding(end = PaddingSmall)
+                    .size(56.dp)
                     .border(
                         width = 2.dp,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -111,8 +112,7 @@ fun TeamsScreenHeader(
         }
     } else {
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
