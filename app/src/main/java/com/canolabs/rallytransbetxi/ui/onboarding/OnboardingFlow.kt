@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
@@ -108,8 +109,8 @@ fun OnboardingFlow(
                         disabledContentColor = onboardingButtonDisabledContent
                     ),
                     enabled = selectedLanguage.value != null || pagerState.currentPage != 2,
+                    shape = RoundedCornerShape(32),
                     modifier = Modifier
-                        .clip(RectangleShape)
                         .fillMaxWidth()
                         .height(96.dp)
                         .padding(16.dp)
