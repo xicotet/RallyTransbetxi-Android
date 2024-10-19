@@ -166,6 +166,7 @@ fun TeamCard(
                         contentDescription = null,
                         modifier = Modifier
                             .clip(CircleShape)
+                            .weight(1f)
                             .height(144.dp)
                             .width(144.dp)
                     )
@@ -174,6 +175,7 @@ fun TeamCard(
                         contentDescription = null,
                         modifier = Modifier
                             .clip(CircleShape)
+                            .weight(1f)
                             .height(144.dp)
                             .width(144.dp)
                     )
