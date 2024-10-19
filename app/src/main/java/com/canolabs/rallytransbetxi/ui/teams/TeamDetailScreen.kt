@@ -42,8 +42,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -131,15 +129,6 @@ fun TeamDetailScreen(
             .build(),
     )
 
-    val gradient = Brush.linearGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.secondaryContainer,
-            MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
-        ),
-        start = Offset(0f, 0f), // Start at the top left corner
-        end = Offset(1000f, 1000f)
-    )
-
     Scaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -187,7 +176,7 @@ fun TeamDetailScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(brush = gradient)
+                .background(color = MaterialTheme.colorScheme.secondaryContainer)
                 .padding(innerPadding)
                 .padding(bottom = 16.dp)
                 .verticalScroll(scrollState),
