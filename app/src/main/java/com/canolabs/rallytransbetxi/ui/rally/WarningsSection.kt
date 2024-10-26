@@ -64,7 +64,8 @@ fun WarningsSection(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.Info, contentDescription = null,
+                    painter = painterResource(id = R.drawable.notification_important),
+                    contentDescription = null,
                     modifier = Modifier.size(36.dp)
                 )
                 Text(
