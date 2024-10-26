@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
@@ -32,7 +33,9 @@ fun FeaturedSection(
     viewModel: RallyScreenViewModel,
     navController: NavController
 ) {
-    LazyRow {
+    LazyRow(
+        modifier = Modifier.padding(bottom = 8.dp),
+    ) {
         item {
             Column(
                 modifier = Modifier
@@ -71,6 +74,8 @@ fun FeaturedSection(
                     text = stringResource(id = R.string.settings),
                     style = MaterialTheme.typography.bodyLarge,
                     fontFamily = ezraFamily,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(top = 8.dp),
                     textAlign = TextAlign.Center
@@ -115,6 +120,8 @@ fun FeaturedSection(
                     text = stringResource(id = R.string.hall_of_fame),
                     style = MaterialTheme.typography.bodyLarge,
                     fontFamily = ezraFamily,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(top = 8.dp),
                     textAlign = TextAlign.Center
@@ -160,6 +167,8 @@ fun FeaturedSection(
                     style = MaterialTheme.typography.bodyLarge,
                     fontFamily = ezraFamily,
                     color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(top = 8.dp),
                     textAlign = TextAlign.Center
                 )
@@ -203,6 +212,8 @@ fun FeaturedSection(
                     text = stringResource(id = R.string.where_to_eat),
                     style = MaterialTheme.typography.bodyLarge,
                     fontFamily = ezraFamily,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(top = 8.dp),
                     textAlign = TextAlign.Center
