@@ -516,7 +516,7 @@ fun TeamDetailScreen(
                             if (state.value.numberOfTimesBestPosition > 1) {
                                 Text(
                                     text = "x" + state.value.numberOfTimesBestPosition.toString(),
-                                    modifier = Modifier.padding(bottom = 6.dp),
+                                    modifier = Modifier.padding(bottom = 8.dp),
                                     fontSize = 16.sp,
                                     fontFamily = ezraFamily,
                                     fontWeight = FontWeight.Normal
