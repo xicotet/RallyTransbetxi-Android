@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.rally
 
+import SettingsInfoDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +25,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,6 +54,8 @@ fun BottomSheetAppSettings(
         viewModel.fetchFontSizeFactorSettings()
     }
 
+    val showInfoDialog = remember { mutableStateOf(false) }
+
     if (state.language == null || state.theme == null || state.directionsProfile == null
         || state.fontSizeFactor == null) {
         Shimmer {
@@ -60,6 +66,8 @@ fun BottomSheetAppSettings(
                     .background(brush = it)
             )
         }
+    } else if (showInfoDialog.value) {
+        SettingsInfoDialog(showInfoDialog)
     } else {
         Column(
             modifier = Modifier
@@ -319,7 +327,7 @@ fun BottomSheetAppSettings(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.Start,  // Aligns items to the start
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
@@ -334,68 +342,85 @@ fun BottomSheetAppSettings(
                     )
                 }
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                IconButton(
+                    onClick = { showInfoDialog.value = true },
+                    modifier = Modifier.padding(start = 8.dp)
                 ) {
-                    IconButton(
-                        onClick = {
-                            viewModel.setProfile(DirectionsProfile.DRIVING_CAR)
-                            viewModel.insertSettings()
-                        },
-                        modifier = Modifier
-                            .size(60.dp)
-                            .clip(CircleShape)
-                            .border(
-                                1.dp,
-                                MaterialTheme.colorScheme.primary,
-                                CircleShape
-                            )
-                            .background(
-                                if (state.directionsProfile.getDatabaseName() == "driving-car")
-                                    MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.onPrimary
-                            )
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        tint = MaterialTheme.colorScheme.primary,
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.directions_car),
-                            contentDescription = null,
-                            tint = if (state.directionsProfile.getDatabaseName() == "driving-car")
-                                MaterialTheme.colorScheme.onPrimary
-                            else MaterialTheme.colorScheme.primary
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            viewModel.setProfile(DirectionsProfile.FOOT_WALKING)
-                            viewModel.insertSettings()
-                        },
-                        modifier = Modifier
-                            .size(60.dp)
-                            .clip(CircleShape)
-                            .border(
-                                1.dp,
-                                MaterialTheme.colorScheme.primary,
-                                CircleShape
+                        IconButton(
+                            onClick = {
+                                viewModel.setProfile(DirectionsProfile.DRIVING_CAR)
+                                viewModel.insertSettings()
+                            },
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clip(CircleShape)
+                                .border(
+                                    1.dp,
+                                    MaterialTheme.colorScheme.primary,
+                                    CircleShape
+                                )
+                                .background(
+                                    if (state.directionsProfile.getDatabaseName() == "driving-car")
+                                        MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onPrimary
+                                )
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.directions_car),
+                                contentDescription = null,
+                                tint = if (state.directionsProfile.getDatabaseName() == "driving-car")
+                                    MaterialTheme.colorScheme.onPrimary
+                                else MaterialTheme.colorScheme.primary
                             )
-                            .background(
-                                if (state.directionsProfile.getDatabaseName() == "foot-walking")
-                                    MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.onPrimary
+                        }
+
+                        IconButton(
+                            onClick = {
+                                viewModel.setProfile(DirectionsProfile.FOOT_WALKING)
+                                viewModel.insertSettings()
+                            },
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clip(CircleShape)
+                                .border(
+                                    1.dp,
+                                    MaterialTheme.colorScheme.primary,
+                                    CircleShape
+                                )
+                                .background(
+                                    if (state.directionsProfile.getDatabaseName() == "foot-walking")
+                                        MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onPrimary
+                                )
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.walk),
+                                contentDescription = null,
+                                tint = if (state.directionsProfile.getDatabaseName() == "foot-walking")
+                                    MaterialTheme.colorScheme.onPrimary
+                                else MaterialTheme.colorScheme.primary
                             )
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.walk),
-                            contentDescription = null,
-                            tint = if (state.directionsProfile.getDatabaseName() == "foot-walking")
-                                MaterialTheme.colorScheme.onPrimary
-                            else MaterialTheme.colorScheme.primary
-                        )
+                        }
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
-
 
             Row(
                 modifier = Modifier

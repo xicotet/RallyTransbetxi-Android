@@ -41,6 +41,8 @@
     <string name="directions_mode">Mode de navegació</string>
     <string name="driving_car_mode">Cotxe</string>
     <string name="walking_mode">A peu</string>
+    <string name="info">Informació</string>
+    <string name="directions_mode_explained">Selecciona com vols vore les direccions cap a l\'inici del tram: a peu o en cotxe. Les rutes estaran disponibles en la pantalla de Trams en prémer este botó:</string>
     <string name="text_size">Tamany de lletra</string>
     <string name="text_size_small">Xicoteta</string>
     <string name="text_size_medium">Normal</string>

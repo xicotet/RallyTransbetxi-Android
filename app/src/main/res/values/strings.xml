@@ -41,6 +41,8 @@
     <string name="directions_mode">Modo de navegación</string>
     <string name="driving_car_mode">Coche</string>
     <string name="walking_mode">A pie</string>
+    <string name="info">Información</string>
+    <string name="directions_mode_explained">Selecciona cómo prefieres ver las direcciones hacia el inicio del tramo: a pie o en coche. Las rutas estarán disponibles en la pantalla de Tramos una vez presiones este botón:</string>
     <string name="text_size">Tamaño de letra</string>
     <string name="text_size_small">Pequeña</string>
     <string name="text_size_medium">Normal</string>
