@@ -28,7 +28,9 @@ fun StagesResultsTab(
     Spacer(modifier = Modifier.height(PaddingSmall))
 
     if (isLoading) {
-        StagesResultsCardShimmer()
+        for (i in 0..3) {
+            StagesResultsCardShimmer()
+        }
     } else {
         val filteredResultsBySearchBar = if (state.isSearchBarVisible) {
             stages.filter { stage ->
