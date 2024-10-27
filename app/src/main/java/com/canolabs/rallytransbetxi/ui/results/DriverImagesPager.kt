@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import com.canolabs.rallytransbetxi.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -27,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
@@ -98,50 +100,82 @@ fun DriverImagesPager(result: Result) {
         ) {page ->
             when (page) {
                 0 -> {
-                    if (driverPainter.state is AsyncImagePainter.State.Loading) {
-                        Shimmer { brush ->
-                            Box(
+                    when (driverPainter.state) {
+                        is AsyncImagePainter.State.Loading, AsyncImagePainter.State.Empty -> {
+                            Shimmer { brush ->
+                                Box(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .height(96.dp)
+                                        .width(96.dp)
+                                        .background(brush = brush)
+                                )
+                            }
+                        }
+
+                        is AsyncImagePainter.State.Error -> {
+                            Image(
+                                painter = painterResource(id = R.drawable.driver_image_default),
+                                contentDescription = null,
                                 modifier = Modifier
                                     .clip(CircleShape)
                                     .height(96.dp)
-                                    .width(96.dp)
-                                    .background(brush = brush)
+                                    .width(96.dp),
+                                contentScale = ContentScale.Crop
                             )
                         }
-                    } else {
-                        Image(
-                            painter = driverPainter,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .height(96.dp)
-                                .width(96.dp),
-                            contentScale = ContentScale.Crop
-                        )
+
+                        else -> {
+                            Image(
+                                painter = driverPainter,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .height(96.dp)
+                                    .width(96.dp),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
                     }
                 }
 
                 1 -> {
-                    if (codriverPainter.state is AsyncImagePainter.State.Loading) {
-                        Shimmer { brush ->
-                            Box(
+                    when (codriverPainter.state) {
+                        is AsyncImagePainter.State.Loading, AsyncImagePainter.State.Empty -> {
+                            Shimmer { brush ->
+                                Box(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .height(96.dp)
+                                        .width(96.dp)
+                                        .background(brush = brush)
+                                )
+                            }
+                        }
+
+                        is AsyncImagePainter.State.Error -> {
+                            Image(
+                                painter = painterResource(id = R.drawable.driver_image_default),
+                                contentDescription = null,
                                 modifier = Modifier
                                     .clip(CircleShape)
                                     .height(96.dp)
-                                    .width(96.dp)
-                                    .background(brush = brush)
+                                    .width(96.dp),
+                                contentScale = ContentScale.Crop
                             )
                         }
-                    } else {
-                        Image(
-                            painter = codriverPainter,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .height(96.dp)
-                                .width(96.dp),
-                            contentScale = ContentScale.Crop
-                        )
+
+                        else -> {
+                            Image(
+                                painter = codriverPainter,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .height(96.dp)
+                                    .width(96.dp),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
                     }
                 }
             }
