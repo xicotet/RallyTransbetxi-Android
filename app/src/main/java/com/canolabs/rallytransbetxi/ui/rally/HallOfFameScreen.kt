@@ -6,17 +6,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
@@ -65,7 +64,6 @@ fun HallOfFameScreen(
 
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
@@ -104,13 +102,10 @@ fun HallOfFameScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(it)
-                .padding(16.dp),
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 32.dp),
             shape = RoundedCornerShape(8.dp),
             shadowElevation = cardsElevation,
         ) {
-
-            Spacer(modifier = Modifier.height(8.dp))
-
             if (state.value.isHallOfFameLoading) {
                 Shimmer { brush ->
                     Box(
@@ -122,20 +117,18 @@ fun HallOfFameScreen(
                     )
                 }
             } else {
-                Column(
+                LazyColumn(
                     modifier = Modifier
-                        .verticalScroll(scrollState)
                         .background(brush = getRallyScreenCardsGradient())
                         .padding(16.dp)
                 ) {
                     val hallOfFameToShow = state.value.hallOfFame
 
-                    hallOfFameToShow.forEach { hallOfFame ->
+                    items(hallOfFameToShow) { hallOfFame ->
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight(),
-                            onClick = {},
                             colors = CardColors(
                                 containerColor = Color.Transparent,
                                 contentColor = MaterialTheme.colorScheme.onSurface,
@@ -145,7 +138,12 @@ fun HallOfFameScreen(
                         ) {
                             Row(
                                 modifier = Modifier
-                                    .padding(16.dp)
+                                    .padding(
+                                        start = 16.dp,
+                                        end = 16.dp,
+                                        top = if (hallOfFame == hallOfFameToShow.first()) 0.dp else 16.dp,
+                                        bottom = if (hallOfFame == hallOfFameToShow.last()) 0.dp else 16.dp
+                                    )
                                     .height(IntrinsicSize.Min)
                                     .fillMaxWidth(),
                             ) {
@@ -194,7 +192,7 @@ fun HallOfFameScreen(
                                 }
                             }
 
-                            // If it's the last element, don't print the divider
+                            // If it's not the last element, print the divider
                             if (hallOfFame != hallOfFameToShow.last()) {
                                 HorizontalDivider(
                                     modifier = Modifier.fillMaxWidth(),
@@ -206,7 +204,6 @@ fun HallOfFameScreen(
                     }
                 }
             }
-
         }
     }
 }

@@ -100,10 +100,10 @@ fun EatScreen(
                         text = stringResource(id = R.string.where_to_eat),
                         fontFamily = ezraFamily,
                         fontWeight = FontWeight.Medium,
+                        fontSize = 24.sp,
                         textAlign = TextAlign.Start,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
-                        lineHeight = 20.sp,
                         modifier = Modifier.padding(end = 8.dp)
                     )
 
