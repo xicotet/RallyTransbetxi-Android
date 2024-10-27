@@ -1,4 +1,4 @@
-package com.canolabs.rallytransbetxi.ui.rally
+package com.canolabs.rallytransbetxi.ui.rally.homeSections
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -25,6 +25,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +39,9 @@ import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.data.models.responses.Activity
 import com.canolabs.rallytransbetxi.domain.entities.Language
+import com.canolabs.rallytransbetxi.ui.rally.RallyScreenUIState
+import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
+import com.canolabs.rallytransbetxi.ui.rally.getRallyScreenCardsGradient
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
@@ -153,7 +158,6 @@ fun ActivityProgramSection(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .wrapContentHeight(),
-                                onClick = {},
                                 colors = CardColors(
                                     containerColor = Color.Transparent,
                                     contentColor = MaterialTheme.colorScheme.onSurface,

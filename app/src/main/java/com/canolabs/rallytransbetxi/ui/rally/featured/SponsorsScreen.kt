@@ -1,4 +1,4 @@
-package com.canolabs.rallytransbetxi.ui.rally
+package com.canolabs.rallytransbetxi.ui.rally.featured
 
 import android.util.Log
 import androidx.compose.foundation.Image

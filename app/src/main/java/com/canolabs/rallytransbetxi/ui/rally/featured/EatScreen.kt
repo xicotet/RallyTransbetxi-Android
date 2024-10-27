@@ -1,4 +1,4 @@
-package com.canolabs.rallytransbetxi.ui.rally
+package com.canolabs.rallytransbetxi.ui.rally.featured
 
 import android.content.Intent
 import android.net.Uri
@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.data.models.responses.Restaurant
 import com.canolabs.rallytransbetxi.ui.miscellaneous.bitmapDescriptorFromVector
+import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.google.android.gms.maps.model.CameraPosition

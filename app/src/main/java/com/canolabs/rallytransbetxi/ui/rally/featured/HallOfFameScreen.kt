@@ -1,4 +1,4 @@
-package com.canolabs.rallytransbetxi.ui.rally
+package com.canolabs.rallytransbetxi.ui.rally.featured
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -45,6 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
+import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
+import com.canolabs.rallytransbetxi.ui.rally.getRallyScreenCardsGradient
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily

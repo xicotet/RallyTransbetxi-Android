@@ -1,4 +1,4 @@
-package com.canolabs.rallytransbetxi.ui.rally
+package com.canolabs.rallytransbetxi.ui.rally.featured
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.navigation.Screens
+import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
+import com.canolabs.rallytransbetxi.ui.rally.getRallyScreenCardsGradient
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 
 @Composable

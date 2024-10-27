@@ -1,4 +1,4 @@
-package com.canolabs.rallytransbetxi.ui.rally
+package com.canolabs.rallytransbetxi.ui.rally.featured
 
 import SettingsInfoDialog
 import androidx.compose.foundation.Image
@@ -41,6 +41,8 @@ import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.entities.Theme
+import com.canolabs.rallytransbetxi.ui.rally.RallyScreenUIState
+import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 
 @Composable
 fun BottomSheetAppSettings(

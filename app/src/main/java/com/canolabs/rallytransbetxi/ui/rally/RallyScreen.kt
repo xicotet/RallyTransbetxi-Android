@@ -34,6 +34,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.ui.rally.dialogs.WarningDialog
+import com.canolabs.rallytransbetxi.ui.rally.featured.BottomSheetAppSettings
+import com.canolabs.rallytransbetxi.ui.rally.featured.FeaturedSection
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.ActivityProgramSection
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.BreakingNewsSection
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.WarningsSection
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

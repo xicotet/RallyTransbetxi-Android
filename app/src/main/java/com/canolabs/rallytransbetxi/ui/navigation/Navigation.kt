@@ -28,6 +28,9 @@ import com.canolabs.rallytransbetxi.ui.maps.MapsScreen
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.onboarding.OnboardingFlow
 import com.canolabs.rallytransbetxi.ui.rally.*
+import com.canolabs.rallytransbetxi.ui.rally.featured.EatScreen
+import com.canolabs.rallytransbetxi.ui.rally.featured.HallOfFameScreen
+import com.canolabs.rallytransbetxi.ui.rally.featured.SponsorsScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreen
