@@ -47,6 +47,8 @@
     <string name="text_size_small">Pequeña</string>
     <string name="text_size_medium">Normal</string>
     <string name="text_size_large">Grande</string>
+    <string name="app_version">Versión de la app</string>
+    <string name="developed_by_pablo_cano">Desarrollado por Pablo Cano</string>
 
     // Permission denied bottom sheet
     <string name="permission_denied_title">Permiso de ubicación</string>

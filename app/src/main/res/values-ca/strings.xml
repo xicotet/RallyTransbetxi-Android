@@ -47,6 +47,8 @@
     <string name="text_size_small">Xicoteta</string>
     <string name="text_size_medium">Normal</string>
     <string name="text_size_large">Gran</string>
+    <string name="app_version">Versió de l\'app</string>
+    <string name="developed_by_pablo_cano">Desenvolupat per Pablo Cano</string>
 
     // Permission denied bottom sheet
     <string name="permission_denied_title">Permís de localització</string>

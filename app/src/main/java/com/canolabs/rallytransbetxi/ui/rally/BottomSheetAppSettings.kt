@@ -33,7 +33,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.canolabs.rallytransbetxi.BuildConfig
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
@@ -57,7 +59,8 @@ fun BottomSheetAppSettings(
     val showInfoDialog = remember { mutableStateOf(false) }
 
     if (state.language == null || state.theme == null || state.directionsProfile == null
-        || state.fontSizeFactor == null) {
+        || state.fontSizeFactor == null
+    ) {
         Shimmer {
             Box(
                 modifier = Modifier
@@ -488,6 +491,29 @@ fun BottomSheetAppSettings(
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.app_version) + ": " + BuildConfig.VERSION_NAME,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Light,
+                    )
+                    Text(
+                        text = stringResource(id = R.string.developed_by_pablo_cano),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Light,
+                    )
                 }
             }
         }
