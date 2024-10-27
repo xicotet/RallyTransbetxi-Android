@@ -35,6 +35,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -206,25 +207,40 @@ fun BreakingNewsSection(
                                             .build(),
                                     )
 
-                                    if (newsPainter.state is AsyncImagePainter.State.Loading) {
-                                        Shimmer { brush ->
-                                            Box(
+                                    when (newsPainter.state) {
+                                        is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> {
+                                            Shimmer { brush ->
+                                                Box(
+                                                    modifier = Modifier
+                                                        .clip(RectangleShape)
+                                                        .fillMaxWidth()
+                                                        .height(200.dp)
+                                                        .background(brush = brush)
+                                                )
+                                            }
+                                        }
+                                        is AsyncImagePainter.State.Error -> {
+                                            Image(
+                                                painter = painterResource(id = R.drawable.news_default_image),
+                                                contentDescription = null,
+                                                contentScale = ContentScale.Fit,
                                                 modifier = Modifier
                                                     .clip(RectangleShape)
+                                                    .padding(vertical = 8.dp)
                                                     .fillMaxWidth()
-                                                    .height(200.dp)
-                                                    .background(brush = brush)
                                             )
                                         }
-                                    } else {
-                                        Image(
-                                            painter = newsPainter,
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .clip(RectangleShape)
-                                                .padding(vertical = 8.dp)
-                                                .fillMaxWidth()
-                                        )
+                                        else -> {
+                                            Image(
+                                                painter = newsPainter,
+                                                contentDescription = null,
+                                                contentScale = ContentScale.Fit,
+                                                modifier = Modifier
+                                                    .clip(RectangleShape)
+                                                    .padding(vertical = 8.dp)
+                                                    .fillMaxWidth()
+                                            )
+                                        }
                                     }
 
                                     Row(

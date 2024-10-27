@@ -88,6 +88,9 @@
     <string name="global_literal">Global</string>
     <string name="team_image_not_available">Imagen original de equipo no disponible</string>
 
+    // News detail
+    <string name="news_image_not_available">Imagen original de noticia no disponible</string>
+
     // Segmented button
     <string name="agria">Agria</string>
     <string name="prototype">Prototipo</string>

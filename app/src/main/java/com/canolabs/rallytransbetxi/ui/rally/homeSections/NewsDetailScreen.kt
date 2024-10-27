@@ -1,4 +1,4 @@
-package com.canolabs.rallytransbetxi.ui.rally
+package com.canolabs.rallytransbetxi.ui.rally.homeSections
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -16,7 +16,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,17 +32,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
+import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.data.models.responses.News
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
+import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
@@ -133,25 +138,49 @@ fun NewsDetailScreen(
                 fontFamily = robotoFamily
             )
 
-            if (newsPainter.state is AsyncImagePainter.State.Loading) {
-                Shimmer { brush ->
-                    Box(
+            when (newsPainter.state) {
+                is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> {
+                    Shimmer { brush ->
+                        Box(
+                            modifier = Modifier
+                                .clip(RectangleShape)
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .background(brush = brush)
+                        )
+                    }
+                }
+                is AsyncImagePainter.State.Error -> {
+                    Image(
+                        painter = painterResource(id = R.drawable.news_default_image),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        colorFilter = ColorFilter.tint(Color.White),
                         modifier = Modifier
                             .clip(RectangleShape)
+                            .padding(vertical = 8.dp)
                             .fillMaxWidth()
-                            .height(200.dp)
-                            .background(brush = brush)
+                    )
+                    Text(
+                        text = "(" + stringResource(id = R.string.news_image_not_available) + ")",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(bottom = 16.dp).fillMaxWidth(),
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        fontFamily = robotoFamily
                     )
                 }
-            } else {
-                Image(
-                    painter = newsPainter,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(RectangleShape)
-                        .padding(vertical = 16.dp)
-                        .fillMaxWidth()
-                )
+                else -> {
+                    Image(
+                        painter = newsPainter,
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .clip(RectangleShape)
+                            .padding(vertical = 8.dp)
+                            .fillMaxWidth()
+                    )
+                }
             }
 
             Row (
