@@ -551,9 +551,6 @@ fun TeamDetailScreen(
             val driverImageUrl = remember { mutableStateOf<String?>(null) }
             val codriverImageUrl = remember { mutableStateOf<String?>(null) }
 
-            val firstImageIsLoaded = remember { mutableStateOf(false) }
-            val secondImageIsLoaded = remember { mutableStateOf(false) }
-
             LaunchedEffect(teamNumber) {
                 try {
                     val driverUrl = driverStorageRef.downloadUrl.await()
@@ -571,13 +568,6 @@ fun TeamDetailScreen(
                     .data(driverImageUrl.value ?: "")
                     .size(Size.ORIGINAL)
                     .build(),
-                onState = { state ->
-                    if (state is AsyncImagePainter.State.Success) {
-                        firstImageIsLoaded.value = true
-                    } else if (state is AsyncImagePainter.State.Loading) {
-                        firstImageIsLoaded.value = false
-                    }
-                }
             )
 
             val codriverPainter = rememberAsyncImagePainter(
@@ -585,13 +575,6 @@ fun TeamDetailScreen(
                     .data(codriverImageUrl.value ?: "")
                     .size(Size.ORIGINAL)
                     .build(),
-                onState = { state ->
-                    if (state is AsyncImagePainter.State.Success) {
-                        secondImageIsLoaded.value = true
-                    } else if (state is AsyncImagePainter.State.Loading) {
-                        secondImageIsLoaded.value = false
-                    }
-                }
             )
 
             Row(
@@ -606,35 +589,54 @@ fun TeamDetailScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.weight(1f)
                 ){
-                    if (!firstImageIsLoaded.value) {
-                        Shimmer { brush ->
-                            Box(
+                    when (driverPainter.state) {
+                        is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> {
+                            Shimmer { brush ->
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RectangleShape)
+                                        .height(170.dp)
+                                        .padding(bottom = 8.dp)
+                                        .width(144.dp)
+                                        .background(brush = brush)
+                                )
+                            }
+                        }
+
+                        is AsyncImagePainter.State.Error -> {
+                            Image(
+                                painter = painterResource(id = R.drawable.driver_image_default) ,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
                                 modifier = Modifier
-                                    .clip(RectangleShape)
+                                    .padding(bottom = 8.dp)
+                                    .clip(CircleShape)
                                     .height(170.dp)
-                                    .width(144.dp)
-                                    .background(brush = brush)
+                                    .width(144.dp),
                             )
                         }
-                    } else {
-                        Image(
-                            painter = driverPainter,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .padding(bottom = 8.dp)
-                                .clip(CircleShape)
-                                .height(170.dp)
-                                .width(144.dp),
-                            contentScale = ContentScale.Crop
-                        )
-                        Text(
-                            text = team?.driver ?: "",
-                            fontSize = 20.sp,
-                            fontFamily = antaFamily,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
-                        )
+
+                        else -> {
+                            Image(
+                                painter = driverPainter,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(bottom = 8.dp)
+                                    .clip(CircleShape)
+                                    .height(170.dp)
+                                    .width(144.dp),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
                     }
+
+                    Text(
+                        text = team?.driver ?: "",
+                        fontSize = 20.sp,
+                        fontFamily = antaFamily,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -654,35 +656,54 @@ fun TeamDetailScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.weight(1f)
                 ){
-                    if (!secondImageIsLoaded.value) {
-                        Shimmer { brush ->
-                            Box(
+                    when (codriverPainter.state) {
+                        is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> {
+                            Shimmer { brush ->
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RectangleShape)
+                                        .height(170.dp)
+                                        .padding(bottom = 8.dp)
+                                        .width(144.dp)
+                                        .background(brush = brush)
+                                )
+                            }
+                        }
+
+                        is AsyncImagePainter.State.Error -> {
+                            Image(
+                                painter = painterResource(id = R.drawable.driver_image_default) ,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
                                 modifier = Modifier
-                                    .clip(RectangleShape)
+                                    .clip(CircleShape)
+                                    .padding(bottom = 8.dp)
                                     .height(170.dp)
-                                    .width(144.dp)
-                                    .background(brush = brush)
+                                    .width(144.dp),
                             )
                         }
-                    } else {
-                        Image(
-                            painter = codriverPainter,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .padding(bottom = 8.dp)
-                                .clip(CircleShape)
-                                .height(170.dp)
-                                .width(144.dp),
-                            contentScale = ContentScale.Crop
-                        )
-                        Text(
-                            text = team?.codriver ?: "",
-                            fontSize = 20.sp,
-                            fontFamily = antaFamily,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
-                        )
+
+                        else -> {
+                            Image(
+                                painter = codriverPainter,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(bottom = 8.dp)
+                                    .clip(CircleShape)
+                                    .height(170.dp)
+                                    .width(144.dp),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
                     }
+
+                    Text(
+                        text = team?.codriver ?: "",
+                        fontSize = 20.sp,
+                        fontFamily = antaFamily,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
