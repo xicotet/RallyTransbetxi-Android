@@ -56,7 +56,12 @@ fun ResultCard(
         }
         Card(
             modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = if (result.disqualified) 0.dp else 12.dp,
+                    bottom = 12.dp
+                )
                 .fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = cardsElevation),
             shape = RoundedCornerShape(8.dp),
