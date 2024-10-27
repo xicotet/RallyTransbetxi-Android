@@ -86,6 +86,7 @@
     <string name="best_stage_position">Millor posició</string>
     <string name="team">Equip</string>
     <string name="global_literal">Global</string>
+    <string name="team_image_not_available">Imatge original d\'equip no disponible</string>
 
     // Segmented button
     <string name="agria">Agria</string>

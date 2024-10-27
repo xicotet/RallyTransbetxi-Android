@@ -49,6 +49,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -63,6 +64,7 @@ import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
+import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -100,7 +102,7 @@ fun TeamDetailScreen(
     val scrollState = rememberScrollState()
 
     val collapsedFraction = scrollBehavior.state.collapsedFraction
-    val fontSize = if (collapsedFraction > 0.5) {
+    val topAppBarFontSize = if (collapsedFraction > 0.5) {
         16.sp // Smaller font size when the AppBar is more than half collapsed
     } else {
         24.sp // Larger font size when the AppBar is less than half collapsed
@@ -147,7 +149,7 @@ fun TeamDetailScreen(
                             team?.name ?: "",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            fontSize = fontSize,
+                            fontSize = topAppBarFontSize,
                             fontFamily = ezraFamily
                         )
                     } else {
@@ -155,7 +157,7 @@ fun TeamDetailScreen(
                             team?.name ?: "",
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
-                            fontSize = fontSize,
+                            fontSize = topAppBarFontSize,
                             fontFamily = ezraFamily
                         )
                     }
@@ -184,19 +186,6 @@ fun TeamDetailScreen(
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (teamImageUrl.value == null) {
-                Shimmer { brush ->
-                    Box(
-                        modifier = Modifier
-                            .clip(RectangleShape)
-                            .height(400.dp)
-                            .width(300.dp)
-                            .align(Alignment.CenterHorizontally)
-                            .background(brush = brush)
-                    )
-                }
-            }
-
             when (teamPainter.state) {
                 is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> {
                     Shimmer { brush ->
@@ -211,7 +200,27 @@ fun TeamDetailScreen(
                     }
                 }
 
-                is AsyncImagePainter.State.Success -> {
+                is AsyncImagePainter.State.Error -> {
+                    Image(
+                        painter = painterResource(id = R.drawable.team_image_default) ,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .clip(RectangleShape)
+                            .height(400.dp)
+                            .width(300.dp)
+                            .align(Alignment.CenterHorizontally),
+                    )
+                    Text(
+                        text = "(" + stringResource(id = R.string.team_image_not_available) + ")",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(top = 4.dp),
+                        fontFamily = robotoFamily
+                    )
+                }
+
+                else -> {
                     Image(
                         painter = teamPainter,
                         contentDescription = null,
@@ -221,10 +230,6 @@ fun TeamDetailScreen(
                             .width(300.dp)
                             .align(Alignment.CenterHorizontally),
                     )
-                }
-
-                is AsyncImagePainter.State.Error -> {
-                    // Show a placeholder image
                 }
             }
 
