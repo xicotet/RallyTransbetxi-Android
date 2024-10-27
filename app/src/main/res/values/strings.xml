@@ -21,6 +21,9 @@
     <string name="show_less">Ver menos</string>
     <string name="weather_forecast">Previsión metereológica</string>
 
+    // Sponsors destination
+    <string name="sponsors_not_available">No se han podido cargar los patrocinadores. Lamentamos las molestias.</string>
+
     // Eat destination
     <string name="open_in_maps">Abrir en Google Maps</string>
     <string name="do_you_want_to_open">¿Quieres abrir</string>

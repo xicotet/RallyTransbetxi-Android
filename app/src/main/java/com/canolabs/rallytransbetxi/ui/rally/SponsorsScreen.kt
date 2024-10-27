@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +28,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -56,9 +58,11 @@ fun SponsorsScreen(
 ) {
     val storage = Firebase.storage
     val sponsorImageUrls = remember { mutableStateListOf<String?>() }
+    val errorDuringInitialization = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         try {
+            // TODO: En este for no puede estar hardcodeado el número de sponsors
             for (i in 1..55) {
                 val sponsorImagePath = "${SPONSORS_IMAGE_PREFIX}$i${SPONSORS_IMAGE_EXTENSION}"
                 val sponsorStorageRef =
@@ -69,6 +73,7 @@ fun SponsorsScreen(
                 Log.d("SponsorsScreen", "Sponsor Image URL: $sponsorUrl")
             }
         } catch (e: Exception) {
+            errorDuringInitialization.value = true
             Log.d("SponsorsScreen", "Error: $e")
         }
     }
@@ -114,31 +119,65 @@ fun SponsorsScreen(
             )
         },
     ) {
+        if (errorDuringInitialization.value) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(id = R.string.sponsors_not_available),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
+        }
+
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 128.dp),
             contentPadding = PaddingValues(16.dp),
-            modifier = Modifier.fillMaxSize().padding(it),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(sponsorPainters) { painter ->
-                if (painter.state is AsyncImagePainter.State.Loading
-                    || painter.state is AsyncImagePainter.State.Empty) {
-                    Shimmer { brush ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(56.dp)
-                                .padding(16.dp)
-                                .background(brush = brush)
+                when (painter.state) {
+                    is AsyncImagePainter.State.Loading,
+                    is AsyncImagePainter.State.Empty -> {
+                        Shimmer { brush ->
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(56.dp)
+                                    .padding(16.dp)
+                                    .background(brush = brush)
+                            )
+                        }
+                    }
+                    is AsyncImagePainter.State.Success -> {
+                        Image(
+                            painter = painter,
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
-                } else {
-                    Image(
-                        painter = painter,
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    else -> {
+                        // TODO: Probar si este bloque funciona cuando cambiamos el numero del for de arriba
+                        Text(
+                            text = stringResource(id = R.string.sponsors_not_available),
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        )
+                    }
                 }
             }
         }
