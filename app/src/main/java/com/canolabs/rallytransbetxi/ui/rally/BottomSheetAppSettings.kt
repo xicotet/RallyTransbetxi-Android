@@ -56,6 +56,14 @@ fun BottomSheetAppSettings(
         viewModel.fetchFontSizeFactorSettings()
     }
 
+    // Need to introduce these 2 since the fontScaleState seems not to affect text in this BottomSheet
+    val scaledBodyMedium = MaterialTheme.typography.bodyMedium.copy(
+        fontSize = MaterialTheme.typography.bodyMedium.fontSize * fontScaleState.value
+    )
+    val scaledTitleMedium = MaterialTheme.typography.titleMedium.copy(
+        fontSize = MaterialTheme.typography.titleMedium.fontSize * fontScaleState.value
+    )
+
     val showInfoDialog = remember { mutableStateOf(false) }
 
     if (state.language == null || state.theme == null || state.directionsProfile == null
@@ -88,12 +96,12 @@ fun BottomSheetAppSettings(
                 Column {
                     Text(
                         text = stringResource(id = R.string.language),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = scaledBodyMedium
                     )
 
                     Text(
                         text = state.language.getLanguageName(),
-                        style = MaterialTheme.typography.titleMedium,
+                        style = scaledTitleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -223,11 +231,11 @@ fun BottomSheetAppSettings(
                 Column {
                     Text(
                         text = stringResource(id = R.string.theme),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = scaledBodyMedium
                     )
                     Text(
                         text = stringResource(id = state.theme.getName()),
-                        style = MaterialTheme.typography.titleMedium,
+                        style = scaledTitleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -336,11 +344,11 @@ fun BottomSheetAppSettings(
                 Column {
                     Text(
                         text = stringResource(id = R.string.directions_mode),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = scaledBodyMedium
                     )
                     Text(
                         text = stringResource(id = state.directionsProfile.getName()),
-                        style = MaterialTheme.typography.titleMedium,
+                        style = scaledTitleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -435,11 +443,11 @@ fun BottomSheetAppSettings(
                 Column {
                     Text(
                         text = stringResource(id = R.string.text_size),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = scaledBodyMedium
                     )
                     Text(
                         text = stringResource(id = state.fontSizeFactor.name()),
-                        style = MaterialTheme.typography.titleMedium,
+                        style = scaledTitleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -506,12 +514,12 @@ fun BottomSheetAppSettings(
                 Column {
                     Text(
                         text = stringResource(id = R.string.app_version) + ": " + BuildConfig.VERSION_NAME,
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = scaledBodyMedium,
                         fontWeight = FontWeight.Light,
                     )
                     Text(
                         text = stringResource(id = R.string.developed_by_pablo_cano),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = scaledBodyMedium,
                         fontWeight = FontWeight.Light,
                     )
                 }

@@ -38,7 +38,6 @@ import com.canolabs.rallytransbetxi.ui.teams.TeamsScreen
 import com.canolabs.rallytransbetxi.ui.teams.TeamsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Navigation(
     stagesScreenViewModel: StagesScreenViewModel,
