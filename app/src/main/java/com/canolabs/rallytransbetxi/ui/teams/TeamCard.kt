@@ -101,11 +101,7 @@ fun TeamCard(
                 .size(Size.ORIGINAL)
                 .build(),
             onState = { state ->
-                if (state is AsyncImagePainter.State.Success) {
-                    firstImageIsLoaded.value = true
-                } else if (state is AsyncImagePainter.State.Loading) {
-                    firstImageIsLoaded.value = false
-                }
+                firstImageIsLoaded.value = state !is AsyncImagePainter.State.Loading
             }
         )
 
@@ -115,11 +111,7 @@ fun TeamCard(
                 .size(Size.ORIGINAL)
                 .build(),
             onState = { state ->
-                if (state is AsyncImagePainter.State.Success) {
-                    secondImageIsLoaded.value = true
-                } else if (state is AsyncImagePainter.State.Loading) {
-                    secondImageIsLoaded.value = false
-                }
+                secondImageIsLoaded.value = state !is AsyncImagePainter.State.Loading
             }
         )
 
@@ -132,38 +124,38 @@ fun TeamCard(
             end = Offset(1000f, 1000f)
         )
 
-        if (firstImageIsLoaded.value && secondImageIsLoaded.value) {
-            Column(
-                modifier = Modifier
-                    .background(brush = gradient)
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+        Column(
+            modifier = Modifier
+                .background(brush = gradient)
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = 4.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .border(
-                                width = 2.dp,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                shape = RoundedCornerShape(2.dp)
-                            ),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = "#" + team.number,
+                Box(
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .border(
+                            width = 2.dp,
                             color = MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontFamily = ezraFamily,
-                            modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp)
-                        )
-                    }
+                            shape = RoundedCornerShape(2.dp)
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = "#" + team.number,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontFamily = ezraFamily,
+                        modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp)
+                    )
+                }
 
+                if (firstImageIsLoaded.value) {
                     Image(
                         painter = driverPainter,
                         contentDescription = null,
@@ -173,7 +165,19 @@ fun TeamCard(
                             .size(width = 144.dp, height = 120.dp),
                         contentScale = ContentScale.Crop
                     )
+                } else {
+                    Shimmer { brush ->
+                        Box(
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .height(100.dp)
+                                .width(100.dp)
+                                .background(brush = brush)
+                        )
+                    }
+                }
 
+                if (secondImageIsLoaded.value) {
                     Image(
                         painter = codriverPainter,
                         contentDescription = null,
@@ -183,130 +187,70 @@ fun TeamCard(
                             .size(width = 144.dp, height = 120.dp),
                         contentScale = ContentScale.Crop
                     )
-                }
-
-                Text(
-                    text = team.name,
-                    fontFamily = robotoFamily,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(8.dp)
-                )
-
-                Row(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .width(200.dp)
-                    ) {
-                        Text(
-                            text = team.driver,
-                            fontFamily = antaFamily,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 2
-                        )
-                        Text(
-                            text = team.codriver,
-                            fontFamily = antaFamily,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 2
-                        )
-                    }
-                    ElevatedButton(
-                        onClick = { navController.navigate("${Screens.TeamDetail.route}/${team.number}") },
-                        shape = CircleShape,
-                        colors = ButtonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                            disabledContainerColor = MaterialTheme.colorScheme.primary,
-                            disabledContentColor = MaterialTheme.colorScheme.primary
-                        ),
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .width(144.dp)
-                            .height(48.dp)
-
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = null
+                } else {
+                    Shimmer { brush ->
+                        Box(
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .height(100.dp)
+                                .width(100.dp)
+                                .background(brush = brush)
                         )
                     }
                 }
             }
-        } else {
-            Shimmer { brush ->
+
+            Text(
+                text = team.name,
+                fontFamily = robotoFamily,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(8.dp)
+            )
+
+            Row(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .width(200.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .height(24.dp)
-                                .width(50.dp)
-                                .background(brush = brush)
-                        )
-
-                        Box(
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .height(100.dp)
-                                .width(100.dp)
-                                .background(brush = brush)
-                        )
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        Box(
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .height(100.dp)
-                                .width(100.dp)
-                                .background(brush = brush)
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .height(24.dp)
-                            .fillMaxWidth()
-                            .background(brush = brush)
+                    Text(
+                        text = team.driver,
+                        fontFamily = antaFamily,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 2
                     )
+                    Text(
+                        text = team.codriver,
+                        fontFamily = antaFamily,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 2
+                    )
+                }
+                ElevatedButton(
+                    onClick = { navController.navigate("${Screens.TeamDetail.route}/${team.number}") },
+                    shape = CircleShape,
+                    colors = ButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = MaterialTheme.colorScheme.primary,
+                        disabledContentColor = MaterialTheme.colorScheme.primary
+                    ),
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .width(144.dp)
+                        .height(48.dp)
 
-                    Row(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .width(200.dp)
-                                .height(48.dp)
-                                .background(brush = brush)
-                        )
-                        Box(
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .width(144.dp)
-                                .height(48.dp)
-                                .background(brush = brush)
-                        )
-                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null
+                    )
                 }
             }
         }

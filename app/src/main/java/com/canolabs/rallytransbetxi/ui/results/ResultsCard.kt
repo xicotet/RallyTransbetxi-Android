@@ -110,16 +110,6 @@ fun ResultCard(
                     }
                 }
 
-                /*VerticalDivider(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(4.dp)
-                        .padding(horizontal = 8.dp),
-                    thickness = 4.dp,
-                    color = MaterialTheme.colorScheme.primary
-                )*/
-
-                // Column with three Texts
                 Column(
                     modifier = Modifier
                         .weight(0.8f)
