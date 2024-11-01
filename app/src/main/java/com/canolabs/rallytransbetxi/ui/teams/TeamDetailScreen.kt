@@ -117,12 +117,11 @@ fun TeamDetailScreen(
     val teamImageUrl = remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(teamNumber) {
-        try {
-            val teamUrl = teamStorageRef.downloadUrl.await()
-            teamImageUrl.value = teamUrl.toString()
-            Log.d("DriverImagesPager", "Driver Image URL: $teamUrl")
+        teamImageUrl.value = try {
+            teamStorageRef.downloadUrl.await().toString()
         } catch (e: Exception) {
-            Log.d("DriverImagesPager", "Error: $e")
+            Log.w("TeamDetailScreen", "Error: $e")
+            ""
         }
     }
 
@@ -186,51 +185,26 @@ fun TeamDetailScreen(
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val placeholderModifier = Modifier
+                .clip(RectangleShape)
+                .height(400.dp)
+                .width(300.dp)
+                .align(Alignment.CenterHorizontally)
+
             when (teamPainter.state) {
-                is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> {
-                    Shimmer { brush ->
-                        Box(
-                            modifier = Modifier
-                                .clip(RectangleShape)
-                                .height(400.dp)
-                                .width(300.dp)
-                                .align(Alignment.CenterHorizontally)
-                                .background(brush = brush)
-                        )
+                is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> ShimmerPlaceholder(placeholderModifier)
+                is AsyncImagePainter.State.Error -> {
+                    if (teamImageUrl.value == null) {
+                        ShimmerPlaceholder(placeholderModifier)
+                    } else {
+                        DefaultTeamImageWithErrorMessage(placeholderModifier)
                     }
                 }
-
-                is AsyncImagePainter.State.Error -> {
-                    Image(
-                        painter = painterResource(id = R.drawable.team_image_default) ,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .clip(RectangleShape)
-                            .height(400.dp)
-                            .width(300.dp)
-                            .align(Alignment.CenterHorizontally),
-                    )
-                    Text(
-                        text = "(" + stringResource(id = R.string.team_image_not_available) + ")",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(top = 4.dp),
-                        fontFamily = robotoFamily
-                    )
-                }
-
-                else -> {
-                    Image(
-                        painter = teamPainter,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .clip(RectangleShape)
-                            .height(400.dp)
-                            .width(300.dp)
-                            .align(Alignment.CenterHorizontally),
-                    )
-                }
+                else -> Image(
+                    painter = teamPainter,
+                    contentDescription = null,
+                    modifier = placeholderModifier
+                )
             }
 
             Row(
@@ -708,4 +682,28 @@ fun TeamDetailScreen(
             }
         }
     }
+}
+
+@Composable
+fun ShimmerPlaceholder(modifier: Modifier) {
+    Shimmer { brush ->
+        Box(modifier = modifier.background(brush))
+    }
+}
+
+@Composable
+fun DefaultTeamImageWithErrorMessage(modifier: Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.team_image_default),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+    )
+    Text(
+        text = "(${stringResource(id = R.string.team_image_not_available)})",
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.padding(top = 4.dp),
+        fontFamily = robotoFamily
+    )
 }
