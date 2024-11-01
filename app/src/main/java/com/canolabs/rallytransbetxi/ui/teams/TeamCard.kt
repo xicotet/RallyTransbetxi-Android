@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -71,50 +72,56 @@ fun TeamCard(
         shape = RoundedCornerShape(8.dp)
     ) {
         val teamNumber = team.number
-        val driverImagePath = "${Constants.DRIVER_IMAGE_PREFIX}${teamNumber}${Constants.DRIVER_IMAGE_EXTENSION}"
-        val codriverImagePath = "${Constants.CODRIVER_IMAGE_PREFIX}${teamNumber}${Constants.DRIVER_IMAGE_EXTENSION}"
+        val driverImagePath =
+            "${Constants.DRIVER_IMAGE_PREFIX}${teamNumber}${Constants.DRIVER_IMAGE_EXTENSION}"
+        val codriverImagePath =
+            "${Constants.CODRIVER_IMAGE_PREFIX}${teamNumber}${Constants.DRIVER_IMAGE_EXTENSION}"
 
         val storage = Firebase.storage
-        val driverStorageRef = storage.reference.child("${Constants.DRIVERS_FOLDER}${driverImagePath}")
-        val codriverStorageRef = storage.reference.child("${Constants.DRIVERS_FOLDER}${codriverImagePath}")
+        val driverStorageRef =
+            storage.reference.child("${Constants.DRIVERS_FOLDER}${driverImagePath}")
+        val codriverStorageRef =
+            storage.reference.child("${Constants.DRIVERS_FOLDER}${codriverImagePath}")
 
         val driverImageUrl = remember { mutableStateOf<String?>(null) }
         val codriverImageUrl = remember { mutableStateOf<String?>(null) }
 
-        val firstImageIsLoaded = remember { mutableStateOf(false) }
-        val secondImageIsLoaded = remember { mutableStateOf(false) }
-
         LaunchedEffect(teamNumber) {
-            try {
-                val driverUrl = driverStorageRef.downloadUrl.await()
-                driverImageUrl.value = driverUrl.toString()
-
-                val codriverUrl = codriverStorageRef.downloadUrl.await()
-                codriverImageUrl.value = codriverUrl.toString()
+            driverImageUrl.value = try {
+                driverStorageRef.downloadUrl.await().toString()
             } catch (e: Exception) {
-                Log.d("DriverImagesPager", "Error: $e")
+                Log.w("TeamCard", "Error loading driver image for team $teamNumber: $e")
+                ""
+            }
+
+            codriverImageUrl.value = try {
+                codriverStorageRef.downloadUrl.await().toString()
+            } catch (e: Exception) {
+                Log.w("TeamCard", "Error loading codriver image for team $teamNumber: $e")
+                ""
             }
         }
 
         val driverPainter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(driverImageUrl.value ?: "")
+                .data(driverImageUrl.value)
                 .size(Size.ORIGINAL)
                 .build(),
-            onState = { state ->
-                firstImageIsLoaded.value = state !is AsyncImagePainter.State.Loading
-            }
+            error = painterResource(id = R.drawable.driver_image_default)
         )
 
         val codriverPainter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(codriverImageUrl.value ?: "")
+                .data(codriverImageUrl.value)
                 .size(Size.ORIGINAL)
                 .build(),
-            onState = { state ->
-                secondImageIsLoaded.value = state !is AsyncImagePainter.State.Loading
-            }
+            error = painterResource(id = R.drawable.driver_image_default)
         )
+
+        val isLoading = driverPainter.state is AsyncImagePainter.State.Loading ||
+            codriverPainter.state is AsyncImagePainter.State.Loading
+        val fetchingImageUrl = driverPainter.state is AsyncImagePainter.State.Error && driverImageUrl.value == null ||
+            codriverPainter.state is AsyncImagePainter.State.Error && codriverImageUrl.value == null
 
         val gradient = Brush.linearGradient(
             colors = listOf(
@@ -133,32 +140,25 @@ fun TeamCard(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(vertical = 4.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .wrapContentWidth()
-                        .border(
-                            width = 2.dp,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            shape = RoundedCornerShape(2.dp)
-                        ),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = "#" + team.number,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontFamily = ezraFamily,
-                        modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp)
-                    )
-                }
-
-                when (driverPainter.state) {
-                    is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> {
-                        Shimmer { brush ->
+            when {
+                isLoading || fetchingImageUrl -> {
+                    Shimmer { brush ->
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .height(24.dp)
+                                    .width(50.dp)
+                                    .background(brush = brush)
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .height(100.dp)
+                                    .width(100.dp)
+                                    .background(brush = brush)
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
                             Box(
                                 modifier = Modifier
                                     .clip(CircleShape)
@@ -168,20 +168,30 @@ fun TeamCard(
                             )
                         }
                     }
-
-                    is AsyncImagePainter.State.Error -> {
-                        Image(
-                            painter = painterResource(id = R.drawable.driver_image_default),
-                            contentDescription = null,
+                }
+                else -> {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    ) {
+                        Box(
                             modifier = Modifier
-                                .clip(CircleShape)
-                                .weight(1f)
-                                .size(width = 144.dp, height = 120.dp),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-
-                    else -> {
+                                .wrapContentWidth()
+                                .border(
+                                    width = 2.dp,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    shape = RoundedCornerShape(2.dp)
+                                ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = "#$teamNumber",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontFamily = ezraFamily,
+                                modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp)
+                            )
+                        }
                         Image(
                             painter = driverPainter,
                             contentDescription = null,
@@ -191,35 +201,6 @@ fun TeamCard(
                                 .size(width = 144.dp, height = 120.dp),
                             contentScale = ContentScale.Crop
                         )
-                    }
-                }
-
-                when (codriverPainter.state) {
-                    is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> {
-                        Shimmer { brush ->
-                            Box(
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .height(100.dp)
-                                    .width(100.dp)
-                                    .background(brush = brush)
-                            )
-                        }
-                    }
-
-                    is AsyncImagePainter.State.Error -> {
-                        Image(
-                            painter = painterResource(id = R.drawable.driver_image_default),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .weight(1f)
-                                .size(width = 144.dp, height = 120.dp),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-
-                    else -> {
                         Image(
                             painter = codriverPainter,
                             contentDescription = null,
