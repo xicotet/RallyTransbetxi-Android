@@ -526,8 +526,21 @@ fun TeamDetailScreen(
             val codriverImageUrl = remember { mutableStateOf<String?>(null) }
 
             LaunchedEffect(teamNumber) {
-                driverImageUrl.value = try { driverStorageRef.downloadUrl.await().toString() } catch (e: Exception) { null }
-                codriverImageUrl.value = try { codriverStorageRef.downloadUrl.await().toString() } catch (e: Exception) { null }
+                driverImageUrl.value = try {
+                    driverStorageRef.downloadUrl.await().toString()
+                } catch (e: Exception) {
+                    Log.w("TeamDetailScreen", "Error: $e")
+                    ""
+                }
+            }
+
+            LaunchedEffect(teamNumber) {
+                codriverImageUrl.value = try {
+                    codriverStorageRef.downloadUrl.await().toString()
+                } catch (e: Exception) {
+                    Log.w("TeamDetailScreen", "Error: $e")
+                    ""
+                }
             }
 
             val driverPainter = rememberAsyncImagePainter(
@@ -535,6 +548,7 @@ fun TeamDetailScreen(
                     .data(driverImageUrl.value ?: "")
                     .size(Size.ORIGINAL)
                     .build(),
+                error = painterResource(id = R.drawable.driver_image_default)
             )
 
             val codriverPainter = rememberAsyncImagePainter(
@@ -542,6 +556,7 @@ fun TeamDetailScreen(
                     .data(codriverImageUrl.value ?: "")
                     .size(Size.ORIGINAL)
                     .build(),
+                error = painterResource(id = R.drawable.driver_image_default)
             )
 
             Row(
@@ -564,8 +579,6 @@ fun TeamDetailScreen(
                         is AsyncImagePainter.State.Error -> {
                             if (driverImageUrl.value == null) {
                                 ShimmerPlaceholder(driverPlaceHolderModified)
-                            } else {
-                                DefaultDriverImage(driverPlaceHolderModified)
                             }
                         }
                         else -> Image(
@@ -603,8 +616,6 @@ fun TeamDetailScreen(
                         is AsyncImagePainter.State.Error -> {
                             if (codriverImageUrl.value == null) {
                                 ShimmerPlaceholder(driverPlaceHolderModified)
-                            } else {
-                                DefaultDriverImage(driverPlaceHolderModified)
                             }
                         }
                         else -> Image(
@@ -633,16 +644,6 @@ fun ShimmerPlaceholder(modifier: Modifier) {
     Shimmer { brush ->
         Box(modifier = modifier.background(brush))
     }
-}
-
-@Composable
-fun DefaultDriverImage(modifier: Modifier) {
-    Image(
-        painter = painterResource(id = R.drawable.driver_image_default),
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        modifier = modifier
-    )
 }
 
 @Composable
