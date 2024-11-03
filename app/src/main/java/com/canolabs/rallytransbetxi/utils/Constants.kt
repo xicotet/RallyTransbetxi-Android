@@ -2,6 +2,7 @@ package com.canolabs.rallytransbetxi.utils
 
 class Constants {
     companion object {
+        const val SPLASH_SCREEN_DURATION = 1300L
         const val BETXI_LOCATION = "39.927995,-0.198889"
         // Day of the event
         const val BEGINNING_DAY = 26

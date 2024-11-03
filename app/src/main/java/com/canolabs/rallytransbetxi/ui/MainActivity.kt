@@ -36,14 +36,17 @@ import androidx.core.content.ContextCompat
 import android.Manifest
 import android.util.Log
 import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.lifecycleScope
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.BottomSheetConnectivityLost
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.ConnectivityObserver
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkConnectivityObserver
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.SPLASH_SCREEN_DURATION
 import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.initialize
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
@@ -72,8 +75,15 @@ class MainActivity : ComponentActivity() {
         )
         Log.d("MainActivity", "Proceeding to: App Check provider factory installed")
 
-        
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
+
+        // Add a delay before dismissing the splash screen so the local data can be loaded
+        lifecycleScope.launch {
+            splashScreen.setKeepOnScreenCondition { true }
+            delay(SPLASH_SCREEN_DURATION)
+            splashScreen.setKeepOnScreenCondition { false }
+        }
+
         askNotificationPermission()
 
         // Load the selected language from SharedPreferences and apply it
