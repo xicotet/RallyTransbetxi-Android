@@ -545,18 +545,16 @@ fun TeamDetailScreen(
 
             val driverPainter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(driverImageUrl.value ?: "")
+                    .data(driverImageUrl.value)
                     .size(Size.ORIGINAL)
                     .build(),
-                error = painterResource(id = R.drawable.driver_image_default)
             )
 
             val codriverPainter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(codriverImageUrl.value ?: "")
+                    .data(codriverImageUrl.value)
                     .size(Size.ORIGINAL)
                     .build(),
-                error = painterResource(id = R.drawable.driver_image_default)
             )
 
             Row(
@@ -579,6 +577,8 @@ fun TeamDetailScreen(
                         is AsyncImagePainter.State.Error -> {
                             if (driverImageUrl.value == null) {
                                 ShimmerPlaceholder(driverPlaceHolderModified)
+                            } else {
+                                DefaultDriverImage(driverPlaceHolderModified)
                             }
                         }
                         else -> Image(
@@ -616,6 +616,8 @@ fun TeamDetailScreen(
                         is AsyncImagePainter.State.Error -> {
                             if (codriverImageUrl.value == null) {
                                 ShimmerPlaceholder(driverPlaceHolderModified)
+                            } else {
+                                DefaultDriverImage(driverPlaceHolderModified)
                             }
                         }
                         else -> Image(
@@ -644,6 +646,16 @@ fun ShimmerPlaceholder(modifier: Modifier) {
     Shimmer { brush ->
         Box(modifier = modifier.background(brush))
     }
+}
+
+@Composable
+fun DefaultDriverImage(modifier: Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.driver_image_default),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+    )
 }
 
 @Composable

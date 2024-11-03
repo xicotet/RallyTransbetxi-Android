@@ -66,6 +66,9 @@ fun DriverImagesPager(result: Result) {
             Log.w("DriverImagesPager", "Error when loading driver image of team $teamNumber: $e")
             ""
         }
+    }
+
+    LaunchedEffect(teamNumber) {
         codriverImageUrl.value = try {
             codriverStorageRef.downloadUrl.await().toString()
         } catch (e: Exception) {
