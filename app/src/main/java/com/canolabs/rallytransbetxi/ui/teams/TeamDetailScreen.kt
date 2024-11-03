@@ -306,7 +306,7 @@ fun TeamDetailScreen(
                                     text = stringResource(id = R.string.category_position) + ": ",
                                     fontSize = 20.sp,
                                     fontFamily = ezraFamily,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.Normal,
                                     textAlign = TextAlign.Center
                                 )
                                 Box(
@@ -323,7 +323,7 @@ fun TeamDetailScreen(
                             text = stringResource(id = R.string.category_position) + ": " + state.value.categoryResult,
                             fontSize = 20.sp,
                             fontFamily = ezraFamily,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -335,7 +335,7 @@ fun TeamDetailScreen(
                                     text = stringResource(id = R.string.overall_position) + ": ",
                                     fontSize = 20.sp,
                                     fontFamily = ezraFamily,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.Normal,
                                     textAlign = TextAlign.Center
                                 )
                                 Box(
@@ -352,7 +352,7 @@ fun TeamDetailScreen(
                             text = stringResource(id = R.string.overall_position) + ": " + state.value.globalResult,
                             fontSize = 20.sp,
                             fontFamily = ezraFamily,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -364,7 +364,7 @@ fun TeamDetailScreen(
                                     text = stringResource(id = R.string.overall_time) + ": ",
                                     fontSize = 20.sp,
                                     fontFamily = ezraFamily,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.Normal,
                                     textAlign = TextAlign.Center
                                 )
                                 Box(
@@ -381,14 +381,14 @@ fun TeamDetailScreen(
                             text = stringResource(id = R.string.overall_time) + ": ",
                             fontSize = 20.sp,
                             fontFamily = ezraFamily,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Start,
                         )
                         Text(
                             text = state.value.globalTime,
                             fontSize = 20.sp,
                             fontFamily = ezraFamily,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center,
                         )
                     }
@@ -420,7 +420,7 @@ fun TeamDetailScreen(
                         text = stringResource(id = R.string.stage_victories),
                         fontSize = 20.sp,
                         fontFamily = ezraFamily,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center
                     )
                     if (state.value.isLoadingStageVictories) {
@@ -438,7 +438,7 @@ fun TeamDetailScreen(
                             text = state.value.stageVictories.toString(),
                             fontSize = 32.sp,
                             fontFamily = ezraFamily,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(8.dp)
                         )
@@ -466,7 +466,7 @@ fun TeamDetailScreen(
                         text = stringResource(id = R.string.best_stage_position),
                         fontSize = 20.sp,
                         fontFamily = ezraFamily,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center
                     )
 
@@ -488,7 +488,7 @@ fun TeamDetailScreen(
                                 text = state.value.bestStagePosition.toString(),
                                 fontSize = 32.sp,
                                 fontFamily = ezraFamily,
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.Normal,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(8.dp)
                             )
@@ -579,7 +579,7 @@ fun TeamDetailScreen(
                         text = team?.driver ?: "",
                         fontSize = 20.sp,
                         fontFamily = antaFamily,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -619,7 +619,7 @@ fun TeamDetailScreen(
                         text = team?.codriver ?: "",
                         fontSize = 20.sp,
                         fontFamily = antaFamily,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center
                     )
                 }
