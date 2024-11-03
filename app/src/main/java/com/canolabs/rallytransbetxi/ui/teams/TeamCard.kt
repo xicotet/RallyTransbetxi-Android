@@ -29,8 +29,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,6 +59,7 @@ import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 
 @Composable
@@ -93,7 +96,9 @@ fun TeamCard(
                 Log.w("TeamCard", "Error loading driver image for team $teamNumber: $e")
                 ""
             }
+        }
 
+        LaunchedEffect(teamNumber) {
             codriverImageUrl.value = try {
                 codriverStorageRef.downloadUrl.await().toString()
             } catch (e: Exception) {
@@ -120,8 +125,16 @@ fun TeamCard(
 
         val isLoading = driverPainter.state is AsyncImagePainter.State.Loading ||
             codriverPainter.state is AsyncImagePainter.State.Loading
-        val fetchingImageUrl = driverPainter.state is AsyncImagePainter.State.Error && driverImageUrl.value == null ||
-            codriverPainter.state is AsyncImagePainter.State.Error && codriverImageUrl.value == null
+
+        val fetchingImageUrl = (driverPainter.state is AsyncImagePainter.State.Error && driverImageUrl.value == null) ||
+            (codriverPainter.state is AsyncImagePainter.State.Error && codriverImageUrl.value == null)
+
+        // Stabilize loading state with a slight delay to avoid flicker
+        var stableLoadingState by remember { mutableStateOf(true) }
+        LaunchedEffect(isLoading, fetchingImageUrl) {
+            delay(100)
+            stableLoadingState = isLoading || fetchingImageUrl
+        }
 
         val gradient = Brush.linearGradient(
             colors = listOf(
@@ -141,7 +154,7 @@ fun TeamCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             when {
-                isLoading || fetchingImageUrl -> {
+                stableLoadingState -> {
                     Shimmer { brush ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Box(

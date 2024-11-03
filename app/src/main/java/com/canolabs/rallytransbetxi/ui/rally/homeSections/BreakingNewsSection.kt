@@ -26,8 +26,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -62,6 +64,7 @@ import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_NEWS
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils.secondsToDate
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import java.util.Locale
 
@@ -106,9 +109,9 @@ fun BreakingNewsSection(
                 .background(brush = gradient)
                 .padding(16.dp)
         ) {
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
-            )  {
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.campaign_outlined),
                     contentDescription = null,
@@ -192,23 +195,36 @@ fun BreakingNewsSection(
                                     val newsImageUrl = remember { mutableStateOf<String?>(null) }
 
                                     LaunchedEffect(Unit) {
-                                        try {
-                                            val imageUrl = newsStorageRef.downloadUrl.await()
-                                            newsImageUrl.value = imageUrl.toString()
+                                        newsImageUrl.value = try {
+                                            newsStorageRef.downloadUrl.await().toString()
                                         } catch (e: Exception) {
                                             Log.d("News", "Error: $e")
+                                            ""
                                         }
                                     }
 
                                     val newsPainter = rememberAsyncImagePainter(
                                         model = ImageRequest.Builder(LocalContext.current)
-                                            .data(newsImageUrl.value ?: "")
+                                            .data(newsImageUrl.value)
                                             .size(Size.ORIGINAL)
                                             .build(),
+                                        error = painterResource(id = R.drawable.news_default_image)
                                     )
 
-                                    when (newsPainter.state) {
-                                        is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> {
+                                    val isLoading =
+                                        newsPainter.state is AsyncImagePainter.State.Loading ||
+                                            newsPainter.state is AsyncImagePainter.State.Empty ||
+                                            (newsPainter.state is AsyncImagePainter.State.Error && newsImageUrl.value == null)
+
+                                    // Stabilize loading state with a slight delay to avoid flickering
+                                    var stableLoadingState by remember { mutableStateOf(true) }
+                                    LaunchedEffect(isLoading) {
+                                        delay(100)
+                                        stableLoadingState = isLoading
+                                    }
+
+                                    when {
+                                        stableLoadingState -> {
                                             Shimmer { brush ->
                                                 Box(
                                                     modifier = Modifier
@@ -219,17 +235,7 @@ fun BreakingNewsSection(
                                                 )
                                             }
                                         }
-                                        is AsyncImagePainter.State.Error -> {
-                                            Image(
-                                                painter = painterResource(id = R.drawable.news_default_image),
-                                                contentDescription = null,
-                                                contentScale = ContentScale.Fit,
-                                                modifier = Modifier
-                                                    .clip(RectangleShape)
-                                                    .padding(vertical = 8.dp)
-                                                    .fillMaxWidth()
-                                            )
-                                        }
+
                                         else -> {
                                             Image(
                                                 painter = newsPainter,
