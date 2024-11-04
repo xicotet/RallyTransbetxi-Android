@@ -2,8 +2,9 @@ package com.canolabs.rallytransbetxi.utils
 
 class Constants {
     companion object {
-        const val SPLASH_SCREEN_DURATION = 1300L
+        const val SPLASH_SCREEN_DURATION = 1250L
         const val BETXI_LOCATION = "39.927995,-0.198889"
+
         // Day of the event
         const val BEGINNING_DAY = 26
         const val BEGINNING_MONTH = 3 // April is 3 in Java.util.calendar

@@ -17,9 +17,11 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -430,7 +432,42 @@ fun MapContent(
                         resultsBottomSheetState.hide()
                     }
                 },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                dragHandle = {}
             ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp, top = 4.dp)
+                ) {
+                    // Centered Drag Handle
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                    ) {
+                        BottomSheetDefaults.DragHandle()
+                    }
+
+                    // Close button aligned to the end (top-right corner)
+                    IconButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                resultsBottomSheetState.hide()
+                                mapsViewModel.setIsResultsBottomSheetVisible(false)
+                            }
+                        },
+                        modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Close",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
                 BottomSheetStageResults(
                     resultsState = resultsState,
                     mapsState = state,

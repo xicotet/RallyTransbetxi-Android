@@ -83,7 +83,7 @@ fun BottomSheetStageResults(
                     modifier = Modifier
                         .height(IntrinsicSize.Min)
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(
@@ -100,7 +100,7 @@ fun BottomSheetStageResults(
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                             modifier = Modifier
-                                .padding(horizontal = 8.dp, vertical = 16.dp)
+                                .padding(start = 8.dp, end = 8.dp, bottom = 16.dp)
                         )
                         if (resultsState.isBottomSheetSearchBarVisible) {
                             Row(

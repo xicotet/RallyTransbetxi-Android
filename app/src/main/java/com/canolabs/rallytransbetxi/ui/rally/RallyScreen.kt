@@ -7,10 +7,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -154,7 +160,39 @@ fun RallyScreen(
                                 bottomSheetState.hide()
                             }
                         },
+                        dragHandle = {},
                     ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 8.dp, end = 8.dp, top = 4.dp)
+                        ) {
+                            // Centered Drag Handle
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                            ) {
+                                BottomSheetDefaults.DragHandle()
+                            }
+
+                            // Close button aligned to the end (top-right corner)
+                            IconButton(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        bottomSheetState.hide()
+                                        viewModel.setIsSettingsBottomSheetVisible(false)
+                                    }
+                                },
+                                modifier = Modifier.align(Alignment.TopEnd),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = "Close",
+                                    tint = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+
                         BottomSheetAppSettings(
                             state = state,
                             viewModel = viewModel,
