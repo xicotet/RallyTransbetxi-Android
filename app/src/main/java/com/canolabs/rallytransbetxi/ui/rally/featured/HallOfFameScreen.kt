@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
-import com.canolabs.rallytransbetxi.ui.rally.getRallyScreenCardsGradient
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.getActivityProgramCardGradient
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
@@ -140,7 +140,7 @@ fun HallOfFameScreen(
             ) {
                 LazyColumn(
                     modifier = Modifier
-                        .background(brush = getRallyScreenCardsGradient())
+                        .background(brush = getActivityProgramCardGradient())
                         .padding(16.dp)
                 ) {
                     val hallOfFameToShow = state.value.hallOfFame

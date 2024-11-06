@@ -31,8 +31,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -222,16 +220,4 @@ fun RallyScreen(
             state = pullRefreshState,
         )
     }
-}
-
-@Composable
-fun getRallyScreenCardsGradient(): Brush {
-    return Brush.linearGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.surface,
-            MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
-        ),
-        start = Offset(0f, 0f), // Start at the top left corner
-        end = Offset(1000f, 1000f)
-    )
 }

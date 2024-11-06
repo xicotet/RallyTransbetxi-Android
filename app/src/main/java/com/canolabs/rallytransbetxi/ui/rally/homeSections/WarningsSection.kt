@@ -22,6 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,7 +43,6 @@ import com.canolabs.rallytransbetxi.utils.Constants
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 import java.util.Locale
 
-
 @Composable
 fun WarningsSection(
     state: RallyScreenUIState,
@@ -60,7 +61,7 @@ fun WarningsSection(
     ) {
         Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.errorContainer)
+                .background(brush = getWarningSectionCardGradient())
                 .padding(16.dp)
         ) {
             Row(
@@ -198,4 +199,16 @@ fun WarningsSection(
             }
         }
     }
+}
+
+@Composable
+fun getWarningSectionCardGradient(): Brush {
+    return Brush.linearGradient(
+        colors = listOf(
+            MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.55f),
+            MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.85f)
+        ),
+        start = Offset(0f, 0f),
+        end = Offset(1000f, 1000f)
+    )
 }

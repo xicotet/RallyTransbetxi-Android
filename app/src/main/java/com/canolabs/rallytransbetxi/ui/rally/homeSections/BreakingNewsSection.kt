@@ -74,25 +74,6 @@ fun BreakingNewsSection(
     viewModel: RallyScreenViewModel,
     navController: NavController
 ) {
-    fun getNewsTitleByLanguage(news: News, language: Language?): String {
-        return when (language) {
-            Language.SPANISH -> news.titleEs
-            Language.CATALAN -> news.titleCa
-            Language.ENGLISH -> news.titleEn
-            Language.GERMAN -> news.titleDe
-            null -> news.titleEs
-        }
-    }
-
-    val gradient = Brush.linearGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-            MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f)
-        ),
-        start = Offset(0f, 0f),
-        end = Offset(1000f, 1000f)
-    )
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -106,7 +87,7 @@ fun BreakingNewsSection(
     ) {
         Column(
             modifier = Modifier
-                .background(brush = gradient)
+                .background(brush = getBreakingNewsCardGradient())
                 .padding(16.dp)
         ) {
             Row(
@@ -300,5 +281,27 @@ fun BreakingNewsSection(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun getBreakingNewsCardGradient(): Brush {
+    return  Brush.linearGradient(
+        colors = listOf(
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+            MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f)
+        ),
+        start = Offset(0f, 0f),
+        end = Offset(1000f, 1000f)
+    )
+}
+
+private fun getNewsTitleByLanguage(news: News, language: Language?): String {
+    return when (language) {
+        Language.SPANISH -> news.titleEs
+        Language.CATALAN -> news.titleCa
+        Language.ENGLISH -> news.titleEn
+        Language.GERMAN -> news.titleDe
+        null -> news.titleEs
     }
 }

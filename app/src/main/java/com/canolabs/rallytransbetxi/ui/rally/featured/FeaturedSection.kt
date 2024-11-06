@@ -27,7 +27,7 @@ import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.navigation.Screens
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
-import com.canolabs.rallytransbetxi.ui.rally.getRallyScreenCardsGradient
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.getActivityProgramCardGradient
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 
 @Composable
@@ -61,7 +61,7 @@ fun FeaturedSection(
                             // to make the whole button clickable
                             viewModel.setIsSettingsBottomSheetVisible(true)
                         }
-                        .background(brush = getRallyScreenCardsGradient())
+                        .background(brush = getActivityProgramCardGradient())
                         .align(Alignment.CenterHorizontally)
                 ) {
                     Icon(
@@ -107,7 +107,7 @@ fun FeaturedSection(
                             // to make the whole button clickable
                             navController.navigate(Screens.HallOfFame.route)
                         }
-                        .background(brush = getRallyScreenCardsGradient())
+                        .background(brush = getActivityProgramCardGradient())
                         .align(Alignment.CenterHorizontally)
                 ) {
                     Icon(
@@ -153,7 +153,7 @@ fun FeaturedSection(
                             // to make the whole button clickable
                             navController.navigate(Screens.Sponsors.route)
                         }
-                        .background(brush = getRallyScreenCardsGradient())
+                        .background(brush = getActivityProgramCardGradient())
                         .align(Alignment.CenterHorizontally)
                 ) {
                     Icon(
@@ -199,7 +199,7 @@ fun FeaturedSection(
                             // to make the whole button clickable
                             navController.navigate(Screens.Eat.route)
                         }
-                        .background(brush = getRallyScreenCardsGradient())
+                        .background(brush = getActivityProgramCardGradient())
                         .align(Alignment.CenterHorizontally)
                 ) {
                     Icon(
