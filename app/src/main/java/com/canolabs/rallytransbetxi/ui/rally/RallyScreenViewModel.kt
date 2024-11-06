@@ -9,6 +9,7 @@ import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 import com.canolabs.rallytransbetxi.domain.entities.FontSizeFactor
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.entities.Theme
+import com.canolabs.rallytransbetxi.domain.usecases.CanAccessToAppUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreActivitiesCollapsedUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreNewsCollapsedUseCase
@@ -45,11 +46,21 @@ class RallyScreenViewModel @Inject constructor(
     private val getNotificationPermissionCounterUseCase: GetNotificationPermissionCounterUseCase,
     private val getAreActivitiesCollapsed: GetAreActivitiesCollapsedUseCase,
     private val getAreNewsCollapsedUseCase: GetAreNewsCollapsedUseCase,
-    private val getAreWarningCollapsedUseCase: GetAreWarningCollapsedUseCase
+    private val getAreWarningCollapsedUseCase: GetAreWarningCollapsedUseCase,
+    private val canAccessToAppUseCase: CanAccessToAppUseCase
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(RallyScreenUIState())
     val state: StateFlow<RallyScreenUIState> = _state.asStateFlow()
+
+    private var _blockApp = MutableStateFlow(false)
+    val blockApp: StateFlow<Boolean> = _blockApp.asStateFlow()
+
+    fun checkAppVersion() {
+        viewModelScope.launch {
+            _blockApp.value = !canAccessToAppUseCase.invoke()
+        }
+    }
 
     fun fetchNews() {
         viewModelScope.launch {

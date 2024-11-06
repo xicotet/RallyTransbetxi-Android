@@ -48,5 +48,8 @@ class Constants {
         const val SPONSORS_IMAGE_EXTENSION = ".jpg"
 
         const val NEWS_FOLDER = "news/"
+
+        // Firebase remote config
+        const val MIN_VERSION_KEY = "min_version"
     }
 }

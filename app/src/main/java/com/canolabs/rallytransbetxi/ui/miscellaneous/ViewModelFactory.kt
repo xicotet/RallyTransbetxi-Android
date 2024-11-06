@@ -3,6 +3,7 @@ package com.canolabs.rallytransbetxi.ui.miscellaneous
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.canolabs.rallytransbetxi.domain.usecases.CanAccessToAppUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreActivitiesCollapsedUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreNewsCollapsedUseCase
@@ -42,7 +43,8 @@ class RallyViewModelFactory @Inject constructor(
     private val getNotificationPermissionCounterUseCase: GetNotificationPermissionCounterUseCase,
     private val getAreActivitiesCollapsed: GetAreActivitiesCollapsedUseCase,
     private val getAreNewsCollapsedUseCase: GetAreNewsCollapsedUseCase,
-    private val getAreWarningCollapsedUseCase: GetAreWarningCollapsedUseCase
+    private val getAreWarningCollapsedUseCase: GetAreWarningCollapsedUseCase,
+    private val canAccessToAppUseCase: CanAccessToAppUseCase
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
@@ -60,7 +62,8 @@ class RallyViewModelFactory @Inject constructor(
                     getNotificationPermissionCounterUseCase,
                     getAreActivitiesCollapsed,
                     getAreNewsCollapsedUseCase,
-                    getAreWarningCollapsedUseCase
+                    getAreWarningCollapsedUseCase,
+                    canAccessToAppUseCase
                 ) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Rally Transbetxi</string>
+    <string name="new_app_version">Hi ha una nova versió disponible</string>
+    <string name="new_app_version_explained">Per favor, actualitza l\'app per a gaudir de les últimes novetats. Per motius de seguretat és aconsellable utilitzar sempre la versió més recent.</string>
 
     // Top level destinations
     <string name="rally">Rally</string>
@@ -125,4 +127,5 @@
     <string name="not_now">Ara no</string>
     <string name="next">Següent</string>
     <string name="end">Finalitzar</string>
+    <string name="update_now">Actualitzar ara</string>
 </resources>

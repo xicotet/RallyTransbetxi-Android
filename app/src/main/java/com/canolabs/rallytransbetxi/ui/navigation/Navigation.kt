@@ -9,7 +9,9 @@ import androidx.compose.material3.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +28,7 @@ import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreen
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
+import com.canolabs.rallytransbetxi.ui.miscellaneous.UpdateAppVersionScreen
 import com.canolabs.rallytransbetxi.ui.onboarding.OnboardingFlow
 import com.canolabs.rallytransbetxi.ui.rally.*
 import com.canolabs.rallytransbetxi.ui.rally.featured.EatScreen
@@ -54,6 +57,10 @@ fun Navigation(
     sharedPreferences: SharedPreferences,
     recomposeNavbar: MutableState<Boolean>
 ) {
+    LaunchedEffect(Unit) {
+        rallyScreenViewModel.checkAppVersion()
+    }
+
     val navController = rememberNavController()
     val screens = listOf(
         Screens.Rally,
@@ -71,7 +78,11 @@ fun Navigation(
         )
     }
 
-    if (finishedOnboarding.value.not()) {
+    val blockApp = rallyScreenViewModel.blockApp.collectAsState()
+
+    if (blockApp.value) {
+        UpdateAppVersionScreen()
+    } else if (finishedOnboarding.value.not()) {
         OnboardingFlow(
             finishedOnboarding = finishedOnboarding,
             sharedPreferences = sharedPreferences,
