@@ -47,6 +47,8 @@ import com.canolabs.rallytransbetxi.ui.rally.homeSections.ActivityProgramSection
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.BreakingNewsSection
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.NotificationPermission
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.WarningsSection
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.HomeSectionShimmer
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.HomeSectionType
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -141,21 +143,26 @@ fun RallyScreen(
                     navController = navController
                 )
 
-                WarningsSection(
-                    state = state,
-                    viewModel = viewModel,
-                )
+                if (state.isLoading) {
+                    HomeSectionShimmer(type = HomeSectionType.WARNINGS)
+                    HomeSectionShimmer(type = HomeSectionType.NEWS)
+                    HomeSectionShimmer(type = HomeSectionType.ACTIVITIES)
+                } else {
+                    WarningsSection(
+                        state = state,
+                        viewModel = viewModel,
+                    )
+                    BreakingNewsSection(
+                        state = state,
+                        viewModel = viewModel,
+                        navController = navController
+                    )
 
-                BreakingNewsSection(
-                    state = state,
-                    viewModel = viewModel,
-                    navController = navController
-                )
-
-                ActivityProgramSection(
-                    state = state,
-                    viewModel = viewModel
-                )
+                    ActivityProgramSection(
+                        state = state,
+                        viewModel = viewModel
+                    )
+                }
 
                 if (state.isSettingsBottomSheetVisible) {
                     ModalBottomSheet(
