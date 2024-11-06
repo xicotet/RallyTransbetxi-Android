@@ -24,6 +24,9 @@
     // Sponsors destination
     <string name="sponsors_not_available">Les imatges dels patrocinadors no s\'han pogut carregar. Lamentem les molèsties.</string>
 
+    // Hall of fame destination
+    <string name="hall_of_fame_not_available">No s\'ha pogut carregar el palmarès. Lamentem les molèsties.</string>
+
     // Eat destination
     <string name="open_in_maps">Obrir a Google Maps</string>
     <string name="do_you_want_to_open">Vols obrir-ho</string>

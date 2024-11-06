@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -87,6 +89,8 @@ fun SponsorsScreen(
         )
     }
 
+    val isLoading = sponsorImageUrls.isEmpty()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -136,47 +140,63 @@ fun SponsorsScreen(
                         .padding(16.dp)
                 )
             }
-        }
+        } else {
 
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 128.dp),
-            contentPadding = PaddingValues(16.dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(sponsorPainters) { painter ->
-                when (painter.state) {
-                    is AsyncImagePainter.State.Loading,
-                    is AsyncImagePainter.State.Empty -> {
-                        Shimmer { brush ->
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(56.dp)
-                                    .padding(16.dp)
-                                    .background(brush = brush)
+            if (isLoading) {
+                Column {
+                    LinearProgressIndicator(
+                        // dynamic progress value
+                        modifier = Modifier
+                            .fillMaxWidth() // fill the width of the parent
+                            .padding(it), // add some padding
+                        color = MaterialTheme.colorScheme.secondary,
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    )
+                }
+            }
+
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 128.dp),
+                contentPadding = PaddingValues(16.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(sponsorPainters) { painter ->
+                    when (painter.state) {
+                        is AsyncImagePainter.State.Loading,
+                        is AsyncImagePainter.State.Empty -> {
+                            Shimmer { brush ->
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(56.dp)
+                                        .padding(16.dp)
+                                        .background(brush = brush)
+                                )
+                            }
+                        }
+
+                        is AsyncImagePainter.State.Success -> {
+                            Image(
+                                painter = painter,
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize()
                             )
                         }
-                    }
-                    is AsyncImagePainter.State.Success -> {
-                        Image(
-                            painter = painter,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-                    else -> {
-                        // TODO: Probar si este bloque funciona cuando cambiamos el numero del for de arriba
-                        Text(
-                            text = stringResource(id = R.string.sponsors_not_available),
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        )
+
+                        else -> {
+                            // TODO: Probar si este bloque funciona cuando cambiamos el numero del for de arriba
+                            Text(
+                                text = stringResource(id = R.string.sponsors_not_available),
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            )
+                        }
                     }
                 }
             }

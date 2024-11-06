@@ -2,11 +2,12 @@ package com.canolabs.rallytransbetxi.ui.rally.featured
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.height
@@ -24,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -44,7 +46,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.canolabs.rallytransbetxi.R
-import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 import com.canolabs.rallytransbetxi.ui.rally.getRallyScreenCardsGradient
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
@@ -100,25 +101,43 @@ fun HallOfFameScreen(
             )
         },
     ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(it)
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 32.dp),
-            shape = RoundedCornerShape(8.dp),
-            shadowElevation = cardsElevation,
-        ) {
-            if (state.value.isHallOfFameLoading) {
-                Shimmer { brush ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .padding(16.dp)
-                            .background(brush = brush)
-                    )
-                }
-            } else {
+        if (state.value.isHallOfFameLoading) {
+            Column {
+                LinearProgressIndicator(
+                    // dynamic progress value
+                    modifier = Modifier
+                        .fillMaxWidth() // fill the width of the parent
+                        .padding(it), // add some padding
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+            }
+        } else if (state.value.hallOfFame.isEmpty()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(id = R.string.hall_of_fame_not_available),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
+        } else {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(it)
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 32.dp),
+                shape = RoundedCornerShape(8.dp),
+                shadowElevation = cardsElevation,
+            ) {
                 LazyColumn(
                     modifier = Modifier
                         .background(brush = getRallyScreenCardsGradient())
