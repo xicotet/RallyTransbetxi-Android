@@ -10,6 +10,7 @@ interface AppSettingsRepository {
         theme: String,
         profile: String,
         fontSizeFactor: Float,
+        notificationPermissionCounter: Int,
         areWarningsCollapsed: Boolean,
         areNewsCollapsed: Boolean,
         areActivitiesCollapsed: Boolean
@@ -17,6 +18,7 @@ interface AppSettingsRepository {
     suspend fun getTheme(): String
     suspend fun getProfile(): String
     suspend fun getFontSizeFactor(): Float
+    suspend fun getNotificationPermissionCounter(): Int
     suspend fun getAreWarningsCollapsed(): Boolean
     suspend fun getAreNewsCollapsed(): Boolean
     suspend fun getAreActivitiesCollapsed(): Boolean
@@ -31,6 +33,7 @@ class AppSettingsRepositoryImpl @Inject constructor(
         theme: String,
         profile: String,
         fontSizeFactor: Float,
+        notificationPermissionCounter: Int,
         areWarningsCollapsed: Boolean,
         areNewsCollapsed: Boolean,
         areActivitiesCollapsed: Boolean
@@ -41,6 +44,7 @@ class AppSettingsRepositoryImpl @Inject constructor(
                 theme,
                 profile,
                 fontSizeFactor,
+                notificationPermissionCounter,
                 areWarningsCollapsed,
                 areNewsCollapsed,
                 areActivitiesCollapsed
@@ -67,6 +71,13 @@ class AppSettingsRepositoryImpl @Inject constructor(
             delay(500)
         }
         return appSettingsDao.getFontSizeFactor()
+    }
+
+    override suspend fun getNotificationPermissionCounter(): Int {
+        while (!isDatabaseInitialized()) {
+            delay(500)
+        }
+        return appSettingsDao.getNotificationPermissionCounter()
     }
 
     override suspend fun getAreWarningsCollapsed(): Boolean {

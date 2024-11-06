@@ -10,6 +10,7 @@ class InsertSettingsUseCase @Inject constructor(
         theme: String,
         profile: String,
         fontSizeFactor: Float,
+        notificationPermissionCounter: Int,
         areWarningsCollapsed: Boolean,
         areNewsCollapsed: Boolean,
         areActivitiesCollapsed: Boolean
@@ -18,6 +19,7 @@ class InsertSettingsUseCase @Inject constructor(
             theme,
             profile,
             fontSizeFactor,
+            notificationPermissionCounter,
             areWarningsCollapsed,
             areNewsCollapsed,
             areActivitiesCollapsed

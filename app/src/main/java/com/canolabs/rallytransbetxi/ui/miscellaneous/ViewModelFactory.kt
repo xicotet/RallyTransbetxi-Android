@@ -12,6 +12,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUse
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetHallOfFameUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetNotificationPermissionCounterUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStageByAcronymUseCase
@@ -38,6 +39,7 @@ class RallyViewModelFactory @Inject constructor(
     private val getThemeSettingsUseCase: GetThemeSettingsUseCase,
     private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
     private val getFontSizeFactorSettingsUseCase: GetFontSizeFactorSettingsUseCase,
+    private val getNotificationPermissionCounterUseCase: GetNotificationPermissionCounterUseCase,
     private val getAreActivitiesCollapsed: GetAreActivitiesCollapsedUseCase,
     private val getAreNewsCollapsedUseCase: GetAreNewsCollapsedUseCase,
     private val getAreWarningCollapsedUseCase: GetAreWarningCollapsedUseCase
@@ -55,6 +57,7 @@ class RallyViewModelFactory @Inject constructor(
                     getThemeSettingsUseCase,
                     getProfileSettingsUseCase,
                     getFontSizeFactorSettingsUseCase,
+                    getNotificationPermissionCounterUseCase,
                     getAreActivitiesCollapsed,
                     getAreNewsCollapsedUseCase,
                     getAreWarningCollapsedUseCase

@@ -54,9 +54,12 @@
     <string name="developed_by_pablo_cano">Desenvolupat per Pablo Cano</string>
 
     // Permission denied bottom sheet
-    <string name="permission_denied_title">Permís de localització</string>
+    <string name="permission_location_title">Permís de localització</string>
+    <string name="permission_notifications_title">Permís per a notificacions</string>
     <string name="permission_denied_message">Per poder obtindre la teua ubicació, necessitem que actives el permís en configuració</string>
+    <string name="permission_notifications_message">Per a mantindre\'t informat sobre resultats i novetats, ens agradaria enviar-te notificacions. Prometem no enviar-ne més de les necessàries</string>
     <string name="open_settings">Obrir configuració</string>
+    <string name="allow_notifications">Permetre notificacions</string>
 
     // Wifi connection lost bottom sheet
     <string name="connection_lost_title">Connexió a internet</string>
@@ -116,6 +119,7 @@
     <string name="hour">Hora</string>
     <string name="hours">Hores</string>
     <string name="omit">Ometre</string>
+    <string name="not_now">Ara no</string>
     <string name="next">Següent</string>
     <string name="end">Finalitzar</string>
 </resources>

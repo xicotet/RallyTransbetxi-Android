@@ -53,10 +53,13 @@
     <string name="app_version">Versión de la app</string>
     <string name="developed_by_pablo_cano">Desarrollado por Pablo Cano</string>
 
-    // Permission denied bottom sheet
-    <string name="permission_denied_title">Permiso de ubicación</string>
+    // Permission bottom sheet
+    <string name="permission_location_title">Permiso de ubicación</string>
+    <string name="permission_notifications_title">Permiso de notificaciones</string>
     <string name="permission_denied_message">Para poder obtener tu ubicación, necesitamos que actives el permiso en ajustes</string>
+    <string name="permission_notifications_message">Para mantenerte informado sobre resultados y novedades, nos gustaría enviarte notificaciones. Prometemos no enviar más de las necesarias.</string>
     <string name="open_settings">Abrir ajustes</string>
+    <string name="allow_notifications">Permitir notificaciones</string>
 
     // Wifi connection lost bottom sheet
     <string name="connection_lost_title">Conexión a internet</string>
@@ -116,6 +119,7 @@
     <string name="hour">Hora</string>
     <string name="hours">Horas</string>
     <string name="omit">Omitir</string>
+    <string name="not_now">Ahora no</string>
     <string name="next">Siguiente</string>
     <string name="end">Finalizar</string>
 </resources>

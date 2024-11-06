@@ -21,6 +21,7 @@ import com.canolabs.rallytransbetxi.utils.Constants.Companion.DATABASE_NAME
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_ACTIVITIES_COLLAPSED
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_FONT_SIZE_FACTOR
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_NEWS_COLLAPSED
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_NOTIFICATION_PERMISSION_COUNTER
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_PROFILE
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_THEME
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_WARNINGS_COLLAPSED
@@ -53,6 +54,7 @@ object DatabaseModule {
                             DEFAULT_THEME,
                             DEFAULT_PROFILE,
                             DEFAULT_FONT_SIZE_FACTOR,
+                            DEFAULT_NOTIFICATION_PERMISSION_COUNTER,
                             DEFAULT_WARNINGS_COLLAPSED,
                             DEFAULT_NEWS_COLLAPSED,
                             DEFAULT_ACTIVITIES_COLLAPSED

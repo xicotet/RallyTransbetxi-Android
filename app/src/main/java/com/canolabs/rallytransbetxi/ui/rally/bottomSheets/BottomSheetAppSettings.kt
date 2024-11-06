@@ -1,4 +1,4 @@
-package com.canolabs.rallytransbetxi.ui.rally.featured
+package com.canolabs.rallytransbetxi.ui.rally.bottomSheets
 
 import SettingsInfoDialog
 import androidx.compose.foundation.Image

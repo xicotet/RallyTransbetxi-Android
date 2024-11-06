@@ -41,10 +41,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.rally.dialogs.WarningDialog
-import com.canolabs.rallytransbetxi.ui.rally.featured.BottomSheetAppSettings
+import com.canolabs.rallytransbetxi.ui.rally.bottomSheets.BottomSheetAppSettings
 import com.canolabs.rallytransbetxi.ui.rally.featured.FeaturedSection
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.ActivityProgramSection
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.BreakingNewsSection
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.NotificationPermission
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.WarningsSection
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import kotlinx.coroutines.delay
@@ -89,6 +90,8 @@ fun RallyScreen(
         viewModel.fetchLanguage(sharedPreferences)
     }
 
+    NotificationPermission(viewModel)
+
     if (pullRefreshState.isRefreshing) {
         LaunchedEffect(true) {
             delay(1500)
@@ -99,7 +102,10 @@ fun RallyScreen(
         }
     }
 
-    Box(Modifier.fillMaxSize().nestedScroll(pullRefreshState.nestedScrollConnection)) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .nestedScroll(pullRefreshState.nestedScrollConnection)) {
         LazyColumn(
             verticalArrangement = Arrangement.Center
         ) {

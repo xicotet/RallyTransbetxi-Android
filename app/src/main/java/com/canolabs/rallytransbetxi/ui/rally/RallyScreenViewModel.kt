@@ -16,6 +16,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetAreWarningCollapsedUseCas
 import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetHallOfFameUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetNotificationPermissionCounterUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetThemeSettingsUseCase
@@ -41,6 +42,7 @@ class RallyScreenViewModel @Inject constructor(
     private val getThemeSettingsUseCase: GetThemeSettingsUseCase,
     private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
     private val getFontSizeFactorSettingsUseCase: GetFontSizeFactorSettingsUseCase,
+    private val getNotificationPermissionCounterUseCase: GetNotificationPermissionCounterUseCase,
     private val getAreActivitiesCollapsed: GetAreActivitiesCollapsedUseCase,
     private val getAreNewsCollapsedUseCase: GetAreNewsCollapsedUseCase,
     private val getAreWarningCollapsedUseCase: GetAreWarningCollapsedUseCase
@@ -110,6 +112,8 @@ class RallyScreenViewModel @Inject constructor(
         }
     }
 
+    // App Settings related functions
+
     fun fetchProfileSettings() {
         viewModelScope.launch {
             _state.setDirectionsProfile(getProfileSettingsUseCase.invoke())
@@ -140,6 +144,14 @@ class RallyScreenViewModel @Inject constructor(
             if (language != null) {
                 _state.setLanguage(Language.entries.find { it.getLanguageCode() == language }!!)
             }
+        }
+    }
+
+    fun fetchNotificationPermissionCounter() {
+        viewModelScope.launch {
+            val counter = getNotificationPermissionCounterUseCase.invoke()
+            val updatedCounter = counter + 1
+            _state.setNotificationPermissionCounter(updatedCounter)
         }
     }
 
@@ -195,6 +207,7 @@ class RallyScreenViewModel @Inject constructor(
             val theme = _state.value.theme?.getDatabaseName()!!
             val profile = _state.value.directionsProfile?.getDatabaseName()!!
             val fontSizeFactor = _state.value.fontSizeFactor?.value()!!
+            val notificationPermissionCounter = _state.value.notificationPermissionCounter!!
             val areWarningsCollapsed = _state.value.areWarningsCollapsed
             val areNewsCollapsed = _state.value.areBreakingNewsCollapsed
             val areActivitiesCollapsed = _state.value.areActivitiesCollapsed
@@ -203,12 +216,15 @@ class RallyScreenViewModel @Inject constructor(
                 theme,
                 profile,
                 fontSizeFactor,
+                notificationPermissionCounter,
                 areWarningsCollapsed,
                 areNewsCollapsed,
                 areActivitiesCollapsed
             )
         }
     }
+
+    // Setters and toggles that can be called from the UI
 
     fun toggleWarnings() {
         _state.setAreWarningsCollapsed(!_state.value.areWarningsCollapsed)
@@ -260,5 +276,23 @@ class RallyScreenViewModel @Inject constructor(
 
     fun setFontSizeFactor(fontSizeFactor: FontSizeFactor) {
         _state.setFontSizeFactor(fontSizeFactor)
+    }
+
+    fun setNotificationPermissionCounter(counter: Int) {
+        _state.setNotificationPermissionCounter(counter)
+    }
+
+    fun shouldShowNotificationPermissionSheet(): Boolean {
+        val counter = state.value.notificationPermissionCounter!!
+        val nextInterval = getExponentialInterval(counter)
+
+        // Show bottom sheet only when counter matches the interval
+        return counter == nextInterval
+    }
+
+    // Exponential backoff with a cap at 64
+    private fun getExponentialInterval(counter: Int): Int {
+        val intervals = listOf(1, 2, 5, 10, 18, 32, 64, 128, 256)
+        return intervals.find { it >= counter } ?: 256
     }
 }

@@ -25,6 +25,7 @@ class Constants {
         const val DEFAULT_THEME = "light"
         const val DEFAULT_PROFILE = "driving-car"
         const val DEFAULT_FONT_SIZE_FACTOR = 1.0f
+        const val DEFAULT_NOTIFICATION_PERMISSION_COUNTER = 0
         const val DEFAULT_WARNINGS_COLLAPSED = true
         const val DEFAULT_NEWS_COLLAPSED = false
         const val DEFAULT_ACTIVITIES_COLLAPSED = false
