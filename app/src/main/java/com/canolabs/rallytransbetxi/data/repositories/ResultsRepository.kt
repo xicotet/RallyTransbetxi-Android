@@ -40,7 +40,7 @@ class ResultsRepositoryImpl @Inject constructor(
         }
 
         if (localVersionCount == 0) {
-            Log.d(TAG, "No local version found. Fetching from API.")
+            Log.d(TAG, "No local version found")
             val apiVersion = versionsRepositoryImpl.getApiVersion(versionName) ?: return emptyList()
             Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
@@ -119,7 +119,7 @@ class ResultsRepositoryImpl @Inject constructor(
         }
 
         if (localVersionCount == 0) {
-            Log.d(TAG, "No local version found. Fetching from API.")
+            Log.d(TAG, "No local version found")
             val apiVersion = versionsRepositoryImpl.getApiVersion(versionName) ?: return emptyList()
             Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 

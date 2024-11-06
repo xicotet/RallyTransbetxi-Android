@@ -29,7 +29,7 @@ class RestaurantsRepositoryImpl @Inject constructor(
 
         // If there is no local version stored, fetch from API and store the version
         if (localVersionCount == 0) {
-            Log.d(TAG, "No local version found. Fetching from API.")
+            Log.d(TAG, "No local version found")
             val apiVersion = versionsRepositoryImpl.getApiVersion(versionName) ?: return emptyList()
             Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
