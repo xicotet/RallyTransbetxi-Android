@@ -7,6 +7,7 @@ import com.canolabs.rallytransbetxi.data.repositories.CategoriesRepositoryImpl
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -24,14 +25,25 @@ class TeamsServiceImpl @Inject constructor(
         // Fetch all categories and store them in a map
         val categories = categoriesRepositoryImpl.getCategories().associateBy { it.categoryId }
 
-        val querySnapshot = firebaseFirestore.collection("teams").get().await()
         val teams = mutableListOf<Team>()
-        for (document in querySnapshot.documents) {
-            try {
-                val team = fetchTeam(document, categories)
-                teams.add(team)
-            } catch (e: Exception) {
-                Log.d("TeamsServiceImpl", "Error getting team ${document.id}: ", e)
+
+        try {
+            val querySnapshot = firebaseFirestore.collection("teams").get().await()
+
+            for (document in querySnapshot.documents) {
+                try {
+                    val team = fetchTeam(document, categories)
+                    teams.add(team)
+                } catch (e: Exception) {
+                    Log.d("TeamsServiceImpl", "Error getting team ${document.id}: ", e)
+                }
+            }
+        } catch (e: FirebaseFirestoreException) {
+            Log.e("TeamsServiceImpl", "Error fetching teams: ${e.message}", e)
+            // Handle permission denied or other Firestore exceptions
+            if (e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED) {
+                Log.e("TeamsServiceImpl", "Permission denied for fetching teams.")
+                // Provide feedback to the user or attempt a recovery action
             }
         }
 

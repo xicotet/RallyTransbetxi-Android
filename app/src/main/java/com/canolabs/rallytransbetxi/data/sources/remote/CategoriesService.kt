@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.data.sources.remote
 
+import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Category
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -25,7 +26,7 @@ class CategoriesServiceImpl @Inject constructor(
             }
             categoriesList
         } catch (e: Exception) {
-            // Handle error
+            Log.e("CategoriesServiceImpl", "Error fetching categories: ${e.message}", e)
             emptyList()
         }
     }
