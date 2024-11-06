@@ -41,7 +41,7 @@ class ResultsRepositoryImpl @Inject constructor(
 
         if (localVersionCount == 0) {
             Log.d(TAG, "No local version found. Fetching from API.")
-            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
+            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName) ?: return emptyList()
             Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
             versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
@@ -65,7 +65,7 @@ class ResultsRepositoryImpl @Inject constructor(
 
         val resultsCount = resultsDao.countGlobalResults()
 
-        return if (apiVersion != localVersion || resultsCount == 0) {
+        return if (apiVersion != null && apiVersion != localVersion) {
             if (resultsCount == 0) {
                 Log.w(TAG, "No local results found global results " +
                     "despite of having a local version stored.")
@@ -120,7 +120,7 @@ class ResultsRepositoryImpl @Inject constructor(
 
         if (localVersionCount == 0) {
             Log.d(TAG, "No local version found. Fetching from API.")
-            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
+            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName) ?: return emptyList()
             Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
             versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
@@ -143,7 +143,7 @@ class ResultsRepositoryImpl @Inject constructor(
 
         val resultsCount = resultsDao.countStageResults(stageId)
 
-        return if (apiVersion != localVersion || resultsCount == 0) {
+        return if (apiVersion != null && apiVersion != localVersion) {
             if (resultsCount == 0) {
                 Log.w(TAG, "No local results found for stageId: $stageId " +
                     "despite of having a local version stored.")
