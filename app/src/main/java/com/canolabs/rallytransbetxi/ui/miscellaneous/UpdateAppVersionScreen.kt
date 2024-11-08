@@ -71,6 +71,7 @@ fun UpdateAppVersionScreen() {
         ElevatedButton(
             onClick = {
                 // TODO: Redirect to the Play Store
+                // navigateToPlayStore(LocalContext.current)
             },
             colors = ButtonColors(
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -93,3 +94,25 @@ fun UpdateAppVersionScreen() {
         }
     }
 }
+
+/*
+fun navigateToPlayStore(context: Context) {
+    val appPackage = context.packageName
+    try {
+        context.startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("market://details?id=$appPackage")
+            )
+        )
+    } catch (e: Exception) {
+        context.startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://play.google.com/store/apps/details?id=$appPackage")
+            )
+        )
+
+    }
+}
+*/
