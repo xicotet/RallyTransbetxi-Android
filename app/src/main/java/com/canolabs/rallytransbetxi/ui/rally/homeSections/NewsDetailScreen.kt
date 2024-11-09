@@ -115,11 +115,11 @@ fun NewsDetailScreen(
             val newsImageUrl = remember { mutableStateOf<String?>(null) }
 
             LaunchedEffect(Unit) {
-                try {
-                    val imageUrl = newsStorageRef.downloadUrl.await()
-                    newsImageUrl.value = imageUrl.toString()
+                newsImageUrl.value = try {
+                    newsStorageRef.downloadUrl.await().toString()
                 } catch (e: Exception) {
-                    Log.d("News", "Error: $e")
+                    Log.d("NewsDetail", "Error: $e")
+                    ""
                 }
             }
 
@@ -151,24 +151,36 @@ fun NewsDetailScreen(
                     }
                 }
                 is AsyncImagePainter.State.Error -> {
-                    Image(
-                        painter = painterResource(id = R.drawable.news_default_image),
-                        contentDescription = null,
-                        contentScale = ContentScale.Fit,
-                        colorFilter = ColorFilter.tint(Color.White),
-                        modifier = Modifier
-                            .clip(RectangleShape)
-                            .padding(vertical = 8.dp)
-                            .fillMaxWidth()
-                    )
-                    Text(
-                        text = "(" + stringResource(id = R.string.news_image_not_available) + ")",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(bottom = 16.dp).fillMaxWidth(),
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        fontFamily = robotoFamily
-                    )
+                    if (newsImageUrl.value == null) {
+                        Shimmer { brush ->
+                            Box(
+                                modifier = Modifier
+                                    .clip(RectangleShape)
+                                    .fillMaxWidth()
+                                    .height(200.dp)
+                                    .background(brush = brush)
+                            )
+                        }
+                    } else {
+                        Image(
+                            painter = painterResource(id = R.drawable.news_default_image),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+                            colorFilter = ColorFilter.tint(Color.White),
+                            modifier = Modifier
+                                .clip(RectangleShape)
+                                .padding(vertical = 8.dp)
+                                .fillMaxWidth()
+                        )
+                        Text(
+                            text = "(" + stringResource(id = R.string.news_image_not_available) + ")",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 16.dp).fillMaxWidth(),
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                            fontFamily = robotoFamily
+                        )
+                    }
                 }
                 else -> {
                     Image(
