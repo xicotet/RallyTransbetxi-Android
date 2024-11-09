@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Rally Transbetxi</string>
     <string name="new_app_version">Hay una nueva versión disponible</string>
     <string name="new_app_version_explained">Por favor, actualiza la app para disfrutar de las últimas novedades. Por motivos de seguridad es aconsejable utilizar siempre la versión más reciente.</string>
@@ -112,6 +112,7 @@
     <string name="stages_maps">Mapas de los tramos</string>
     <string name="directions">Cómo llegar</string>
     <string name="pick_a_language">Elige un idioma</string>
+    <string name="pick_a_language_description" tools:ignore="Typos">Podrás cambiar el idioma en cualquier momento desde la sección de ajustes.</string>
 
     // General
     <string name="yes">Sí</string>

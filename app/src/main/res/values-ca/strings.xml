@@ -112,6 +112,7 @@
     <string name="stages_maps">Mapes dels trams</string>
     <string name="directions">Com arribar</string>
     <string name="pick_a_language">Tria un idioma</string>
+    <string name="pick_a_language_description">Podràs canviar l\'idioma en qualsevol moment des de la secció de configuració.</string>
 
     // General
     <string name="yes">Sí</string>
