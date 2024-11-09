@@ -228,12 +228,24 @@ fun TeamDetailScreen(
                         ),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(
-                        text = "#" + team?.number,
-                        fontSize = 28.sp,
-                        fontFamily = ezraFamily,
-                        modifier = Modifier.padding(4.dp)
-                    )
+                    if (team?.number != null) {
+                        Text(
+                            text = "#" + team.number,
+                            fontSize = 28.sp,
+                            fontFamily = ezraFamily,
+                            modifier = Modifier.padding(4.dp)
+                        )
+                    } else {
+                        Shimmer {
+                            Box(
+                                modifier = Modifier
+                                    .clip(RectangleShape)
+                                    .height(40.dp)
+                                    .width(40.dp)
+                                    .background(it)
+                            )
+                        }
+                    }
                 }
                 Spacer(modifier = Modifier.width(16.dp))
 
