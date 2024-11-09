@@ -5,6 +5,9 @@ class Constants {
         const val SPLASH_SCREEN_DURATION = 1250L
         const val BETXI_LOCATION = "39.927995,-0.198889"
 
+        // Onboarding
+        const val THRESHOLD_FOR_LARGE_IMAGE_LOADING   = 1200 * 1024 // 1.2GB in kilobytes
+
         // Day of the event
         const val BEGINNING_DAY = 26
         const val BEGINNING_MONTH = 3 // April is 3 in Java.util.calendar

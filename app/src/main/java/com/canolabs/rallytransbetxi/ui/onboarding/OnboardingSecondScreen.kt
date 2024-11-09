@@ -30,14 +30,16 @@ data class SquareItem(
 )
 
 @Composable
-fun OnboardingSecondScreen() {
+fun OnboardingSecondScreen(
+    shouldLoadBiggerImage: Boolean
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         item {
             Image(
-                painter = painterResource(id = R.drawable.motoret_2),
+                painter = painterResource(id = if (shouldLoadBiggerImage) R.drawable.motoret_2 else R.drawable.motoret_2_svg),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()

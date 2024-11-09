@@ -38,13 +38,14 @@ import com.canolabs.rallytransbetxi.ui.theme.onboardingText
 @Composable
 fun OnboardingThirdScreen(
     selectedLanguage: MutableState<Language?>,
+    shouldLoadBiggerImage: Boolean
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
     ) {
         Image(
-            painter = painterResource(id = R.drawable.motoret_3),
+            painter = painterResource(id = if (shouldLoadBiggerImage) R.drawable.motoret_3 else R.drawable.motoret_3_svg),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()

@@ -16,13 +16,15 @@ import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 import com.canolabs.rallytransbetxi.ui.theme.onboardingText
 
 @Composable
-fun OnboardingFirstScreen() {
+fun OnboardingFirstScreen(
+    shouldLoadBiggerImage: Boolean
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
         item {
             Image(
-                painter = painterResource(id = R.drawable.motoret_1),
+                painter = painterResource(id = if (shouldLoadBiggerImage) R.drawable.motoret_1 else R.drawable.motoret_1_svg),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
