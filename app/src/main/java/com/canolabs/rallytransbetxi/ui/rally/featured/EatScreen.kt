@@ -5,7 +5,9 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -14,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -127,46 +130,62 @@ fun EatScreen(
     ) {
         val showDialog = remember { mutableStateOf(false) }
         val selectedRestaurant = remember { mutableStateOf<Restaurant?>(null) }
+        val mapLoaded = remember { mutableStateOf(false) }
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-        ) {
-            GoogleMap(
-                modifier = Modifier.fillMaxSize(),
-                uiSettings = mapUiSettings,
-                properties = mapProperties,
-                cameraPositionState = cameraPositionState
+        Column {
+            if (mapLoaded.value.not()) {
+                LinearProgressIndicator(
+                    // dynamic progress value
+                    modifier = Modifier
+                        .fillMaxWidth() // fill the width of the parent
+                        .padding(it), // add some padding
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
-                state.value.restaurants.forEach { restaurant ->
-                    val restaurantPosition =
-                        LatLng(restaurant.place.latitude, restaurant.place.longitude)
-                    val restaurantMarkerState = MarkerState(restaurantPosition)
-                    Marker(
-                        state = restaurantMarkerState,
-                        title = restaurant.name,
-                        icon = if (darkThemeState.value) {
-                            context.bitmapDescriptorFromVector(
-                                R.drawable.restaurant_outlined,
-                                1f
-                            )
-                        } else {
-                            context.bitmapDescriptorFromVector(
-                                R.drawable.restaurant_outlined_black,
-                                1f
-                            )
-                        },
-                        onInfoWindowClick = {
-                            selectedRestaurant.value = restaurant
-                            showDialog.value = true
-                        },
-                        onClick = {
-                            selectedRestaurant.value = restaurant
-                            showDialog.value = true
-                            true
-                        }
-                    )
+                GoogleMap(
+                    modifier = Modifier.fillMaxSize(),
+                    uiSettings = mapUiSettings,
+                    properties = mapProperties,
+                    onMapLoaded = {
+                        mapLoaded.value = true
+                    },
+                    cameraPositionState = cameraPositionState
+                ) {
+                    state.value.restaurants.forEach { restaurant ->
+                        val restaurantPosition =
+                            LatLng(restaurant.place.latitude, restaurant.place.longitude)
+                        val restaurantMarkerState = MarkerState(restaurantPosition)
+                        Marker(
+                            state = restaurantMarkerState,
+                            title = restaurant.name,
+                            icon = if (darkThemeState.value) {
+                                context.bitmapDescriptorFromVector(
+                                    R.drawable.restaurant_outlined,
+                                    1f
+                                )
+                            } else {
+                                context.bitmapDescriptorFromVector(
+                                    R.drawable.restaurant_outlined_black,
+                                    1f
+                                )
+                            },
+                            onInfoWindowClick = {
+                                selectedRestaurant.value = restaurant
+                                showDialog.value = true
+                            },
+                            onClick = {
+                                selectedRestaurant.value = restaurant
+                                showDialog.value = true
+                                true
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -174,10 +193,13 @@ fun EatScreen(
             AlertDialog(
                 onDismissRequest = { showDialog.value = false },
                 title = { Text(stringResource(id = R.string.open_in_maps)) },
-                text = {Text(
-                    stringResource(id = R.string.do_you_want_to_open) + " " + (selectedRestaurant.value?.name ?: "")
-                        + " " + stringResource(id = R.string.in_google_maps)
-                )  },
+                text = {
+                    Text(
+                        stringResource(id = R.string.do_you_want_to_open) + " " + (selectedRestaurant.value?.name
+                            ?: "")
+                            + " " + stringResource(id = R.string.in_google_maps)
+                    )
+                },
                 confirmButton = {
                     Button(
                         onClick = {
