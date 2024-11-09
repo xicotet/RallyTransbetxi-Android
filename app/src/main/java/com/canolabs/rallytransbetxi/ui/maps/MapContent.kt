@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -115,6 +116,8 @@ fun MapContent(
                 color = MaterialTheme.colorScheme.secondary,
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
+        } else {
+            Spacer(modifier = Modifier.padding(scaffoldPadding))
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -192,8 +195,7 @@ fun MapContent(
                     labelColor = MaterialTheme.colorScheme.onBackground
                 ),
                 modifier = Modifier
-                    .padding(scaffoldPadding)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 16.dp)
             )
 
             var expanded by remember { mutableStateOf(false) }
@@ -203,7 +205,6 @@ fun MapContent(
                 shape = CircleShape,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(scaffoldPadding)
                     .padding(16.dp)
                     .background(Color.White, CircleShape)
             ) {
