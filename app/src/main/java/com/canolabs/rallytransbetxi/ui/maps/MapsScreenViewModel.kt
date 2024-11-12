@@ -75,9 +75,11 @@ class MapsScreenViewModel @Inject constructor(
             val endPointLongitude = _state.value.stage.geoPoints?.first()?.longitude.toString()
             val endPointLatitude = _state.value.stage.geoPoints?.first()?.latitude.toString()
 
+            updateInitialProfile()
+
             try{
                 val directions = getDirectionsUseCase.execute(
-                    getProfileSettingsUseCase.invoke(),
+                    _state.value.directionsProfile!!,
                     BuildConfig.DIRECTIONS_API_KEY,
                     "$startPointLongitude,$startPointLatitude",
                     "$endPointLongitude,$endPointLatitude"
@@ -145,5 +147,18 @@ class MapsScreenViewModel @Inject constructor(
 
     fun setIsPermissionDeniedBottomSheetVisible(isPermissionDeniedBottomSheetVisible: Boolean) {
         _state.setIsPermissionDeniedBottomSheetVisible(isPermissionDeniedBottomSheetVisible)
+    }
+
+    private fun fetchProfileSettings() {
+        viewModelScope.launch {
+            _state.setDirectionsProfile(getProfileSettingsUseCase.invoke())
+        }
+    }
+
+    private suspend fun updateInitialProfile() {
+        fetchProfileSettings()
+        while (state.value.directionsProfile == null) {
+            delay(100)
+        }
     }
 }

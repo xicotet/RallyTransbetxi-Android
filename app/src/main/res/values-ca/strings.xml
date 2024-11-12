@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Rally Transbetxi</string>
+    <string name="new_app_version">Hi ha una nova versió disponible</string>
+    <string name="new_app_version_explained">Per favor, actualitza l\'app per a gaudir de les últimes novetats. Per motius de seguretat és aconsellable utilitzar sempre la versió més recent.</string>
 
     // Top level destinations
     <string name="rally">Rally</string>
@@ -21,6 +23,12 @@
     <string name="show_less">Veure menys</string>
     <string name="weather_forecast">Previsió meteorològica</string>
 
+    // Sponsors destination
+    <string name="sponsors_not_available">Les imatges dels patrocinadors no s\'han pogut carregar. Lamentem les molèsties.</string>
+
+    // Hall of fame destination
+    <string name="hall_of_fame_not_available">No s\'ha pogut carregar el palmarès. Lamentem les molèsties.</string>
+
     // Eat destination
     <string name="open_in_maps">Obrir a Google Maps</string>
     <string name="do_you_want_to_open">Vols obrir-ho</string>
@@ -41,15 +49,22 @@
     <string name="directions_mode">Mode de navegació</string>
     <string name="driving_car_mode">Cotxe</string>
     <string name="walking_mode">A peu</string>
+    <string name="info">Informació</string>
+    <string name="directions_mode_explained">Selecciona com vols vore les direccions cap a l\'inici del tram: a peu o en cotxe. Les rutes estaran disponibles en la pantalla de Trams en prémer este botó:</string>
     <string name="text_size">Tamany de lletra</string>
     <string name="text_size_small">Xicoteta</string>
     <string name="text_size_medium">Normal</string>
     <string name="text_size_large">Gran</string>
+    <string name="app_version">Versió de l\'app</string>
+    <string name="developed_by_pablo_cano">Desenvolupat per Pablo Cano</string>
 
     // Permission denied bottom sheet
-    <string name="permission_denied_title">Permís de localització</string>
+    <string name="permission_location_title">Permís de localització</string>
+    <string name="permission_notifications_title">Permís per a notificacions</string>
     <string name="permission_denied_message">Per poder obtindre la teua ubicació, necessitem que actives el permís en configuració</string>
+    <string name="permission_notifications_message">Per a mantindre\'t informat sobre resultats i novetats, ens agradaria enviar-te notificacions. Prometem no enviar-ne més de les necessàries</string>
     <string name="open_settings">Obrir configuració</string>
+    <string name="allow_notifications">Permetre notificacions</string>
 
     // Wifi connection lost bottom sheet
     <string name="connection_lost_title">Connexió a internet</string>
@@ -79,6 +94,10 @@
     <string name="best_stage_position">Millor posició</string>
     <string name="team">Equip</string>
     <string name="global_literal">Global</string>
+    <string name="team_image_not_available">Imatge original d\'equip no disponible</string>
+
+    // News detail
+    <string name="news_image_not_available">Imatge original de notícia no disponible</string>
 
     // Segmented button
     <string name="agria">Agria</string>
@@ -93,18 +112,21 @@
     <string name="stages_maps">Mapes dels trams</string>
     <string name="directions">Com arribar</string>
     <string name="pick_a_language">Tria un idioma</string>
+    <string name="pick_a_language_description">Podràs canviar l\'idioma en qualsevol moment des de la secció de configuració.</string>
 
     // General
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="search">Buscar&#8230;</string>
     <string name="ok">Acceptar</string>
-    <string name="location">Ubicació</string>
+    <string name="map">Mapa</string>
     <string name="day">Dia</string>
     <string name="days">Dies</string>
     <string name="hour">Hora</string>
     <string name="hours">Hores</string>
     <string name="omit">Ometre</string>
+    <string name="not_now">Ara no</string>
     <string name="next">Següent</string>
     <string name="end">Finalitzar</string>
+    <string name="update_now">Actualitzar ara</string>
 </resources>

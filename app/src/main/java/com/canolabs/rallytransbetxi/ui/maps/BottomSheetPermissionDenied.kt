@@ -48,7 +48,7 @@ fun BottomSheetPermissionDenied(
         Spacer(modifier = Modifier.padding(8.dp))
 
         Text(
-            text = stringResource(id = R.string.permission_denied_title),
+            text = stringResource(id = R.string.permission_location_title),
             fontFamily = ezraFamily,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(PaddingMedium),

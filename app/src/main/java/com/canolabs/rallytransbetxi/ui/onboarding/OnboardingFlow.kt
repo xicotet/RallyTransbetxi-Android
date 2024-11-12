@@ -1,5 +1,7 @@
 package com.canolabs.rallytransbetxi.ui.onboarding
 
+import android.app.ActivityManager
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
@@ -31,7 +34,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -41,6 +44,7 @@ import com.canolabs.rallytransbetxi.ui.theme.onboardingBackground
 import com.canolabs.rallytransbetxi.ui.theme.onboardingButtonDisabledBackground
 import com.canolabs.rallytransbetxi.ui.theme.onboardingButtonDisabledContent
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.THRESHOLD_FOR_LARGE_IMAGE_LOADING
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -108,8 +112,8 @@ fun OnboardingFlow(
                         disabledContentColor = onboardingButtonDisabledContent
                     ),
                     enabled = selectedLanguage.value != null || pagerState.currentPage != 2,
+                    shape = RoundedCornerShape(32),
                     modifier = Modifier
-                        .clip(RectangleShape)
                         .fillMaxWidth()
                         .height(96.dp)
                         .padding(16.dp)
@@ -137,14 +141,32 @@ fun OnboardingFlow(
                 modifier = Modifier
                     .padding(it)
             ) { page ->
+                val context = LocalContext.current
+                val availableMemory = getAvailableMemory(context)
+                Log.d("OnboardingFlow", "Available memory: $availableMemory KB")
+                val shouldLoadBiggerImage = shouldLoadBiggerImage(availableMemory)
+                Log.d("OnboardingFlow", "Should load bigger images: $shouldLoadBiggerImage")
+
                 when (page) {
-                    0 -> OnboardingFirstScreen()
-                    1 -> OnboardingSecondScreen()
+                    0 -> OnboardingFirstScreen(shouldLoadBiggerImage = shouldLoadBiggerImage)
+                    1 -> OnboardingSecondScreen(shouldLoadBiggerImage = shouldLoadBiggerImage)
                     2 -> OnboardingThirdScreen(
                         selectedLanguage = selectedLanguage,
+                        shouldLoadBiggerImage = shouldLoadBiggerImage
                     )
                 }
             }
         }
     }
+}
+
+private fun getAvailableMemory(context: Context): Long {
+    val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    val memoryInfo = ActivityManager.MemoryInfo()
+    activityManager.getMemoryInfo(memoryInfo)
+    return memoryInfo.availMem / 1024 // Convert to kilobytes
+}
+
+private fun shouldLoadBiggerImage(availableMemory: Long): Boolean {
+    return availableMemory > THRESHOLD_FOR_LARGE_IMAGE_LOADING
 }

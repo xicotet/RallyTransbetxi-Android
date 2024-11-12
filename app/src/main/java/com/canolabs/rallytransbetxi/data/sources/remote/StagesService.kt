@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.data.sources.remote
 
+import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -26,7 +27,7 @@ class StagesServiceImpl @Inject constructor(
             }
             stagesList
         } catch (e: Exception) {
-            // Handle error
+            Log.e("StagesServiceImpl", "Error fetching stages: ${e.message}", e)
             emptyList()
         }
     }
@@ -37,6 +38,7 @@ class StagesServiceImpl @Inject constructor(
                 .document(acronym).get().await()
             documentSnapshot.toObject(Stage::class.java)?.copy(acronym = documentSnapshot.id)
         } catch (e: Exception) {
+            Log.e("StagesServiceImpl", "Error fetching stage $acronym: ${e.message}", e)
             null
         }
     }
