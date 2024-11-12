@@ -22,7 +22,7 @@ class VersionsServiceImpl @Inject constructor(
             }
             version
         } catch (e: Exception) {
-            Log.d("VersionsServiceImpl", "Error fetching version: ${e.message}")
+            Log.e("VersionsServiceImpl", "Error fetching version: ${e.message}")
             null
         }
     }

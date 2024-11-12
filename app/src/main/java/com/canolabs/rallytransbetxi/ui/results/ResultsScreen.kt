@@ -23,12 +23,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -46,10 +49,13 @@ fun ResultsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val titles = listOf(R.string.global, R.string.stages)
+    val pagerState = rememberPagerState(pageCount = { titles.size })
     val coroutineScope = rememberCoroutineScope()
 
     // Remember the refreshing state
     val pullRefreshState = rememberPullToRefreshState()
+
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         viewModel.fetchGlobalResults()
@@ -73,12 +79,12 @@ fun ResultsScreen(
             .nestedScroll(pullRefreshState.nestedScrollConnection)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
         ) {
 
             ResultsScreenHeader(viewModel = viewModel)
-
-            val pagerState = rememberPagerState(pageCount = { titles.size })
 
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
@@ -96,22 +102,14 @@ fun ResultsScreen(
                 }
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-            ) {
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.fillMaxSize()
-                ) { page ->
-                    when (page) {
-                        0 -> {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .verticalScroll(rememberScrollState())
-                            ) {
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
+                when (page) {
+                    0 -> {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            Column {
                                 RacingCategorySegmentedButton(
                                     selectedRacingCategories = state.selectedRacingCategories,
                                     onSelectedTabIndexChange = { tabIndex ->
@@ -128,24 +126,23 @@ fun ResultsScreen(
                                     state = state,
                                     navController = navController
                                 )
-                                Spacer(modifier = Modifier.weight(1f))
                             }
                         }
-                        1 -> {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .verticalScroll(rememberScrollState())
-                            ) {
-                                StagesResultsTab(
-                                    stages = state.stages,
-                                    isLoading = state.isLoading,
-                                    state = state,
-                                    viewModel = viewModel,
-                                    navController = navController
-                                )
-                                Spacer(modifier = Modifier.weight(1f))
-                            }
+                    }
+
+                    1 -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            StagesResultsTab(
+                                stages = state.stages,
+                                isLoading = state.isLoading,
+                                state = state,
+                                viewModel = viewModel,
+                                navController = navController
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
                         }
                     }
                 }
@@ -156,6 +153,26 @@ fun ResultsScreen(
             modifier = Modifier.align(Alignment.TopCenter),
             state = pullRefreshState,
         )
+
+        if (scrollState.value > 100 && pagerState.currentPage == 0) {
+            FloatingActionButton(
+                onClick = {
+                    coroutineScope.launch {
+                        scrollState.animateScrollTo(0)
+                    }
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp), // Ensure it's not part of the scrollable content
+                content = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.arrow_upward),
+                        contentDescription = "Scroll to top",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            )
+        }
     }
 }
 

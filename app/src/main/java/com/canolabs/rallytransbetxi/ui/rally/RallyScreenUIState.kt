@@ -23,6 +23,7 @@ data class RallyScreenUIState(
     val theme: Theme? = null,
     val directionsProfile: DirectionsProfile? = null,
     val fontSizeFactor: FontSizeFactor? = null,
+    val notificationPermissionCounter: Int? = null,
     val isDialogShowing: Boolean = false,
     val warningShownOnDialog: Warning? = null,
     val areWarningsCollapsed: Boolean = true,
@@ -58,6 +59,10 @@ fun MutableStateFlow<RallyScreenUIState>.setDirectionsProfile(directionsProfile:
 
 fun MutableStateFlow<RallyScreenUIState>.setLanguage(language: Language) {
     value = value.copy(language = language)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setNotificationPermissionCounter(notificationPermissionCounter: Int) {
+    value = value.copy(notificationPermissionCounter = notificationPermissionCounter)
 }
 
 fun MutableStateFlow<RallyScreenUIState>.setIsDialogShowing(isDialogShowing: Boolean) {

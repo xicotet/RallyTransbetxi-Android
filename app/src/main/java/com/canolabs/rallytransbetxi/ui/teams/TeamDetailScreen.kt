@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -42,13 +43,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -63,6 +64,7 @@ import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
+import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -100,7 +102,7 @@ fun TeamDetailScreen(
     val scrollState = rememberScrollState()
 
     val collapsedFraction = scrollBehavior.state.collapsedFraction
-    val fontSize = if (collapsedFraction > 0.5) {
+    val topAppBarFontSize = if (collapsedFraction > 0.5) {
         16.sp // Smaller font size when the AppBar is more than half collapsed
     } else {
         24.sp // Larger font size when the AppBar is less than half collapsed
@@ -115,12 +117,11 @@ fun TeamDetailScreen(
     val teamImageUrl = remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(teamNumber) {
-        try {
-            val teamUrl = teamStorageRef.downloadUrl.await()
-            teamImageUrl.value = teamUrl.toString()
-            Log.d("DriverImagesPager", "Driver Image URL: $teamUrl")
+        teamImageUrl.value = try {
+            teamStorageRef.downloadUrl.await().toString()
         } catch (e: Exception) {
-            Log.d("DriverImagesPager", "Error: $e")
+            Log.w("TeamDetailScreen", "Error: $e")
+            ""
         }
     }
 
@@ -129,15 +130,6 @@ fun TeamDetailScreen(
             .data(teamImageUrl.value ?: "")
             .size(Size.ORIGINAL)
             .build(),
-    )
-
-    val gradient = Brush.linearGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.secondaryContainer,
-            MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
-        ),
-        start = Offset(0f, 0f), // Start at the top left corner
-        end = Offset(1000f, 1000f)
     )
 
     Scaffold(
@@ -156,7 +148,7 @@ fun TeamDetailScreen(
                             team?.name ?: "",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            fontSize = fontSize,
+                            fontSize = topAppBarFontSize,
                             fontFamily = ezraFamily
                         )
                     } else {
@@ -164,7 +156,7 @@ fun TeamDetailScreen(
                             team?.name ?: "",
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
-                            fontSize = fontSize,
+                            fontSize = topAppBarFontSize,
                             fontFamily = ezraFamily
                         )
                     }
@@ -187,53 +179,32 @@ fun TeamDetailScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.secondaryContainer)
                 .padding(innerPadding)
-                .background(brush = gradient)
+                .padding(bottom = 16.dp)
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (teamImageUrl.value == null) {
-                Shimmer { brush ->
-                    Box(
-                        modifier = Modifier
-                            .clip(RectangleShape)
-                            .height(400.dp)
-                            .width(300.dp)
-                            .align(Alignment.CenterHorizontally)
-                            .background(brush = brush)
-                    )
-                }
-            }
+            val placeholderModifier = Modifier
+                .clip(RectangleShape)
+                .height(400.dp)
+                .width(300.dp)
+                .align(Alignment.CenterHorizontally)
 
             when (teamPainter.state) {
-                is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> {
-                    Shimmer { brush ->
-                        Box(
-                            modifier = Modifier
-                                .clip(RectangleShape)
-                                .height(400.dp)
-                                .width(300.dp)
-                                .align(Alignment.CenterHorizontally)
-                                .background(brush = brush)
-                        )
+                is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> ShimmerPlaceholder(placeholderModifier)
+                is AsyncImagePainter.State.Error -> {
+                    if (teamImageUrl.value == null) {
+                        ShimmerPlaceholder(placeholderModifier)
+                    } else {
+                        DefaultTeamImageWithErrorMessage(placeholderModifier)
                     }
                 }
-
-                is AsyncImagePainter.State.Success -> {
-                    Image(
-                        painter = teamPainter,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .clip(RectangleShape)
-                            .height(400.dp)
-                            .width(300.dp)
-                            .align(Alignment.CenterHorizontally),
-                    )
-                }
-
-                is AsyncImagePainter.State.Error -> {
-                    // Show a placeholder image
-                }
+                else -> Image(
+                    painter = teamPainter,
+                    contentDescription = null,
+                    modifier = placeholderModifier
+                )
             }
 
             Row(
@@ -257,12 +228,24 @@ fun TeamDetailScreen(
                         ),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(
-                        text = "#" + team?.number,
-                        fontSize = 28.sp,
-                        fontFamily = ezraFamily,
-                        modifier = Modifier.padding(4.dp)
-                    )
+                    if (team?.number != null) {
+                        Text(
+                            text = "#" + team.number,
+                            fontSize = 28.sp,
+                            fontFamily = ezraFamily,
+                            modifier = Modifier.padding(4.dp)
+                        )
+                    } else {
+                        Shimmer {
+                            Box(
+                                modifier = Modifier
+                                    .clip(RectangleShape)
+                                    .height(40.dp)
+                                    .width(40.dp)
+                                    .background(it)
+                            )
+                        }
+                    }
                 }
                 Spacer(modifier = Modifier.width(16.dp))
 
@@ -335,7 +318,7 @@ fun TeamDetailScreen(
                                     text = stringResource(id = R.string.category_position) + ": ",
                                     fontSize = 20.sp,
                                     fontFamily = ezraFamily,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.Normal,
                                     textAlign = TextAlign.Center
                                 )
                                 Box(
@@ -352,7 +335,7 @@ fun TeamDetailScreen(
                             text = stringResource(id = R.string.category_position) + ": " + state.value.categoryResult,
                             fontSize = 20.sp,
                             fontFamily = ezraFamily,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -364,7 +347,7 @@ fun TeamDetailScreen(
                                     text = stringResource(id = R.string.overall_position) + ": ",
                                     fontSize = 20.sp,
                                     fontFamily = ezraFamily,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.Normal,
                                     textAlign = TextAlign.Center
                                 )
                                 Box(
@@ -381,7 +364,7 @@ fun TeamDetailScreen(
                             text = stringResource(id = R.string.overall_position) + ": " + state.value.globalResult,
                             fontSize = 20.sp,
                             fontFamily = ezraFamily,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -393,7 +376,7 @@ fun TeamDetailScreen(
                                     text = stringResource(id = R.string.overall_time) + ": ",
                                     fontSize = 20.sp,
                                     fontFamily = ezraFamily,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.Normal,
                                     textAlign = TextAlign.Center
                                 )
                                 Box(
@@ -410,14 +393,14 @@ fun TeamDetailScreen(
                             text = stringResource(id = R.string.overall_time) + ": ",
                             fontSize = 20.sp,
                             fontFamily = ezraFamily,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Start,
                         )
                         Text(
                             text = state.value.globalTime,
                             fontSize = 20.sp,
                             fontFamily = ezraFamily,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center,
                         )
                     }
@@ -449,7 +432,7 @@ fun TeamDetailScreen(
                         text = stringResource(id = R.string.stage_victories),
                         fontSize = 20.sp,
                         fontFamily = ezraFamily,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center
                     )
                     if (state.value.isLoadingStageVictories) {
@@ -467,7 +450,7 @@ fun TeamDetailScreen(
                             text = state.value.stageVictories.toString(),
                             fontSize = 32.sp,
                             fontFamily = ezraFamily,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(8.dp)
                         )
@@ -495,7 +478,7 @@ fun TeamDetailScreen(
                         text = stringResource(id = R.string.best_stage_position),
                         fontSize = 20.sp,
                         fontFamily = ezraFamily,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center
                     )
 
@@ -517,14 +500,14 @@ fun TeamDetailScreen(
                                 text = state.value.bestStagePosition.toString(),
                                 fontSize = 32.sp,
                                 fontFamily = ezraFamily,
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.Normal,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(8.dp)
                             )
                             if (state.value.numberOfTimesBestPosition > 1) {
                                 Text(
                                     text = "x" + state.value.numberOfTimesBestPosition.toString(),
-                                    modifier = Modifier.padding(bottom = 6.dp),
+                                    modifier = Modifier.padding(bottom = 8.dp),
                                     fontSize = 16.sp,
                                     fontFamily = ezraFamily,
                                     fontWeight = FontWeight.Normal
@@ -554,47 +537,36 @@ fun TeamDetailScreen(
             val driverImageUrl = remember { mutableStateOf<String?>(null) }
             val codriverImageUrl = remember { mutableStateOf<String?>(null) }
 
-            val firstImageIsLoaded = remember { mutableStateOf(false) }
-            val secondImageIsLoaded = remember { mutableStateOf(false) }
+            LaunchedEffect(teamNumber) {
+                driverImageUrl.value = try {
+                    driverStorageRef.downloadUrl.await().toString()
+                } catch (e: Exception) {
+                    Log.w("TeamDetailScreen", "Error: $e")
+                    ""
+                }
+            }
 
             LaunchedEffect(teamNumber) {
-                try {
-                    val driverUrl = driverStorageRef.downloadUrl.await()
-                    driverImageUrl.value = driverUrl.toString()
-
-                    val codriverUrl = codriverStorageRef.downloadUrl.await()
-                    codriverImageUrl.value = codriverUrl.toString()
+                codriverImageUrl.value = try {
+                    codriverStorageRef.downloadUrl.await().toString()
                 } catch (e: Exception) {
-                    Log.d("DriverImagesPager", "Error: $e")
+                    Log.w("TeamDetailScreen", "Error: $e")
+                    ""
                 }
             }
 
             val driverPainter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(driverImageUrl.value ?: "")
+                    .data(driverImageUrl.value)
                     .size(Size.ORIGINAL)
                     .build(),
-                onState = { state ->
-                    if (state is AsyncImagePainter.State.Success) {
-                        firstImageIsLoaded.value = true
-                    } else if (state is AsyncImagePainter.State.Loading) {
-                        firstImageIsLoaded.value = false
-                    }
-                }
             )
 
             val codriverPainter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(codriverImageUrl.value ?: "")
+                    .data(codriverImageUrl.value)
                     .size(Size.ORIGINAL)
                     .build(),
-                onState = { state ->
-                    if (state is AsyncImagePainter.State.Success) {
-                        secondImageIsLoaded.value = true
-                    } else if (state is AsyncImagePainter.State.Loading) {
-                        secondImageIsLoaded.value = false
-                    }
-                }
             )
 
             Row(
@@ -604,38 +576,37 @@ fun TeamDetailScreen(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Top
-            ){
-                Column (
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-                ){
-                    if (!firstImageIsLoaded.value) {
-                        Shimmer { brush ->
-                            Box(
-                                modifier = Modifier
-                                    .clip(RectangleShape)
-                                    .height(170.dp)
-                                    .width(144.dp)
-                                    .background(brush = brush)
-                            )
+            ) {
+                val driverPlaceHolderModified = Modifier
+                    .clip(CircleShape)
+                    .padding(bottom = 8.dp)
+                    .height(170.dp)
+                    .width(144.dp)
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
+                    when (driverPainter.state) {
+                        is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> ShimmerPlaceholder(driverPlaceHolderModified)
+                        is AsyncImagePainter.State.Error -> {
+                            if (driverImageUrl.value == null) {
+                                ShimmerPlaceholder(driverPlaceHolderModified)
+                            } else {
+                                DefaultDriverImage(driverPlaceHolderModified)
+                            }
                         }
-                    } else {
-                        Image(
+                        else -> Image(
                             painter = driverPainter,
                             contentDescription = null,
-                            modifier = Modifier
-                                .clip(RectangleShape)
-                                .height(170.dp)
-                                .width(144.dp)
-                        )
-                        Text(
-                            text = team?.driver ?: "",
-                            fontSize = 20.sp,
-                            fontFamily = antaFamily,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
+                            modifier = driverPlaceHolderModified,
+                            contentScale = ContentScale.Crop
                         )
                     }
+                    Text(
+                        text = team?.driver ?: "",
+                        fontSize = 20.sp,
+                        fontFamily = antaFamily,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Center
+                    )
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -651,39 +622,67 @@ fun TeamDetailScreen(
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-                ){
-                    if (!secondImageIsLoaded.value) {
-                        Shimmer { brush ->
-                            Box(
-                                modifier = Modifier
-                                    .clip(RectangleShape)
-                                    .height(170.dp)
-                                    .width(144.dp)
-                                    .background(brush = brush)
-                            )
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
+                    when (codriverPainter.state) {
+                        is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> ShimmerPlaceholder(driverPlaceHolderModified)
+                        is AsyncImagePainter.State.Error -> {
+                            if (codriverImageUrl.value == null) {
+                                ShimmerPlaceholder(driverPlaceHolderModified)
+                            } else {
+                                DefaultDriverImage(driverPlaceHolderModified)
+                            }
                         }
-                    } else {
-                        Image(
+                        else -> Image(
                             painter = codriverPainter,
                             contentDescription = null,
-                            modifier = Modifier
-                                .clip(RectangleShape)
-                                .height(170.dp)
-                                .width(144.dp)
-                        )
-                        Text(
-                            text = team?.codriver ?: "",
-                            fontSize = 20.sp,
-                            fontFamily = antaFamily,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
+                            modifier = driverPlaceHolderModified,
+                            contentScale = ContentScale.Crop
                         )
                     }
+
+                    Text(
+                        text = team?.codriver ?: "",
+                        fontSize = 20.sp,
+                        fontFamily = antaFamily,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
     }
+}
+
+@Composable
+fun ShimmerPlaceholder(modifier: Modifier) {
+    Shimmer { brush ->
+        Box(modifier = modifier.background(brush))
+    }
+}
+
+@Composable
+fun DefaultDriverImage(modifier: Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.driver_image_default),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun DefaultTeamImageWithErrorMessage(modifier: Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.team_image_default),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+    )
+    Text(
+        text = "(${stringResource(id = R.string.team_image_not_available)})",
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.padding(top = 4.dp),
+        fontFamily = robotoFamily
+    )
 }

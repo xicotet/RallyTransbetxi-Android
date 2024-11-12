@@ -2,6 +2,7 @@ package com.canolabs.rallytransbetxi.ui.maps
 
 import android.location.Location
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
+import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.miscellaneous.UIState
 import com.google.maps.android.compose.MapProperties
@@ -21,6 +22,7 @@ data class MapsScreenUIState(
     val isGpsDialogVisible: Boolean = false,
     val language: Language? = null,
     val isLoadingDirections: Boolean = false,
+    val directionsProfile: DirectionsProfile? = null,
     override val isLoading: Boolean = false,
     override val loadingMessageId: Int? = null,
 ) : UIState
@@ -47,6 +49,10 @@ fun MutableStateFlow<MapsScreenUIState>.setIsResultsBottomSheetVisible(isBottomS
 
 fun MutableStateFlow<MapsScreenUIState>.setIsPermissionDeniedBottomSheetVisible(isPermissionDeniedBottomSheetVisible: Boolean) {
     value = value.copy(isPermissionDeniedBottomSheetVisible = isPermissionDeniedBottomSheetVisible)
+}
+
+fun MutableStateFlow<MapsScreenUIState>.setDirectionsProfile(directionsProfile: DirectionsProfile) {
+    value = value.copy(directionsProfile = directionsProfile)
 }
 
 fun MutableStateFlow<MapsScreenUIState>.setLanguage(language: Language) {

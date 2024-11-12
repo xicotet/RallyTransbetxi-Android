@@ -26,7 +26,7 @@ class WarningsServiceImpl @Inject constructor(
             }
             warnings
         } catch (e: Exception) {
-            Log.d("WarningsServiceImpl", "Error fetching warnings: ${e.message}")
+            Log.e("WarningsServiceImpl", "Error fetching warnings: ${e.message}")
             emptyList()
         }
     }

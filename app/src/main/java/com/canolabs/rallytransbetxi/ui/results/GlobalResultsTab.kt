@@ -1,9 +1,11 @@
 package com.canolabs.rallytransbetxi.ui.results
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -14,7 +16,6 @@ import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 import com.canolabs.rallytransbetxi.ui.navigation.Screens
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
-
 
 @Composable
 fun GlobalResultsTab(
@@ -83,17 +84,20 @@ fun GlobalResultsTab(
             )
         }
 
-        sortedResultsByTime.forEachIndexed { index, result ->
-            if (filteredResultsBySearchBar.contains(result)) {
-                ResultCard(
-                    result = result,
-                    position = index + 1,
-                    onClick = {
-                        navController.navigate(
-                            "${Screens.TeamDetail.route}/${result.team.number}"
-                        )
-                    }
-                )
+        // Apply the key logic for each result based on the team's number
+        Column {
+            filteredResultsBySearchBar.forEach { result ->
+                key(result.team.number) {
+                    ResultCard(
+                        result = result,
+                        position = sortedResultsByTime.indexOf(result) + 1, // Maintain original position
+                        onClick = {
+                            navController.navigate(
+                                "${Screens.TeamDetail.route}/${result.team.number}"
+                            )
+                        }
+                    )
+                }
             }
         }
     }

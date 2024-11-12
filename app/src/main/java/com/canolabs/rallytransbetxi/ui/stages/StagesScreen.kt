@@ -1,9 +1,11 @@
 package com.canolabs.rallytransbetxi.ui.stages
 
 import android.content.SharedPreferences
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,10 +20,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 import com.canolabs.rallytransbetxi.ui.navigation.Screens
 import com.canolabs.rallytransbetxi.ui.theme.PaddingHuge
 import com.canolabs.rallytransbetxi.ui.theme.PaddingLarge
@@ -55,7 +60,10 @@ fun StagesScreen(
         }
     }
 
-    Box(Modifier.fillMaxSize().nestedScroll(pullRefreshState.nestedScrollConnection)) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .nestedScroll(pullRefreshState.nestedScrollConnection)) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
@@ -100,6 +108,17 @@ fun StageList(
             )
         }
         if (state.isLoading) {
+            item {
+                Shimmer {
+                    Box(
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .size(width = 250.dp, height = 32.dp)
+                            .clip(MaterialTheme.shapes.small)
+                            .background(brush = it)
+                    )
+                }
+            }
             items(5) {
                 StageCardShimmer()
             }

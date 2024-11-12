@@ -106,6 +106,7 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging") // Firebase Messaging
     implementation("com.google.firebase:firebase-appcheck-playintegrity") // Firebase App Check
     implementation("com.google.android.play:integrity:1.4.0") // Play Integrity
+    implementation("com.google.firebase:firebase-config-ktx") // Remote config
 
     implementation("com.google.android.gms:play-services-location:21.3.0") // Location services
 

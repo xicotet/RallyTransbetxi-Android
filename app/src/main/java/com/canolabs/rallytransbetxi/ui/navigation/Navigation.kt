@@ -3,15 +3,21 @@ package com.canolabs.rallytransbetxi.ui.navigation
 import android.content.SharedPreferences
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.*
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -22,8 +28,13 @@ import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreen
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
+import com.canolabs.rallytransbetxi.ui.miscellaneous.UpdateAppVersionScreen
 import com.canolabs.rallytransbetxi.ui.onboarding.OnboardingFlow
 import com.canolabs.rallytransbetxi.ui.rally.*
+import com.canolabs.rallytransbetxi.ui.rally.featured.EatScreen
+import com.canolabs.rallytransbetxi.ui.rally.featured.HallOfFameScreen
+import com.canolabs.rallytransbetxi.ui.rally.featured.SponsorsScreen
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.NewsDetailScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreen
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.stages.StagesScreen
@@ -33,7 +44,6 @@ import com.canolabs.rallytransbetxi.ui.teams.TeamsScreen
 import com.canolabs.rallytransbetxi.ui.teams.TeamsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Navigation(
     stagesScreenViewModel: StagesScreenViewModel,
@@ -47,6 +57,10 @@ fun Navigation(
     sharedPreferences: SharedPreferences,
     recomposeNavbar: MutableState<Boolean>
 ) {
+    LaunchedEffect(Unit) {
+        rallyScreenViewModel.checkAppVersion()
+    }
+
     val navController = rememberNavController()
     val screens = listOf(
         Screens.Rally,
@@ -64,7 +78,11 @@ fun Navigation(
         )
     }
 
-    if (finishedOnboarding.value.not()) {
+    val blockApp = rallyScreenViewModel.blockApp.collectAsState()
+
+    if (blockApp.value) {
+        UpdateAppVersionScreen()
+    } else if (finishedOnboarding.value.not()) {
         OnboardingFlow(
             finishedOnboarding = finishedOnboarding,
             sharedPreferences = sharedPreferences,
@@ -90,12 +108,26 @@ fun Navigation(
                         screens.forEach { screen ->
                             NavigationBarItem(
                                 icon = {
-                                    val iconResource =
-                                        if (currentRoute == screen.route) screen.iconSelected else screen.iconUnselected
-                                    Icon(
-                                        painterResource(id = iconResource!!),
-                                        contentDescription = null
-                                    )
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(
+                                                if (currentRoute == screen.route) RoundedCornerShape(
+                                                    32
+                                                ) else RoundedCornerShape(0.dp)
+                                            ) // Rounded shape for active
+                                            .background(
+                                                if (currentRoute == screen.route) MaterialTheme.colorScheme.primaryContainer
+                                                else Color.Transparent
+                                            )
+                                            .padding(vertical = 4.dp, horizontal = 16.dp)
+                                    ) {
+                                        val iconResource =
+                                            if (currentRoute == screen.route) screen.iconSelected else screen.iconUnselected
+                                        Icon(
+                                            painterResource(id = iconResource!!),
+                                            contentDescription = null
+                                        )
+                                    }
                                 },
                                 label = {
                                     Text(
@@ -105,6 +137,9 @@ fun Navigation(
                                         fontFamily = robotoFamily
                                     )
                                 },
+                                colors = NavigationBarItemDefaults.colors(
+                                    indicatorColor = Color.Transparent,
+                                ),
                                 selected = currentRoute == screen.route,
                                 onClick = {
                                     navController.navigate(screen.route) {

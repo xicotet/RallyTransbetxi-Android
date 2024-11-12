@@ -7,10 +7,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -25,8 +31,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,6 +38,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.ui.rally.dialogs.WarningDialog
+import com.canolabs.rallytransbetxi.ui.rally.bottomSheets.BottomSheetAppSettings
+import com.canolabs.rallytransbetxi.ui.rally.featured.FeaturedSection
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.ActivityProgramSection
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.BreakingNewsSection
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.NotificationPermission
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.WarningsSection
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.HomeSectionShimmer
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.HomeSectionType
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -77,6 +90,8 @@ fun RallyScreen(
         viewModel.fetchLanguage(sharedPreferences)
     }
 
+    NotificationPermission(viewModel)
+
     if (pullRefreshState.isRefreshing) {
         LaunchedEffect(true) {
             delay(1500)
@@ -87,7 +102,10 @@ fun RallyScreen(
         }
     }
 
-    Box(Modifier.fillMaxSize().nestedScroll(pullRefreshState.nestedScrollConnection)) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .nestedScroll(pullRefreshState.nestedScrollConnection)) {
         LazyColumn(
             verticalArrangement = Arrangement.Center
         ) {
@@ -123,21 +141,26 @@ fun RallyScreen(
                     navController = navController
                 )
 
-                WarningsSection(
-                    state = state,
-                    viewModel = viewModel,
-                )
+                if (state.isLoading) {
+                    HomeSectionShimmer(type = HomeSectionType.WARNINGS)
+                    HomeSectionShimmer(type = HomeSectionType.NEWS)
+                    HomeSectionShimmer(type = HomeSectionType.ACTIVITIES)
+                } else {
+                    WarningsSection(
+                        state = state,
+                        viewModel = viewModel,
+                    )
+                    BreakingNewsSection(
+                        state = state,
+                        viewModel = viewModel,
+                        navController = navController
+                    )
 
-                BreakingNewsSection(
-                    state = state,
-                    viewModel = viewModel,
-                    navController = navController
-                )
-
-                ActivityProgramSection(
-                    state = state,
-                    viewModel = viewModel
-                )
+                    ActivityProgramSection(
+                        state = state,
+                        viewModel = viewModel
+                    )
+                }
 
                 if (state.isSettingsBottomSheetVisible) {
                     ModalBottomSheet(
@@ -148,7 +171,39 @@ fun RallyScreen(
                                 bottomSheetState.hide()
                             }
                         },
+                        dragHandle = {},
                     ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 8.dp, end = 8.dp, top = 4.dp)
+                        ) {
+                            // Centered Drag Handle
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                            ) {
+                                BottomSheetDefaults.DragHandle()
+                            }
+
+                            // Close button aligned to the end (top-right corner)
+                            IconButton(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        bottomSheetState.hide()
+                                        viewModel.setIsSettingsBottomSheetVisible(false)
+                                    }
+                                },
+                                modifier = Modifier.align(Alignment.TopEnd),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = "Close",
+                                    tint = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+
                         BottomSheetAppSettings(
                             state = state,
                             viewModel = viewModel,
@@ -165,16 +220,4 @@ fun RallyScreen(
             state = pullRefreshState,
         )
     }
-}
-
-@Composable
-fun getRallyScreenCardsGradient(): Brush {
-    return Brush.linearGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.surface,
-            MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
-        ),
-        start = Offset(0f, 0f), // Start at the top left corner
-        end = Offset(1000f, 1000f)
-    )
 }

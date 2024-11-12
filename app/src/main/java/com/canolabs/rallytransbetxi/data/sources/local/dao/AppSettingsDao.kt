@@ -20,6 +20,9 @@ interface AppSettingsDao {
     @Query("SELECT fontSizeFactor FROM appsetting WHERE id = 1")
     suspend fun getFontSizeFactor(): Float
 
+    @Query("SELECT notificationPermissionCounter FROM appsetting WHERE id = 1")
+    suspend fun getNotificationPermissionCounter(): Int
+
     @Query("SELECT areWarningsCollapsed FROM appsetting WHERE id = 1")
     suspend fun getAreWarningsCollapsed(): Boolean
 

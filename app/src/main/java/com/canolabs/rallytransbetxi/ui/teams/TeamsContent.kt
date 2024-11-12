@@ -2,6 +2,7 @@ package com.canolabs.rallytransbetxi.ui.teams
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.data.models.responses.Team
 import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
@@ -17,12 +18,11 @@ fun TeamsContent(
         TeamCardShimmer()
         TeamCardShimmer()
     } else {
-
         val sortedTeamsByNumber = teams.sortedBy { it.number.toIntOrNull() ?: Int.MAX_VALUE }
 
-        val filteredTeamsByCategory = sortedTeamsByNumber.filter { teams ->
+        val filteredTeamsByCategory = sortedTeamsByNumber.filter { team ->
             state.selectedRacingCategories.any { selectedCategory ->
-                teams.category.name == selectedCategory.getApiName()
+                team.category.name == selectedCategory.getApiName()
             }
         }
 
@@ -38,10 +38,10 @@ fun TeamsContent(
         }
 
         Column {
-            filteredTeamsByCategory.forEach {
-                if (filteredTeamsBySearchBar.contains(it)) {
+            filteredTeamsBySearchBar.forEach { team ->
+                key(team.number) {
                     TeamCard(
-                        team = it,
+                        team = team,
                         navController = navController,
                     )
                 }

@@ -22,15 +22,14 @@ class HallOfFameRepositoryImpl @Inject constructor(
 
     override suspend fun getHallOfFame(): List<HallOfFame> {
         val versionName = "hall_of_fame"
-        Log.d(TAG, "getHallOfFame() called")
 
         val localVersionCount = versionsRepositoryImpl.countLocalStoredVersionsByName(versionName)
         Log.d(TAG, "Local version count for '$versionName': $localVersionCount")
 
         // If there is no local version stored, fetch from API and store the version
         if (localVersionCount == 0) {
-            Log.d(TAG, "No local version found. Fetching from API.")
-            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
+            Log.d(TAG, "No local version found")
+            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName) ?: return emptyList()
             Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
             versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
@@ -53,7 +52,7 @@ class HallOfFameRepositoryImpl @Inject constructor(
         Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
         // Compare versions
-        return if (apiVersion != localVersion) {
+        return if (apiVersion != null && apiVersion != localVersion) {
             Log.d(TAG, "API version is different. Fetching data from API.")
 
             // If API version is newer, fetch from API and update local version

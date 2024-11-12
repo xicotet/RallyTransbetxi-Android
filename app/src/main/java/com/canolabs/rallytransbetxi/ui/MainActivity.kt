@@ -1,13 +1,10 @@
 package com.canolabs.rallytransbetxi.ui
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -32,18 +29,19 @@ import com.canolabs.rallytransbetxi.ui.theme.RallyTransbetxiTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.core.content.ContextCompat
-import android.Manifest
 import android.util.Log
 import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.lifecycleScope
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.BottomSheetConnectivityLost
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.ConnectivityObserver
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkConnectivityObserver
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.SPLASH_SCREEN_DURATION
 import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.initialize
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
@@ -72,9 +70,14 @@ class MainActivity : ComponentActivity() {
         )
         Log.d("MainActivity", "Proceeding to: App Check provider factory installed")
 
-        
-        installSplashScreen()
-        askNotificationPermission()
+        val splashScreen = installSplashScreen()
+
+        // Add a delay before dismissing the splash screen so the local data can be loaded
+        lifecycleScope.launch {
+            splashScreen.setKeepOnScreenCondition { true }
+            delay(SPLASH_SCREEN_DURATION)
+            splashScreen.setKeepOnScreenCondition { false }
+        }
 
         // Load the selected language from SharedPreferences and apply it
         val sharedPreferences = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
@@ -178,35 +181,9 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    private fun askNotificationPermission() {
-        // This is only necessary for API level >= 33 (TIRAMISU)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
-                PackageManager.PERMISSION_GRANTED
-            ) {
-                // FCM SDK can post notifications.
-            } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-                // Display an educational UI explaining to the user the features that will be enabled
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            } else {
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
-        }
-    }
-
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission(),
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            Log.d("MainActivity", "Notification permission granted")
-        } else {
-            Log.d("MainActivity", "Notification permission denied")
-        }
-    }
 }
 
-fun changeAppLocale(
+private fun changeAppLocale(
     context: Context,
     localeString: String,
     recomposeNavbar: MutableState<Boolean>? = null

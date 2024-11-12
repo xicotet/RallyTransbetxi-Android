@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import com.canolabs.rallytransbetxi.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -25,7 +26,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
@@ -57,16 +60,20 @@ fun DriverImagesPager(result: Result) {
     val codriverImageUrl = remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(teamNumber) {
-        try {
-            val driverUrl = driverStorageRef.downloadUrl.await()
-            driverImageUrl.value = driverUrl.toString()
-            Log.d("DriverImagesPager", "Driver Image URL: $driverUrl")
-
-            val codriverUrl = codriverStorageRef.downloadUrl.await()
-            codriverImageUrl.value = codriverUrl.toString()
-            Log.d("DriverImagesPager", "Codriver Image URL: $codriverUrl")
+        driverImageUrl.value = try {
+            driverStorageRef.downloadUrl.await().toString()
         } catch (e: Exception) {
-            Log.d("DriverImagesPager", "Error: $e")
+            Log.w("DriverImagesPager", "Error when loading driver image of team $teamNumber: $e")
+            ""
+        }
+    }
+
+    LaunchedEffect(teamNumber) {
+        codriverImageUrl.value = try {
+            codriverStorageRef.downloadUrl.await().toString()
+        } catch (e: Exception) {
+            Log.w("DriverImagesPager", "Error when loading codriver image of team $teamNumber: $e")
+            ""
         }
     }
 
@@ -88,61 +95,63 @@ fun DriverImagesPager(result: Result) {
 
     Column(
         modifier = Modifier.padding(end = 16.dp)
-    ){
+    ) {
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
                 .height(100.dp)
                 .width(100.dp)
-        ) {page ->
-            when (page) {
-                0 -> {
-                    if (driverPainter.state is AsyncImagePainter.State.Loading) {
-                        Shimmer { brush ->
-                            Box(
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .height(96.dp)
-                                    .width(96.dp)
-                                    .background(brush = brush)
-                            )
-                        }
-                    } else {
-                        Image(
-                            painter = driverPainter,
-                            contentDescription = null,
+        ) { page ->
+            val painter = if (page == 0) driverPainter else codriverPainter
+
+            when (painter.state) {
+                is AsyncImagePainter.State.Loading, AsyncImagePainter.State.Empty -> {
+                    Shimmer { brush ->
+                        Box(
                             modifier = Modifier
                                 .clip(CircleShape)
-                                .height(96.dp)
-                                .width(96.dp)
+                                .size(96.dp)
+                                .background(brush = brush)
                         )
                     }
                 }
 
-                1 -> {
-                    if (codriverPainter.state is AsyncImagePainter.State.Loading) {
+                is AsyncImagePainter.State.Error -> {
+                    if (page == 0 && driverImageUrl.value == null
+                        || page == 1 && codriverImageUrl.value == null) {
                         Shimmer { brush ->
                             Box(
                                 modifier = Modifier
                                     .clip(CircleShape)
-                                    .height(96.dp)
-                                    .width(96.dp)
+                                    .size(96.dp)
                                     .background(brush = brush)
                             )
                         }
                     } else {
                         Image(
-                            painter = codriverPainter,
+                            painter = painterResource(id = R.drawable.driver_image_default),
                             contentDescription = null,
                             modifier = Modifier
                                 .clip(CircleShape)
-                                .height(96.dp)
-                                .width(96.dp)
+                                .size(96.dp),
+                            contentScale = ContentScale.Crop
                         )
                     }
                 }
+
+                else -> {
+                    Image(
+                        painter = painter,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(96.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
         }
+
         Row(
             Modifier
                 .wrapContentHeight()
@@ -151,9 +160,7 @@ fun DriverImagesPager(result: Result) {
             horizontalArrangement = Arrangement.Center
         ) {
             repeat(pagerState.pageCount) { iteration ->
-                val color =
-                    if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.onPrimaryContainer
-                    else Color.LightGray
+                val color = if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.onPrimaryContainer else Color.LightGray
                 Box(
                     modifier = Modifier
                         .padding(2.dp)
