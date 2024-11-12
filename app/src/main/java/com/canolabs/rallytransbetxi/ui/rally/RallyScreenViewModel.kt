@@ -10,9 +10,6 @@ import com.canolabs.rallytransbetxi.domain.entities.FontSizeFactor
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.entities.Theme
 import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetAreActivitiesCollapsedUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetAreNewsCollapsedUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetAreWarningCollapsedUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetHallOfFameUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
@@ -40,10 +37,7 @@ class RallyScreenViewModel @Inject constructor(
     private val insertSettingsUseCase: InsertSettingsUseCase,
     private val getThemeSettingsUseCase: GetThemeSettingsUseCase,
     private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
-    private val getFontSizeFactorSettingsUseCase: GetFontSizeFactorSettingsUseCase,
-    private val getAreActivitiesCollapsed: GetAreActivitiesCollapsedUseCase,
-    private val getAreNewsCollapsedUseCase: GetAreNewsCollapsedUseCase,
-    private val getAreWarningCollapsedUseCase: GetAreWarningCollapsedUseCase
+    private val getFontSizeFactorSettingsUseCase: GetFontSizeFactorSettingsUseCase
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(RallyScreenUIState())
@@ -52,18 +46,21 @@ class RallyScreenViewModel @Inject constructor(
     fun fetchNews() {
         viewModelScope.launch {
             _state.setIsLoading(true)
+            _state.setAreBreakingNewsCollapsed(true)
 
             val news = getNewsUseCase.invoke()
             val newsOrderedByDate = news.sortedByDescending { it.date }
             _state.setNews(newsOrderedByDate)
 
             _state.setIsLoading(false)
+            _state.setAreBreakingNewsCollapsed(false)
         }
     }
 
     fun fetchActivities() {
         viewModelScope.launch {
             _state.setIsLoading(true)
+            _state.setAreActivitiesCollapsed(true)
 
             val activities = getActivitiesUseCase.invoke()
             val activitiesOrderedByIndex = activities.sortedBy {
@@ -71,6 +68,7 @@ class RallyScreenViewModel @Inject constructor(
             }
             _state.setActivities(activitiesOrderedByIndex)
 
+            _state.setAreActivitiesCollapsed(false)
             _state.setIsLoading(false)
         }
     }
@@ -143,25 +141,6 @@ class RallyScreenViewModel @Inject constructor(
         }
     }
 
-    fun fetchAreWarningsCollapsed() {
-        viewModelScope.launch {
-            _state.setAreWarningsCollapsed(getAreWarningCollapsedUseCase.invoke())
-        }
-    }
-
-    fun fetchAreNewsCollapsed() {
-        viewModelScope.launch {
-            _state.setAreBreakingNewsCollapsed(getAreNewsCollapsedUseCase.invoke())
-        }
-    }
-
-    fun fetchAreActivitiesCollapsed() {
-        viewModelScope.launch {
-            _state.setAreActivitiesCollapsed(getAreActivitiesCollapsed.invoke())
-        }
-    }
-
-
     suspend fun updateInitialThemeState(darkThemeState: MutableState<Boolean>, isSystemInDarkTheme: Boolean) {
         fetchThemeSettings()
         while (state.value.theme == null) {
@@ -183,30 +162,13 @@ class RallyScreenViewModel @Inject constructor(
         fontScaleState.value = state.value.fontSizeFactor?.value() ?: 1f
     }
 
-    suspend fun updateInitialProfile() {
-        fetchProfileSettings()
-        while (state.value.directionsProfile == null) {
-            delay(100)
-        }
-    }
-
     fun insertSettings() {
         viewModelScope.launch {
             val theme = _state.value.theme?.getDatabaseName()!!
             val profile = _state.value.directionsProfile?.getDatabaseName()!!
             val fontSizeFactor = _state.value.fontSizeFactor?.value()!!
-            val areWarningsCollapsed = _state.value.areWarningsCollapsed
-            val areNewsCollapsed = _state.value.areBreakingNewsCollapsed
-            val areActivitiesCollapsed = _state.value.areActivitiesCollapsed
 
-            insertSettingsUseCase.invoke(
-                theme,
-                profile,
-                fontSizeFactor,
-                areWarningsCollapsed,
-                areNewsCollapsed,
-                areActivitiesCollapsed
-            )
+            insertSettingsUseCase.invoke(theme, profile, fontSizeFactor)
         }
     }
 

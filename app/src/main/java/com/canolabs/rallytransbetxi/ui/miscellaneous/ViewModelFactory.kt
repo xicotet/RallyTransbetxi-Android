@@ -4,9 +4,6 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetAreActivitiesCollapsedUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetAreNewsCollapsedUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetAreWarningCollapsedUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
@@ -37,10 +34,7 @@ class RallyViewModelFactory @Inject constructor(
     private val insertSettingsUseCase: InsertSettingsUseCase,
     private val getThemeSettingsUseCase: GetThemeSettingsUseCase,
     private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
-    private val getFontSizeFactorSettingsUseCase: GetFontSizeFactorSettingsUseCase,
-    private val getAreActivitiesCollapsed: GetAreActivitiesCollapsedUseCase,
-    private val getAreNewsCollapsedUseCase: GetAreNewsCollapsedUseCase,
-    private val getAreWarningCollapsedUseCase: GetAreWarningCollapsedUseCase
+    private val getFontSizeFactorSettingsUseCase: GetFontSizeFactorSettingsUseCase
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
@@ -54,10 +48,7 @@ class RallyViewModelFactory @Inject constructor(
                     insertSettingsUseCase,
                     getThemeSettingsUseCase,
                     getProfileSettingsUseCase,
-                    getFontSizeFactorSettingsUseCase,
-                    getAreActivitiesCollapsed,
-                    getAreNewsCollapsedUseCase,
-                    getAreWarningCollapsedUseCase
+                    getFontSizeFactorSettingsUseCase
                 ) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")

@@ -93,10 +93,7 @@ fun BreakingNewsSection(
             .padding(16.dp),
         shape = RoundedCornerShape(8.dp),
         shadowElevation = cardsElevation,
-        onClick = {
-            viewModel.toggleBreakingNews()
-            viewModel.insertSettings()
-        }
+        onClick = { viewModel.toggleBreakingNews() }
     ) {
         Column(
             modifier = Modifier
@@ -122,12 +119,7 @@ fun BreakingNewsSection(
                         .padding(start = 12.dp, top = 4.dp)
                         .weight(5f)
                 )
-                IconButton(
-                    onClick = {
-                        viewModel.toggleBreakingNews()
-                        viewModel.insertSettings()
-                    }
-                ) {
+                IconButton(onClick = { viewModel.toggleBreakingNews() }) {
                     if (!state.areBreakingNewsCollapsed) {
                         Icon(
                             painter = painterResource(id = R.drawable.collapse_all),

@@ -50,10 +50,7 @@ fun WarningsSection(
             .padding(16.dp),
         shape = RoundedCornerShape(8.dp),
         shadowElevation = cardsElevation,
-        onClick = {
-            viewModel.toggleWarnings()
-            viewModel.insertSettings()
-        }
+        onClick = { viewModel.toggleWarnings() }
     ) {
         Column(
             modifier = Modifier
@@ -78,12 +75,7 @@ fun WarningsSection(
                         .padding(start = 12.dp, top = 4.dp)
                         .weight(5f)
                 )
-                IconButton(
-                    onClick = {
-                        viewModel.toggleWarnings()
-                        viewModel.insertSettings()
-                    }
-                ) {
+                IconButton(onClick = { viewModel.toggleWarnings() }) {
                     if (!state.areWarningsCollapsed) {
                         Icon(
                             painter = painterResource(id = R.drawable.collapse_all),
