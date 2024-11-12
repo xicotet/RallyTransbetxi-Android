@@ -28,8 +28,8 @@ android {
         applicationId = "com.canolabs.rallytransbetxi"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1"
+        versionCode = 2
+        versionName = "0.2.0"
 
         val properties = Properties()
         properties.load(project.rootProject.file("local.properties").inputStream())
