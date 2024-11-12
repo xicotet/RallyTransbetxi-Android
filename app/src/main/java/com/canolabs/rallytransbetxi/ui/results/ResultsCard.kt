@@ -1,6 +1,5 @@
 package com.canolabs.rallytransbetxi.ui.results
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -57,7 +56,12 @@ fun ResultCard(
         }
         Card(
             modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = if (result.disqualified) 0.dp else 12.dp,
+                    bottom = 12.dp
+                )
                 .fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = cardsElevation),
             shape = RoundedCornerShape(8.dp),
@@ -106,16 +110,6 @@ fun ResultCard(
                     }
                 }
 
-                /*VerticalDivider(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(4.dp)
-                        .padding(horizontal = 8.dp),
-                    thickness = 4.dp,
-                    color = MaterialTheme.colorScheme.primary
-                )*/
-
-                // Column with three Texts
                 Column(
                     modifier = Modifier
                         .weight(0.8f)
@@ -210,8 +204,6 @@ fun ResultCard(
                         )
                     }
                 }
-
-                Log.d("ResultCard", "Image URL: ${result.team.driverImage}")
 
                 DriverImagesPager(result = result)
             }

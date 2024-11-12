@@ -42,8 +42,8 @@ class StagesRepositoryImpl @Inject constructor(
 
         // If there is no local version stored, fetch from API and store the version
         if (localVersionCount == 0) {
-            Log.d(TAG, "No local version found. Fetching from API.")
-            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
+            Log.d(TAG, "No local version found")
+            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName) ?: return emptyList()
             Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
             versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
@@ -66,7 +66,7 @@ class StagesRepositoryImpl @Inject constructor(
         Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
         // Compare versions
-        return if (apiVersion != localVersion) {
+        return if (apiVersion != null && apiVersion != localVersion) {
             Log.d(TAG, "API version is different. Fetching data from API.")
 
             // If API version is newer, fetch from API and update local version
@@ -114,8 +114,8 @@ class StagesRepositoryImpl @Inject constructor(
 
         // If there is no local version stored, fetch from API and store the version
         if (localVersionCount == 0) {
-            Log.d(TAG, "No local version found. Fetching from API.")
-            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
+            Log.d(TAG, "No local version found")
+            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName) ?: return Stage()
             Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
             versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
@@ -138,10 +138,9 @@ class StagesRepositoryImpl @Inject constructor(
         Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
         // Compare versions
-        return if (apiVersion > localVersion) {
+        return if (apiVersion != null && apiVersion != localVersion) {
             Log.d(TAG, "API version is newer. Fetching data from API.")
 
-            // If API version is newer, fetch from API and update local version
             // If API version is newer, fetch from API and update local version
             val stages = stagesServiceImpl.fetchStages()
             Log.d(TAG, "Fetched stages from API: ${stages.size} stages")

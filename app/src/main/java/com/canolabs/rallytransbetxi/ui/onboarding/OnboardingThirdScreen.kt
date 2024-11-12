@@ -33,18 +33,20 @@ import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.onboardingCardBackground
 import com.canolabs.rallytransbetxi.ui.theme.onboardingText
+import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 
 
 @Composable
 fun OnboardingThirdScreen(
     selectedLanguage: MutableState<Language?>,
+    shouldLoadBiggerImage: Boolean
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
     ) {
         Image(
-            painter = painterResource(id = R.drawable.motoret_3),
+            painter = painterResource(id = if (shouldLoadBiggerImage) R.drawable.motoret_3 else R.drawable.motoret_3_svg),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
@@ -58,7 +60,17 @@ fun OnboardingThirdScreen(
             fontFamily = antaFamily,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
+        )
+        Text(
+            text = stringResource(id = R.string.pick_a_language_description),
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Start,
+            color = onboardingText,
+            fontFamily = robotoFamily,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         )
 
         LazyVerticalGrid(

@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun Shimmer(content: @Composable (brush: Brush) -> Unit) {
-    val transition = rememberInfiniteTransition()
+    val transition = rememberInfiniteTransition(label = "")
     val animation = transition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,

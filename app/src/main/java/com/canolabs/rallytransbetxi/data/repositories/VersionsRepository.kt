@@ -11,7 +11,7 @@ interface VersionsRepository {
     suspend fun countLocalStoredVersionsByName(name: String): Int
     suspend fun insertLocalStoredVersion(name: String, timestamp: Timestamp)
     suspend fun deleteLocalStoredVersion(name: String)
-    suspend fun getApiVersion(name: String): Timestamp
+    suspend fun getApiVersion(name: String): Timestamp?
 }
 
 class VersionsRepositoryImpl @Inject constructor(
@@ -34,8 +34,8 @@ class VersionsRepositoryImpl @Inject constructor(
         versionsDao.deleteVersion(name)
     }
 
-    override suspend fun getApiVersion(name: String): Timestamp {
-        return versionsServiceImpl.fetchVersion(name)?.timestamp ?: Timestamp.now()
+    override suspend fun getApiVersion(name: String): Timestamp? {
+        return versionsServiceImpl.fetchVersion(name)?.timestamp
     }
 
 }

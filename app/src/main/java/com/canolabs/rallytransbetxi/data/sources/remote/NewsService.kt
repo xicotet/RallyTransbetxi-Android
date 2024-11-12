@@ -25,7 +25,7 @@ class NewsServiceImpl @Inject constructor(
             }
             newsList
         } catch (e: Exception) {
-            Log.d("NewsServiceImpl", "Error fetching news: ${e.message}")
+            Log.e("NewsServiceImpl", "Error fetching news: ${e.message}")
             emptyList()
         }
     }

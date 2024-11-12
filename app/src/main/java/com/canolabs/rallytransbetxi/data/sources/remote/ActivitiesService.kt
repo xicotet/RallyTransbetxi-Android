@@ -26,7 +26,7 @@ class ActivitiesServiceImpl @Inject constructor(
             }
             activities
         } catch (e: Exception) {
-            Log.d("ActivitiesServiceImpl", "Error fetching activities: ${e.message}")
+            Log.e("ActivitiesServiceImpl", "Error fetching activities: ${e.message}")
             emptyList()
         }
     }

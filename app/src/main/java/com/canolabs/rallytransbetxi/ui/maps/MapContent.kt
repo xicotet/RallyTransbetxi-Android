@@ -15,11 +15,14 @@ import androidx.compose.foundation.shape.CircleShape
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
+import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 import com.canolabs.rallytransbetxi.ui.miscellaneous.bitmapDescriptorFromVector
 import com.canolabs.rallytransbetxi.ui.results.BottomSheetStageResults
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
@@ -112,6 +116,8 @@ fun MapContent(
                 color = MaterialTheme.colorScheme.secondary,
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
+        } else {
+            Spacer(modifier = Modifier.padding(scaffoldPadding))
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -189,8 +195,7 @@ fun MapContent(
                     labelColor = MaterialTheme.colorScheme.onBackground
                 ),
                 modifier = Modifier
-                    .padding(scaffoldPadding)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 16.dp)
             )
 
             var expanded by remember { mutableStateOf(false) }
@@ -200,7 +205,6 @@ fun MapContent(
                 shape = CircleShape,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(scaffoldPadding)
                     .padding(16.dp)
                     .background(Color.White, CircleShape)
             ) {
@@ -355,8 +359,10 @@ fun MapContent(
                     ExtendedFloatingActionButton(
                         onClick = {
                             if (state.directions.isNotEmpty()) {
+                                val mode =
+                                    if (state.directionsProfile == DirectionsProfile.FOOT_WALKING) "w" else "d"  // 'w' for walking, 'd' for driving
                                 val gmmIntentUri =
-                                    Uri.parse("google.navigation:q=${state.directions.last()[1]},${state.directions.last()[0]}")
+                                    Uri.parse("google.navigation:q=${state.directions.last()[1]},${state.directions.last()[0]}&mode=$mode")
                                 val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                                 mapIntent.setPackage("com.google.android.apps.maps")
                                 context.startActivity(mapIntent)
@@ -427,7 +433,42 @@ fun MapContent(
                         resultsBottomSheetState.hide()
                     }
                 },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                dragHandle = {}
             ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp, top = 4.dp)
+                ) {
+                    // Centered Drag Handle
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                    ) {
+                        BottomSheetDefaults.DragHandle()
+                    }
+
+                    // Close button aligned to the end (top-right corner)
+                    IconButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                resultsBottomSheetState.hide()
+                                mapsViewModel.setIsResultsBottomSheetVisible(false)
+                            }
+                        },
+                        modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Close",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
                 BottomSheetStageResults(
                     resultsState = resultsState,
                     mapsState = state,

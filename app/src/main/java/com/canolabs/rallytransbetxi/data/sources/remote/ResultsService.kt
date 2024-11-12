@@ -7,6 +7,7 @@ import com.canolabs.rallytransbetxi.data.repositories.TeamsRepositoryImpl
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -24,16 +25,22 @@ class ResultsServiceImpl @Inject constructor(
         val startupTime = System.currentTimeMillis()
 
         val teams = teamsRepositoryImpl.getTeams().associateBy { it.number }
-
-        val documentSnapshot = firebaseFirestore.collection("results/global/ranking").get().await()
         val globalResults = mutableListOf<Result>()
 
-        for (document in documentSnapshot.documents) {
-            try {
-                val result = fetchResult(document, teams)
-                globalResults.add(result)
-            } catch (e: Exception) {
-                Log.d("ResultsServiceImpl", "Error getting global result ${document.id}: ", e)
+        try {
+            val documentSnapshot = firebaseFirestore.collection("results/global/ranking").get().await()
+            for (document in documentSnapshot.documents) {
+                try {
+                    val result = fetchResult(document, teams)
+                    globalResults.add(result)
+                } catch (e: Exception) {
+                    Log.d("ResultsServiceImpl", "Error processing result ${document.id}: ", e)
+                }
+            }
+        } catch (e: FirebaseFirestoreException) {
+            Log.e("ResultsServiceImpl", "Error fetching global results: ${e.message}", e)
+            if (e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED) {
+                Log.e("ResultsServiceImpl", "Permission denied for global results.")
             }
         }
 
@@ -56,21 +63,27 @@ class ResultsServiceImpl @Inject constructor(
         val startupTime = System.currentTimeMillis()
 
         val teams = teamsRepositoryImpl.getTeams().associateBy { it.number }
-
-        val documentSnapshot = firebaseFirestore.collection("results/stage/$stageId").get().await()
         val stageResults = mutableListOf<Result>()
 
-        for (document in documentSnapshot.documents) {
-            try {
-                val result = fetchResult(document, teams)
-                stageResults.add(result)
-            } catch (e: Exception) {
-                Log.d("ResultsServiceImpl", "Error getting global result ${document.id}: ", e)
+        try {
+            val documentSnapshot = firebaseFirestore.collection("results/stage/$stageId").get().await()
+            for (document in documentSnapshot.documents) {
+                try {
+                    val result = fetchResult(document, teams)
+                    stageResults.add(result)
+                } catch (e: Exception) {
+                    Log.d("ResultsServiceImpl", "Error processing result ${document.id}: ", e)
+                }
+            }
+        } catch (e: FirebaseFirestoreException) {
+            Log.e("ResultsServiceImpl", "Error fetching stage results: ${e.message}", e)
+            if (e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED) {
+                Log.e("ResultsServiceImpl", "Permission denied for stage results.")
             }
         }
 
         val endTime = System.currentTimeMillis()
-        Log.d("ResultsServiceImpl", "Time fetching stage: ${endTime - startupTime} ms")
+        Log.d("ResultsServiceImpl", "Time fetching stage results: ${endTime - startupTime} ms")
         return stageResults
     }
 }
