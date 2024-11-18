@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.layout.Spacer
@@ -106,6 +108,14 @@ fun MapContent(
         resultsViewModel.fetchStagesResults(stageAcronym)
     }
 
+    // Precompute geoPoints for markers
+    val startPoint = remember(state.stage.geoPoints) {
+        state.stage.geoPoints?.firstOrNull()?.let { LatLng(it.latitude, it.longitude) }
+    }
+    val endPoint = remember(state.stage.geoPoints) {
+        state.stage.geoPoints?.lastOrNull()?.let { LatLng(it.latitude, it.longitude) }
+    }
+
     Column {
         if (state.isLoading || state.isLoadingDirections) {
             LinearProgressIndicator(
@@ -135,20 +145,38 @@ fun MapContent(
                     color = MaterialTheme.colorScheme.primary
                 )
 
-                Marker(
-                    state = MarkerState(state.stage.geoPoints?.first()?.let {
-                        LatLng(it.latitude, it.longitude)
-                    } ?: betxi),
-                    title = state.stage.name,
-                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
-                )
+                // Start point marker
+                if (startPoint != null) {
+                    Marker(
+                        state = MarkerState(position = startPoint),
+                        title = state.stage.name,
+                        flat = true,
+                        icon = BitmapDescriptorFactory.fromBitmap(
+                            Bitmap.createScaledBitmap(
+                                BitmapFactory.decodeResource(LocalContext.current.resources, R.drawable.race_start),
+                                128,
+                                128,
+                                false
+                            )
+                        )
+                    )
+                }
 
-                Marker(
-                    state = MarkerState(state.stage.geoPoints?.last()?.let {
-                        LatLng(it.latitude, it.longitude)
-                    } ?: betxi),
-                    title = state.stage.name,
-                )
+                if (endPoint != null) {
+                    Marker(
+                        state = remember { MarkerState(position = endPoint) },
+                        title = state.stage.name,
+                        flat = true,
+                        icon = BitmapDescriptorFactory.fromBitmap(
+                            Bitmap.createScaledBitmap(
+                                BitmapFactory.decodeResource(LocalContext.current.resources, R.drawable.race_end),
+                                128,
+                                128,
+                                false
+                            )
+                        )
+                    )
+                }
 
                 PrintUserLocation(location = state.location)
                 PrintDirections(directions = state.directions)
@@ -195,7 +223,7 @@ fun MapContent(
                     labelColor = MaterialTheme.colorScheme.onBackground
                 ),
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             )
 
             var expanded by remember { mutableStateOf(false) }
@@ -205,7 +233,7 @@ fun MapContent(
                 shape = CircleShape,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
                     .background(Color.White, CircleShape)
             ) {
                 IconButton(
