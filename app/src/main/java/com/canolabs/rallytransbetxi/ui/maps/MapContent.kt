@@ -62,6 +62,7 @@ import com.canolabs.rallytransbetxi.ui.results.BottomSheetStageResults
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -108,21 +109,32 @@ fun MapContent(
         resultsViewModel.fetchStagesResults(stageAcronym)
     }
 
-    // Precompute geoPoints for markers
-    val startPoint = remember(state.stage.geoPoints) {
-        state.stage.geoPoints?.firstOrNull()?.let { LatLng(it.latitude, it.longitude) }
-    }
-    val endPoint = remember(state.stage.geoPoints) {
-        state.stage.geoPoints?.lastOrNull()?.let { LatLng(it.latitude, it.longitude) }
+    val isMapReady = remember { mutableStateOf(false) }
+    val startMarkerIcon = remember { mutableStateOf<BitmapDescriptor?>(null) }
+    val endMarkerIcon = remember { mutableStateOf<BitmapDescriptor?>(null) }
+
+    LaunchedEffect(context) {
+        startMarkerIcon.value = BitmapDescriptorFactory.fromBitmap(
+            Bitmap.createScaledBitmap(
+                BitmapFactory.decodeResource(context.resources, R.drawable.race_start),
+                128, 128, false
+            )
+        )
+
+        endMarkerIcon.value = BitmapDescriptorFactory.fromBitmap(
+            Bitmap.createScaledBitmap(
+                BitmapFactory.decodeResource(context.resources, R.drawable.race_end),
+                128, 128, false
+            )
+        )
     }
 
     Column {
         if (state.isLoading || state.isLoadingDirections) {
             LinearProgressIndicator(
-                // dynamic progress value
                 modifier = Modifier
-                    .fillMaxWidth() // fill the width of the parent
-                    .padding(scaffoldPadding), // add some padding
+                    .fillMaxWidth()
+                    .padding(scaffoldPadding),
                 color = MaterialTheme.colorScheme.secondary,
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
@@ -135,6 +147,9 @@ fun MapContent(
                 modifier = Modifier.fillMaxSize(),
                 uiSettings = state.uiSettings,
                 properties = state.mapProperties,
+                onMapLoaded = {
+                    isMapReady.value = true
+                },
                 cameraPositionState = cameraPositionState
             ) {
 
@@ -146,35 +161,26 @@ fun MapContent(
                 )
 
                 // Start point marker
-                if (startPoint != null) {
+                if (startMarkerIcon.value != null && isMapReady.value) {
                     Marker(
-                        state = MarkerState(position = startPoint),
+                        state = MarkerState(state.stage.geoPoints?.first()?.let {
+                            LatLng(it.latitude, it.longitude)
+                        } ?: betxi),
                         title = state.stage.name,
                         flat = true,
-                        icon = BitmapDescriptorFactory.fromBitmap(
-                            Bitmap.createScaledBitmap(
-                                BitmapFactory.decodeResource(LocalContext.current.resources, R.drawable.race_start),
-                                128,
-                                128,
-                                false
-                            )
-                        )
+                        icon = startMarkerIcon.value!!
                     )
                 }
 
-                if (endPoint != null) {
+                // End point marker
+                if (endMarkerIcon.value != null && isMapReady.value) {
                     Marker(
-                        state = remember { MarkerState(position = endPoint) },
+                        state = MarkerState(state.stage.geoPoints?.last()?.let {
+                            LatLng(it.latitude, it.longitude)
+                        } ?: betxi),
                         title = state.stage.name,
                         flat = true,
-                        icon = BitmapDescriptorFactory.fromBitmap(
-                            Bitmap.createScaledBitmap(
-                                BitmapFactory.decodeResource(LocalContext.current.resources, R.drawable.race_end),
-                                128,
-                                128,
-                                false
-                            )
-                        )
+                        icon = endMarkerIcon.value!!
                     )
                 }
 
@@ -233,7 +239,7 @@ fun MapContent(
                 shape = CircleShape,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
                     .background(Color.White, CircleShape)
             ) {
                 IconButton(
