@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -222,6 +223,7 @@ fun BreakingNewsSection(
                                                 painter = newsPainter,
                                                 contentDescription = null,
                                                 contentScale = ContentScale.Fit,
+                                                colorFilter = ColorFilter.tint(Color.White),
                                                 modifier = Modifier
                                                     .clip(RectangleShape)
                                                     .padding(vertical = 8.dp)
