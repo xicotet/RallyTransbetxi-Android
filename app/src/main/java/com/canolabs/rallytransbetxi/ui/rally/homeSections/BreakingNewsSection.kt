@@ -26,6 +26,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,7 +74,8 @@ import java.util.Locale
 fun BreakingNewsSection(
     state: RallyScreenUIState,
     viewModel: RallyScreenViewModel,
-    navController: NavController
+    navController: NavController,
+    darkThemeState: MutableState<Boolean>
 ) {
     Surface(
         modifier = Modifier
@@ -223,7 +225,7 @@ fun BreakingNewsSection(
                                                 painter = newsPainter,
                                                 contentDescription = null,
                                                 contentScale = ContentScale.Fit,
-                                                colorFilter = ColorFilter.tint(Color.White),
+                                                colorFilter = if (darkThemeState.value) ColorFilter.tint(Color.White) else null,
                                                 modifier = Modifier
                                                     .clip(RectangleShape)
                                                     .padding(vertical = 8.dp)
