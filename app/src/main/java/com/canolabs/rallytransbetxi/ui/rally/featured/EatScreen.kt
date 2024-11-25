@@ -29,6 +29,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -146,49 +147,38 @@ fun EatScreen(
                 )
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 GoogleMap(
                     modifier = Modifier.fillMaxSize(),
                     uiSettings = mapUiSettings,
                     properties = mapProperties,
-                    onMapLoaded = {
-                        mapLoaded.value = true
-                    },
+                    onMapLoaded = { mapLoaded.value = true },
                     cameraPositionState = cameraPositionState
                 ) {
                     state.value.restaurants.forEach { restaurant ->
-                        val restaurantPosition =
-                            LatLng(restaurant.place.latitude, restaurant.place.longitude)
-                        val restaurantMarkerState = MarkerState(restaurantPosition)
+                        val restaurantPosition = LatLng(restaurant.place.latitude, restaurant.place.longitude)
                         Marker(
-                            state = restaurantMarkerState,
+                            state = MarkerState(position = restaurantPosition),
                             title = restaurant.name,
-                            icon = if (darkThemeState.value) {
-                                context.bitmapDescriptorFromVector(
-                                    R.drawable.restaurant_outlined,
-                                    1f
-                                )
-                            } else {
-                                context.bitmapDescriptorFromVector(
-                                    R.drawable.restaurant_outlined_black,
-                                    1f
-                                )
-                            },
-                            onInfoWindowClick = {
-                                selectedRestaurant.value = restaurant
-                                showDialog.value = true
-                            },
-                            onClick = {
-                                selectedRestaurant.value = restaurant
-                                showDialog.value = true
-                                true
-                            }
+                            icon = context.bitmapDescriptorFromVector(
+                                if (darkThemeState.value) R.drawable.restaurant_outlined else R.drawable.restaurant_outlined_black,
+                                1f
+                            )
                         )
                     }
                 }
+
+                // Add the restaurant cards on top of the map
+                RestaurantCards(
+                    restaurants = state.value.restaurants,
+                    onCardClick = { restaurant ->
+                        selectedRestaurant.value = restaurant
+                        showDialog.value = true
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(8.dp)
+                )
             }
         }
         if (showDialog.value) {
