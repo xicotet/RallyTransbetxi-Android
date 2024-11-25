@@ -2,8 +2,10 @@ package com.canolabs.rallytransbetxi.ui.rally.featured
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +31,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -54,7 +57,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun EatScreen(
     viewModel: RallyScreenViewModel,
@@ -62,6 +65,7 @@ fun EatScreen(
     darkThemeState: MutableState<Boolean>,
 ) {
     val state = viewModel.state.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.fetchRestaurants()
@@ -135,6 +139,24 @@ fun EatScreen(
         val selectedRestaurant = remember { mutableStateOf<Restaurant?>(null) }
         val mapLoaded = remember { mutableStateOf(false) }
 
+        // Callback to update the selected restaurant and highlight the marker
+        val onPageChange: (Int) -> Unit = { pageIndex ->
+            if (state.value.restaurants.isNotEmpty() && pageIndex in state.value.restaurants.indices) {
+                selectedRestaurant.value = state.value.restaurants[pageIndex]
+                val restaurantPosition = LatLng(
+                    state.value.restaurants[pageIndex].place.latitude,
+                    state.value.restaurants[pageIndex].place.longitude
+                )
+                //val cameraUpdate = CameraUpdateFactory.newLatLngZoom(restaurantPosition, 15f)
+                //coroutineScope.launch {
+                //    cameraPositionState.animate(cameraUpdate, durationMs = 2000)
+                //}
+            } else {
+                // Handle empty list or out-of-bounds index, for example:
+                Log.e("onPageChange", "No restaurants available or invalid index: $pageIndex")
+            }
+        }
+
         Column {
             if (mapLoaded.value.not()) {
                 LinearProgressIndicator(
@@ -160,27 +182,29 @@ fun EatScreen(
                         Marker(
                             state = MarkerState(position = restaurantPosition),
                             title = restaurant.name,
-                            icon = context.bitmapDescriptorFromVector(
-                                if (darkThemeState.value) R.drawable.restaurant_outlined else R.drawable.restaurant_outlined_black,
+                            icon = LocalContext.current.bitmapDescriptorFromVector(
+                                if (restaurant == selectedRestaurant.value) R.drawable.selected_restaurant
+                                else if (darkThemeState.value) R.drawable.restaurant_outlined
+                                else R.drawable.restaurant_outlined_black,
                                 1f
                             )
                         )
                     }
                 }
 
-                // Add the restaurant cards on top of the map
+                // Restaurant Cards
                 RestaurantCards(
                     restaurants = state.value.restaurants,
                     onCardClick = { restaurant ->
                         selectedRestaurant.value = restaurant
                         showDialog.value = true
                     },
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(8.dp)
+                    onPageChange = onPageChange,
+                    modifier = Modifier.align(Alignment.BottomCenter).padding(8.dp)
                 )
             }
         }
+
         if (showDialog.value) {
             AlertDialog(
                 onDismissRequest = { showDialog.value = false },

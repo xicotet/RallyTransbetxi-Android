@@ -21,9 +21,15 @@ import com.canolabs.rallytransbetxi.data.models.responses.Restaurant
 fun RestaurantCards(
     restaurants: List<Restaurant>,
     onCardClick: (Restaurant) -> Unit,
+    onPageChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState(pageCount = { restaurants.size })
+
+    // Notify the current page whenever it changes
+    LaunchedEffect(pagerState.currentPage) {
+        onPageChange(pagerState.currentPage)
+    }
 
     val fadingEdgeBrush = Brush.horizontalGradient(
         colorStops = arrayOf(
