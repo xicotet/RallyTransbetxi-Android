@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
@@ -128,6 +129,7 @@ fun ResultCard(
                         text = trimmedDriverName,
                         fontFamily = antaFamily,
                         textAlign = TextAlign.Center,
+                        lineHeight = 24.sp,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 2,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -148,6 +150,7 @@ fun ResultCard(
                         text = trimmedCodriverName,
                         fontFamily = antaFamily,
                         overflow = TextOverflow.Ellipsis,
+                        lineHeight = 24.sp,
                         textAlign = TextAlign.Center,
                         maxLines = 2,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
