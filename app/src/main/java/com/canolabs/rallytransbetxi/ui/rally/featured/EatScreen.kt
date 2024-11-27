@@ -94,6 +94,13 @@ fun EatScreen(
         viewModel.fetchRestaurants()
     }
 
+    LaunchedEffect(state.value.restaurants) {
+        // Establish the selected restaurant when the list is loaded
+        if (state.value.restaurants.isNotEmpty()) {
+            selectedRestaurant.value = state.value.restaurants[pagerState.currentPage]
+        }
+    }
+
     LaunchedEffect(pagerState.currentPage) {
         if (state.value.restaurants.isNotEmpty() && pagerState.currentPage in state.value.restaurants.indices) {
             selectedRestaurant.value = state.value.restaurants[pagerState.currentPage]
