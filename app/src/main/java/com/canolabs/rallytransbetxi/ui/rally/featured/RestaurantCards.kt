@@ -2,48 +2,48 @@ package com.canolabs.rallytransbetxi.ui.rally.featured
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.pager.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.canolabs.rallytransbetxi.data.models.responses.Restaurant
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RestaurantCards(
     restaurants: List<Restaurant>,
     onCardClick: (Restaurant) -> Unit,
-    onPageChange: (Int) -> Unit,
+    pagerState: PagerState,
     modifier: Modifier = Modifier
 ) {
-    val pagerState = rememberPagerState(pageCount = { restaurants.size })
-
-    // Notify the current page whenever it changes
-    LaunchedEffect(pagerState.currentPage) {
-        onPageChange(pagerState.currentPage)
-    }
-
-    val fadingEdgeBrush = Brush.horizontalGradient(
-        colorStops = arrayOf(
-            0f to Color.Black.copy(alpha = 1f),
-            0.9f to Color.Black.copy(alpha = 1f), // Maintain fully opaque for most of the content
-            1f to Color.Transparent  // Fade back to transparent
-        )
-    )
+    val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
-            .fadingEdge(fadingEdgeBrush) // Apply fade effect to edges
     ) {
         HorizontalPager(
             state = pagerState,
@@ -66,14 +66,26 @@ fun RestaurantCards(
 
             // Animate height transition smoothly
             val animatedHeight by animateDpAsState(targetValue = pageHeight, label = "")
+            val alpha = if (restaurants[pagerState.currentPage] == restaurants[page]) 1f else 0.8f
 
             Card(
-                onClick = { onCardClick(restaurant) },
+                onClick = {
+                    if (restaurants[pagerState.currentPage] == restaurants[page]) {
+                        onCardClick(restaurant)
+                    } else {
+                        coroutineScope.launch {
+                            // Animate the scroll to the selected page
+                            pagerState.animateScrollToPage(page)
+                        }
+                    }
+                },
                 modifier = Modifier
-                    .height(animatedHeight), // Apply dynamic height based on scale
+                    .height(animatedHeight)
+                    .alpha(alpha),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                elevation = if (page == pagerState.currentPage) CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    else CardDefaults.cardElevation()
             ) {
                 Column(
                     modifier = Modifier
@@ -106,10 +118,3 @@ fun RestaurantCards(
         }
     }
 }
-
-fun Modifier.fadingEdge(brush: Brush): Modifier = this
-    .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
-    .drawWithContent {
-        drawContent()
-        drawRect(brush = brush, blendMode = BlendMode.DstIn)
-    }
