@@ -2,6 +2,7 @@ package com.canolabs.rallytransbetxi.data.modules
 
 import android.content.Context
 import com.canolabs.rallytransbetxi.data.sources.remote.DirectionsService
+import com.canolabs.rallytransbetxi.data.sources.remote.PlacesService
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkChecker
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkCheckerImpl
 import com.canolabs.rallytransbetxi.utils.Constants
@@ -21,13 +22,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    // Provide Retrofit for Directions API
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
-        // Create a logging interceptor
+    @DirectionsRetrofit
+    fun provideDirectionsRetrofit(): Retrofit {
+        val baseUrl = Constants.DIRECTIONS_BASE_URL
         val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
-
-        // Create an OkHttpClient and add the logging interceptor
         val client = OkHttpClient.Builder()
             .addInterceptor(logging)
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -36,15 +37,45 @@ object NetworkModule {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl(Constants.DIRECTIONS_BASE_URL)
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(client) // Set the client with the interceptor
+            .client(client)
             .build()
     }
 
+    // Provide Retrofit for Places API
     @Provides
-    fun provideDirectionsService(retrofit: Retrofit): DirectionsService {
+    @Singleton
+    @PlacesRetrofit
+    fun providePlacesRetrofit(): Retrofit {
+        val baseUrl = Constants.PLACES_BASE_URL
+        val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+        val client = OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build()
+
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build()
+    }
+
+    // Provide the DirectionsService (using the DirectionsRetrofit instance)
+    @Provides
+    @Singleton
+    fun provideDirectionsService(@DirectionsRetrofit retrofit: Retrofit): DirectionsService {
         return retrofit.create(DirectionsService::class.java)
+    }
+
+    // Provide the PlacesService (using the PlacesRetrofit instance)
+    @Provides
+    @Singleton
+    fun providePlacesService(@PlacesRetrofit retrofit: Retrofit): PlacesService {
+        return retrofit.create(PlacesService::class.java)
     }
 
     @Provides

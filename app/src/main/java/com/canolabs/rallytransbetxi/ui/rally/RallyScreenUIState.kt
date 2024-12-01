@@ -3,7 +3,7 @@ package com.canolabs.rallytransbetxi.ui.rally
 import com.canolabs.rallytransbetxi.data.models.responses.Activity
 import com.canolabs.rallytransbetxi.data.models.responses.HallOfFame
 import com.canolabs.rallytransbetxi.data.models.responses.News
-import com.canolabs.rallytransbetxi.data.models.responses.Restaurant
+import com.canolabs.rallytransbetxi.data.models.responses.PlaceResponse
 import com.canolabs.rallytransbetxi.data.models.responses.Warning
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 import com.canolabs.rallytransbetxi.domain.entities.FontSizeFactor
@@ -16,7 +16,7 @@ data class RallyScreenUIState(
     val news: List<News> = emptyList(),
     val activities: List<Activity>  = emptyList(),
     val hallOfFame: List<HallOfFame> = emptyList(),
-    val restaurants: List<Restaurant> = emptyList(),
+    val restaurants: List<PlaceResponse> = emptyList(),
     val warnings: List<Warning> = emptyList(),
     val isHallOfFameLoading: Boolean = false,
     val language: Language? = null,
@@ -73,7 +73,7 @@ fun MutableStateFlow<RallyScreenUIState>.setWarningShownOnDialog(warning: Warnin
     value = value.copy(warningShownOnDialog = warning)
 }
 
-fun MutableStateFlow<RallyScreenUIState>.setRestaurants(restaurants: List<Restaurant>) {
+fun MutableStateFlow<RallyScreenUIState>.setRestaurants(restaurants: List<PlaceResponse>) {
     value = value.copy(restaurants = restaurants)
 }
 

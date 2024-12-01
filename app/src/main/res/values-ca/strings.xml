@@ -33,6 +33,8 @@
     <string name="open_in_maps">Obrir a Google Maps</string>
     <string name="do_you_want_to_open">Vols obrir-ho</string>
     <string name="in_google_maps">en Google Maps?</string>
+    <string name="restaurant_opened">Obert</string>
+    <string name="restaurant_closed">Tancat</string>
 
     // Maps destination
     <string name="navigate">Navegar</string>

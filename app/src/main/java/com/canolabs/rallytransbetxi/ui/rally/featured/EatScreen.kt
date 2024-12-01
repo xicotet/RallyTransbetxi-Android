@@ -51,7 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.canolabs.rallytransbetxi.R
-import com.canolabs.rallytransbetxi.data.models.responses.Restaurant
+import com.canolabs.rallytransbetxi.data.models.responses.PlaceResponse
 import com.canolabs.rallytransbetxi.ui.miscellaneous.bitmapDescriptorFromVector
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
@@ -80,7 +80,7 @@ fun EatScreen(
     val state = viewModel.state.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
-    val selectedRestaurant = remember { mutableStateOf<Restaurant?>(null) }
+    val selectedRestaurant = remember { mutableStateOf<PlaceResponse?>(null) }
     val pagerState = rememberPagerState(pageCount = { state.value.restaurants.size })
 
     val betxiLocation = Constants.BETXI_LOCATION.split(",")
@@ -105,8 +105,8 @@ fun EatScreen(
         if (state.value.restaurants.isNotEmpty() && pagerState.currentPage in state.value.restaurants.indices) {
             selectedRestaurant.value = state.value.restaurants[pagerState.currentPage]
             val restaurantPosition = LatLng(
-                state.value.restaurants[pagerState.currentPage].place.latitude,
-                state.value.restaurants[pagerState.currentPage].place.longitude
+                state.value.restaurants[pagerState.currentPage].location.latitude,
+                state.value.restaurants[pagerState.currentPage].location.longitude
             )
 
             val currentZoom = cameraPositionState.position.zoom
@@ -201,13 +201,13 @@ fun EatScreen(
                     cameraPositionState = cameraPositionState
                 ) {
                     state.value.restaurants.forEach { restaurant ->
-                        val restaurantPosition = LatLng(restaurant.place.latitude, restaurant.place.longitude)
+                        val restaurantPosition = LatLng(restaurant.location.latitude, restaurant.location.longitude)
                         MarkerInfoWindow(
                             state = MarkerState(position = restaurantPosition),
                             title = restaurant.name,
                             onClick = {
                                 selectedRestaurant.value = restaurant
-                                // Move the pagerstate to the selected restaurant
+                                // Move the pager state to the selected restaurant
                                 val index = state.value.restaurants.indexOf(restaurant)
                                 coroutineScope.launch {
                                     pagerState.scrollToPage(index)
@@ -250,7 +250,7 @@ fun EatScreen(
                     Button(
                         onClick = {
                             val intent =
-                                Intent(Intent.ACTION_VIEW, Uri.parse(selectedRestaurant.value?.url))
+                                Intent(Intent.ACTION_VIEW, Uri.parse(selectedRestaurant.value?.googleMapsUri))
                             openMapLauncher.launch(intent)
                             showDialog.value = false
                         }

@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.canolabs.rallytransbetxi.BuildConfig
 import com.canolabs.rallytransbetxi.data.models.responses.Warning
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 import com.canolabs.rallytransbetxi.domain.entities.FontSizeFactor
@@ -14,6 +15,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreActivitiesCollapsedUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreNewsCollapsedUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreWarningCollapsedUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetBetxiRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetHallOfFameUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
@@ -47,7 +49,8 @@ class RallyScreenViewModel @Inject constructor(
     private val getAreActivitiesCollapsed: GetAreActivitiesCollapsedUseCase,
     private val getAreNewsCollapsedUseCase: GetAreNewsCollapsedUseCase,
     private val getAreWarningCollapsedUseCase: GetAreWarningCollapsedUseCase,
-    private val canAccessToAppUseCase: CanAccessToAppUseCase
+    private val canAccessToAppUseCase: CanAccessToAppUseCase,
+    private val getBetxiRestaurantsUseCase: GetBetxiRestaurantsUseCase
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(RallyScreenUIState())
@@ -118,8 +121,14 @@ class RallyScreenViewModel @Inject constructor(
 
     fun fetchRestaurants() {
         viewModelScope.launch {
-            val restaurants = getRestaurantsUseCase.invoke()
-            _state.setRestaurants(restaurants)
+            // TODO: Refactor this
+            val betxiRestaurants = getBetxiRestaurantsUseCase.invoke(
+                BuildConfig.MAPS_API_KEY,
+                "Restaurantes y bares cerca de Betxi",
+                "es",
+                null
+            )
+            _state.setRestaurants(betxiRestaurants)
         }
     }
 

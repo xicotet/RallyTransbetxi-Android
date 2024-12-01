@@ -8,6 +8,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreActivitiesCollapsedUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreNewsCollapsedUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreWarningCollapsedUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetBetxiRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
@@ -44,7 +45,8 @@ class RallyViewModelFactory @Inject constructor(
     private val getAreActivitiesCollapsed: GetAreActivitiesCollapsedUseCase,
     private val getAreNewsCollapsedUseCase: GetAreNewsCollapsedUseCase,
     private val getAreWarningCollapsedUseCase: GetAreWarningCollapsedUseCase,
-    private val canAccessToAppUseCase: CanAccessToAppUseCase
+    private val canAccessToAppUseCase: CanAccessToAppUseCase,
+    private val getBetxiRestaurantsUseCase: GetBetxiRestaurantsUseCase
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
@@ -63,7 +65,8 @@ class RallyViewModelFactory @Inject constructor(
                     getAreActivitiesCollapsed,
                     getAreNewsCollapsedUseCase,
                     getAreWarningCollapsedUseCase,
-                    canAccessToAppUseCase
+                    canAccessToAppUseCase,
+                    getBetxiRestaurantsUseCase
                 ) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")

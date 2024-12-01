@@ -33,8 +33,12 @@ class Constants {
         const val DEFAULT_NEWS_COLLAPSED = false
         const val DEFAULT_ACTIVITIES_COLLAPSED = false
 
-        // OpenRouteService
+        // OpenRouteService API
         const val DIRECTIONS_BASE_URL = "https://api.openrouteservice.org/v2/"
+
+        // Google Places API
+        const val PLACES_BASE_URL = "https://places.googleapis.com/v1/"
+        const val PLACES_FIELD_MASK = "places.displayName,places.formattedAddress,places.rating,places.location,places.photos,places.googleMapsUri,places.websiteUri,places.currentOpeningHours,places.googleMapsLinks,places.priceRange"
 
         // Firebase storage
         const val DRIVERS_FOLDER = "drivers/"
