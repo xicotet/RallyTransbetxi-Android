@@ -127,13 +127,13 @@ class RallyScreenViewModel @Inject constructor(
     fun fetchRestaurants() {
         viewModelScope.launch {
             // Start fetching restaurants by popularity and distance concurrently
-            val popularityDeferred = async { fetchRestaurantsByPopularity() }
             val distanceDeferred = async { fetchRestaurantsByDistance() }
+            val popularityDeferred = async { fetchRestaurantsByPopularity() }
 
             // Wait for both results to complete
             val allRestaurants = listOf(
-                popularityDeferred.await(),
-                distanceDeferred.await()
+                distanceDeferred.await(),
+                popularityDeferred.await()
             ).flatten()
 
             // Filter out duplicates based on some unique identifier, e.g., place ID

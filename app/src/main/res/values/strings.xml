@@ -35,6 +35,7 @@
     <string name="in_google_maps">en Google Maps?</string>
     <string name="restaurant_opened">Abierto</string>
     <string name="restaurant_closed">Cerrado</string>
+    <string name="open_in_google_maps">Abrir en Google Maps</string>
 
     // Maps destination
     <string name="navigate">Navegar</string>

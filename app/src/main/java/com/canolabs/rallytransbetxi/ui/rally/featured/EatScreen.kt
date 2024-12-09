@@ -1,16 +1,12 @@
 package com.canolabs.rallytransbetxi.ui.rally.featured
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.VectorDrawable
-import android.net.Uri
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,8 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -137,9 +131,6 @@ fun EatScreen(
         mapStyleOptions = mapStyleOptions
     )
 
-    val openMapLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { /* handle the result if needed */ }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -177,7 +168,6 @@ fun EatScreen(
             )
         },
     ) {
-        val showDialog = remember { mutableStateOf(false) }
         val mapLoaded = remember { mutableStateOf(false) }
 
         Column {
@@ -201,7 +191,8 @@ fun EatScreen(
                     cameraPositionState = cameraPositionState
                 ) {
                     state.value.restaurants.forEach { restaurant ->
-                        val restaurantPosition = LatLng(restaurant.location.latitude, restaurant.location.longitude)
+                        val restaurantPosition =
+                            LatLng(restaurant.location.latitude, restaurant.location.longitude)
                         MarkerInfoWindow(
                             state = MarkerState(position = restaurantPosition),
                             title = restaurant.name,
@@ -228,55 +219,25 @@ fun EatScreen(
                     }
                 }
 
-                // Restaurant Cards
-                RestaurantCards(
-                    restaurants = state.value.restaurants,
-                    onCardClick = { restaurant ->
-                        selectedRestaurant.value = restaurant
-                        showDialog.value = true
-                    },
-                    pagerState = pagerState,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(8.dp)
-                )
-            }
-        }
-
-        if (showDialog.value) {
-            AlertDialog(
-                onDismissRequest = { showDialog.value = false },
-                title = { Text(stringResource(id = R.string.open_in_maps)) },
-                text = {
-                    Text(
-                        stringResource(id = R.string.do_you_want_to_open) + " " + (selectedRestaurant.value?.name
-                            ?: "")
-                            + " " + stringResource(id = R.string.in_google_maps)
+                if (state.value.restaurants.isEmpty()) {
+                    RestaurantCardShimmer(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(8.dp)
                     )
-                },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            val intent =
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse(selectedRestaurant.value?.googleMapsUri)
-                                )
-                            openMapLauncher.launch(intent)
-                            showDialog.value = false
-                        }
-                    ) {
-                        Text(stringResource(id = R.string.yes))
-                    }
-                },
-                dismissButton = {
-                    Button(
-                        onClick = { showDialog.value = false }
-                    ) {
-                        Text(stringResource(id = R.string.no))
-                    }
-                },
-            )
+                } else {
+                    RestaurantCards(
+                        restaurants = state.value.restaurants,
+                        onCardClick = { restaurant ->
+                            selectedRestaurant.value = restaurant
+                        },
+                        pagerState = pagerState,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(8.dp)
+                    )
+                }
+            }
         }
     }
 }
