@@ -225,7 +225,9 @@ fun BreakingNewsSection(
                                                 painter = newsPainter,
                                                 contentDescription = null,
                                                 contentScale = ContentScale.Fit,
-                                                colorFilter = if (darkThemeState.value) ColorFilter.tint(Color.White) else null,
+                                                colorFilter = if (darkThemeState.value && newsPainter.state is AsyncImagePainter.State.Error) ColorFilter.tint(
+                                                    Color.White
+                                                ) else null,
                                                 modifier = Modifier
                                                     .clip(RectangleShape)
                                                     .padding(vertical = 8.dp)
@@ -290,7 +292,7 @@ fun BreakingNewsSection(
 
 @Composable
 fun getBreakingNewsCardGradient(): Brush {
-    return  Brush.linearGradient(
+    return Brush.linearGradient(
         colors = listOf(
             MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
             MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f)

@@ -84,11 +84,6 @@ fun OnboardingThirdScreen(
                             .size(100.dp)
                             .padding(8.dp)
                             .clickable {
-                                // If it's already selected, deselect it
-                                if (selectedLanguage.value == language) {
-                                    selectedLanguage.value = null
-                                    return@clickable
-                                }
                                 selectedLanguage.value = language
                             }
                             .border(

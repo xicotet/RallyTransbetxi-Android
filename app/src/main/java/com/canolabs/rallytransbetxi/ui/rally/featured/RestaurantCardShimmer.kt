@@ -77,7 +77,7 @@ fun RestaurantCardShimmer(modifier: Modifier) {
                         modifier = Modifier
                             .height(18.dp)
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp)
+                            .padding(horizontal = 16.dp)
                             .background(brush)
                     )
                 }
@@ -87,8 +87,9 @@ fun RestaurantCardShimmer(modifier: Modifier) {
                 Shimmer { brush ->
                     Box(
                         modifier = Modifier
-                            .height(14.dp)
+                            .height(18.dp)
                             .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
                             .background(brush)
                     )
                 }
