@@ -8,8 +8,8 @@ import retrofit2.http.POST
 
 interface PlacesService {
 
-    @POST("./places:searchText") // The './' notation is needed so retrofit can handle correctly the colon
-    suspend fun searchRestaurants(
+    @POST("./places:searchNearby") // The './' notation is needed so retrofit can handle correctly the colon
+    suspend fun searchNearbyRestaurants(
         @Header("X-Goog-Api-Key") apiKey: String,
         @Header("X-Goog-FieldMask") fieldMask: String,
         @Body body: PlaceSearchRequest

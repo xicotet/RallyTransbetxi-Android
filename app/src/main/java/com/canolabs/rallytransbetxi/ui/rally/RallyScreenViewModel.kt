@@ -1,10 +1,12 @@
 package com.canolabs.rallytransbetxi.ui.rally
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.BuildConfig
+import com.canolabs.rallytransbetxi.data.models.responses.PlaceResponse
 import com.canolabs.rallytransbetxi.data.models.responses.Warning
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 import com.canolabs.rallytransbetxi.domain.entities.FontSizeFactor
@@ -25,7 +27,10 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetThemeSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetWarningsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.InsertSettingsUseCase
+import com.canolabs.rallytransbetxi.utils.Constants
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.PLACES_NEARBY_SEARCH_MANUAL_EXCLUDED_RESTAURANTS
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -121,18 +126,61 @@ class RallyScreenViewModel @Inject constructor(
 
     fun fetchRestaurants() {
         viewModelScope.launch {
-            // TODO: Refactor this
-            val betxiRestaurants = getBetxiRestaurantsUseCase.invoke(
-                BuildConfig.MAPS_API_KEY,
-                "Restaurantes y bares cerca de Betxi",
-                "es",
-                null
-            )
-            _state.setRestaurants(betxiRestaurants)
+            // Start fetching restaurants by popularity and distance concurrently
+            val popularityDeferred = async { fetchRestaurantsByPopularity() }
+            val distanceDeferred = async { fetchRestaurantsByDistance() }
+
+            // Wait for both results to complete
+            val allRestaurants = listOf(
+                popularityDeferred.await(),
+                distanceDeferred.await()
+            ).flatten()
+
+            // Filter out duplicates based on some unique identifier, e.g., place ID
+            val uniqueRestaurants = allRestaurants.distinctBy { it.displayName.text  }
+
+            // Filter restaurants without an image and no ratings
+            val filteredRestaurants = uniqueRestaurants.filter {
+                it.photos?.isNotEmpty() == true && it.rating != null
+            }
+
+            // Filter out manually excluded restaurants
+            val manuallyExcludedRestaurants = PLACES_NEARBY_SEARCH_MANUAL_EXCLUDED_RESTAURANTS.split(",")
+            val finalRestaurants = filteredRestaurants.filter {
+                it.displayName.text !in manuallyExcludedRestaurants
+            }
+
+            Log.w("RallyScreenViewModel", "Fetched ${finalRestaurants.size} unique restaurants after filtering")
+
+            // Update the state with the filtered list
+            _state.setRestaurants(finalRestaurants)
         }
     }
 
-    // App Settings related functions
+    private suspend fun fetchRestaurantsByPopularity(): List<PlaceResponse>{
+        return getBetxiRestaurantsUseCase.invoke(
+            BuildConfig.MAPS_API_KEY,
+            Constants.PLACES_NEARBY_SEARCH_RANK_BY_POPULARITY,
+            state.value.language?.getLanguageCode(),
+        ).also {
+            Log.w("RallyScreenViewModel", "Fetched ${it.size} restaurants by popularity")
+        }
+    }
+
+    private suspend fun fetchRestaurantsByDistance(): List<PlaceResponse> {
+        return getBetxiRestaurantsUseCase.invoke(
+            BuildConfig.MAPS_API_KEY,
+            Constants.PLACES_NEARBY_SEARCH_RANK_BY_DISTANCE,
+            state.value.language?.getLanguageCode(),
+        ).also {
+            Log.w("RallyScreenViewModel", "Fetched ${it.size} restaurants by distance")
+        }
+    }
+
+
+    /*
+     * App Settings related functions
+     */
 
     fun fetchProfileSettings() {
         viewModelScope.launch {
@@ -244,7 +292,9 @@ class RallyScreenViewModel @Inject constructor(
         }
     }
 
-    // Setters and toggles that can be called from the UI
+    /*
+     * Setters and toggles that can be called from the UI
+     */
 
     fun toggleWarnings() {
         _state.setAreWarningsCollapsed(!_state.value.areWarningsCollapsed)
@@ -304,15 +354,15 @@ class RallyScreenViewModel @Inject constructor(
 
     fun shouldShowNotificationPermissionSheet(): Boolean {
         val counter = state.value.notificationPermissionCounter!!
-        val nextInterval = getExponentialInterval(counter)
+        val nextInterval = getAlmostExponentialInterval(counter)
 
         // Show bottom sheet only when counter matches the interval
         return counter == nextInterval
     }
 
-    // Exponential backoff with a cap at 64
-    private fun getExponentialInterval(counter: Int): Int {
-        val intervals = listOf(1, 2, 5, 10, 18, 32, 64, 128, 256)
+    // Almost exponential backoff with a cap at 256
+    private fun getAlmostExponentialInterval(counter: Int): Int {
+        val intervals = listOf(1, 2, 5, 10, 18, 32, 64, 128, 256) // This is arbitrary and can be changed
         return intervals.find { it >= counter } ?: 256
     }
 }

@@ -1,6 +1,5 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
-import com.canolabs.rallytransbetxi.data.models.requests.LocationRestriction
 import com.canolabs.rallytransbetxi.data.models.responses.PlaceResponse
 import com.canolabs.rallytransbetxi.data.repositories.PlacesRepositoryImpl
 import javax.inject.Inject
@@ -10,10 +9,9 @@ class GetBetxiRestaurantsUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         apiKey: String,
-        query: String,
+        rankPreference: String,
         languageCode: String?,
-        locationRestriction: LocationRestriction?
     ): List<PlaceResponse> {
-        return placesRepositoryImpl.getBetxiRestaurants(apiKey, query, languageCode, locationRestriction)
+        return placesRepositoryImpl.getBetxiRestaurants(apiKey, rankPreference, languageCode)
     }
 }

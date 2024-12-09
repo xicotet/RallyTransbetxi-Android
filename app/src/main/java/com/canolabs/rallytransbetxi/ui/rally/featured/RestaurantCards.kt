@@ -46,6 +46,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.canolabs.rallytransbetxi.BuildConfig
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.data.models.responses.PlaceResponse
+import com.canolabs.rallytransbetxi.utils.Constants
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -207,6 +208,6 @@ fun RestaurantCards(
 // Helper function to generate photo URL
 fun getPhotoUrl(photoReference: String?): String? {
     return photoReference?.let {
-        "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=$it&key=${BuildConfig.MAPS_API_KEY}"
+        Constants.PHOTO_URL_TEMPLATE.format(it, BuildConfig.MAPS_API_KEY)
     }
 }

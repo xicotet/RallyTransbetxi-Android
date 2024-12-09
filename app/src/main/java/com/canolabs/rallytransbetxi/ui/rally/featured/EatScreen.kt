@@ -216,8 +216,14 @@ fun EatScreen(
                             },
                             content = {},
                             zIndex = if (restaurant == selectedRestaurant.value) 1f else 0f,
-                            icon = if (restaurant == selectedRestaurant.value) createCustomRestaurantMarkerWithRating(LocalContext.current, 4.5f)
-                                else LocalContext.current.bitmapDescriptorFromVector(R.drawable.resturant_red_background, 1f),
+                            icon = if (restaurant == selectedRestaurant.value) createCustomRestaurantMarkerWithRating(
+                                LocalContext.current,
+                                restaurant.rating?.toString() ?: "N/A"
+                            )
+                            else LocalContext.current.bitmapDescriptorFromVector(
+                                R.drawable.resturant_red_background,
+                                1f
+                            ),
                         )
                     }
                 }
@@ -230,7 +236,9 @@ fun EatScreen(
                         showDialog.value = true
                     },
                     pagerState = pagerState,
-                    modifier = Modifier.align(Alignment.BottomCenter).padding(8.dp)
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(8.dp)
                 )
             }
         }
@@ -250,7 +258,10 @@ fun EatScreen(
                     Button(
                         onClick = {
                             val intent =
-                                Intent(Intent.ACTION_VIEW, Uri.parse(selectedRestaurant.value?.googleMapsUri))
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(selectedRestaurant.value?.googleMapsUri)
+                                )
                             openMapLauncher.launch(intent)
                             showDialog.value = false
                         }
@@ -270,7 +281,7 @@ fun EatScreen(
     }
 }
 
-fun createCustomRestaurantMarkerWithRating(context: Context, rating: Float): BitmapDescriptor {
+fun createCustomRestaurantMarkerWithRating(context: Context, rating: String): BitmapDescriptor {
     val circleDiameter = 100  // Diameter of the circle (left side)
     val rectWidth = 120       // Width of the rectangle (right side)
     val height = 120          // Increased height for both the circle and the rectangle (to accommodate padding)
@@ -299,8 +310,10 @@ fun createCustomRestaurantMarkerWithRating(context: Context, rating: Float): Bit
 
     // Load the restaurant_white_background drawable and convert it to Bitmap
     val drawable = ContextCompat.getDrawable(context, R.drawable.restaurant_white_background) as VectorDrawable
-    val circleBitmap = Bitmap.createBitmap(circleDiameter,
-        (height - topBottomPadding * 2).toInt(), Bitmap.Config.ARGB_8888) // Adjusted height
+    val circleBitmap = Bitmap.createBitmap(
+        circleDiameter,
+        (height - topBottomPadding * 2).toInt(), Bitmap.Config.ARGB_8888
+    ) // Adjusted height
     val circleCanvas = Canvas(circleBitmap)
     drawable.setBounds(0, 0, circleDiameter, circleBitmap.height)
     drawable.draw(circleCanvas)
@@ -327,7 +340,7 @@ fun createCustomRestaurantMarkerWithRating(context: Context, rating: Float): Bit
     val ratingStartY = (height / 2f) + (textHeight / 2f) - 20f // Adjust by half of the text height to center it
 
     // Draw the rating text centered vertically
-    canvas.drawText("$rating", ratingStartX, ratingStartY, textPaint)
+    canvas.drawText(rating, ratingStartX, ratingStartY, textPaint)
 
     // Return the BitmapDescriptor for the custom marker
     return BitmapDescriptorFactory.fromBitmap(bitmap)
