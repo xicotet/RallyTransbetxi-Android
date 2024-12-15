@@ -17,6 +17,7 @@ data class RallyScreenUIState(
     val activities: List<Activity>  = emptyList(),
     val hallOfFame: List<HallOfFame> = emptyList(),
     val restaurants: List<PlaceResponse> = emptyList(),
+    val numberOfSponsors: Int = 0,
     val warnings: List<Warning> = emptyList(),
     val isHallOfFameLoading: Boolean = false,
     val language: Language? = null,
@@ -75,6 +76,10 @@ fun MutableStateFlow<RallyScreenUIState>.setWarningShownOnDialog(warning: Warnin
 
 fun MutableStateFlow<RallyScreenUIState>.setRestaurants(restaurants: List<PlaceResponse>) {
     value = value.copy(restaurants = restaurants)
+}
+
+fun MutableStateFlow<RallyScreenUIState>.setNumberOfSponsors(numberOfSponsors: Int) {
+    value = value.copy(numberOfSponsors = numberOfSponsors)
 }
 
 fun MutableStateFlow<RallyScreenUIState>.setWarnings(warnings: List<Warning>) {

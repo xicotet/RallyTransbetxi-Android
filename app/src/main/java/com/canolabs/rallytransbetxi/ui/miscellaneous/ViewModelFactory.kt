@@ -15,6 +15,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetHallOfFameUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNotificationPermissionCounterUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetNumberOfSponsorsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStageByAcronymUseCase
@@ -46,7 +47,8 @@ class RallyViewModelFactory @Inject constructor(
     private val getAreNewsCollapsedUseCase: GetAreNewsCollapsedUseCase,
     private val getAreWarningCollapsedUseCase: GetAreWarningCollapsedUseCase,
     private val canAccessToAppUseCase: CanAccessToAppUseCase,
-    private val getBetxiRestaurantsUseCase: GetBetxiRestaurantsUseCase
+    private val getBetxiRestaurantsUseCase: GetBetxiRestaurantsUseCase,
+    private val getNumberOfSponsorsUseCase: GetNumberOfSponsorsUseCase
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
@@ -66,7 +68,8 @@ class RallyViewModelFactory @Inject constructor(
                     getAreNewsCollapsedUseCase,
                     getAreWarningCollapsedUseCase,
                     canAccessToAppUseCase,
-                    getBetxiRestaurantsUseCase
+                    getBetxiRestaurantsUseCase,
+                    getNumberOfSponsorsUseCase
                 ) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")

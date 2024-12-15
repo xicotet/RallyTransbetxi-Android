@@ -29,6 +29,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,34 +46,52 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
+import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.SPONSORS_IMAGE_EXTENSION
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.SPONSORS_IMAGE_PREFIX
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SponsorsScreen(
+    viewModel: RallyScreenViewModel,
     onBackClick: () -> Unit
 ) {
     val storage = Firebase.storage
+    val state = viewModel.state.collectAsState()
     val sponsorImageUrls = remember { mutableStateListOf<String?>() }
     val errorDuringInitialization = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        try {
-            // TODO: En este for no puede estar hardcodeado el número de sponsors
-            for (i in 1..55) {
-                val sponsorImagePath = "${SPONSORS_IMAGE_PREFIX}$i${SPONSORS_IMAGE_EXTENSION}"
-                val sponsorStorageRef =
-                    storage.reference.child("${Constants.SPONSORS_FOLDER}$sponsorImagePath")
+        viewModel.fetchNumberOfSponsors()
+    }
 
-                val sponsorUrl = sponsorStorageRef.downloadUrl.await()
-                sponsorImageUrls.add(sponsorUrl.toString())
-                Log.d("SponsorsScreen", "Sponsor Image URL: $sponsorUrl")
+    LaunchedEffect(state.value.numberOfSponsors) {
+        try {
+            // Wait until the number of sponsors is greater than 0
+            val totalSponsors = state.value.numberOfSponsors
+            if (totalSponsors > 0) {
+                // Launch coroutines for all image downloads concurrently
+                val urls = coroutineScope {
+                    (1..totalSponsors).map { i ->
+                        async {
+                            val sponsorImagePath = "${SPONSORS_IMAGE_PREFIX}$i${SPONSORS_IMAGE_EXTENSION}"
+                            val sponsorStorageRef =
+                                storage.reference.child("${Constants.SPONSORS_FOLDER}$sponsorImagePath")
+                            sponsorStorageRef.downloadUrl.await().toString()
+                        }
+                    }.awaitAll()
+                }
+
+                // Add all URLs to the list at once
+                sponsorImageUrls.addAll(urls)
             }
         } catch (e: Exception) {
             errorDuringInitialization.value = true
