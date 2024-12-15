@@ -187,27 +187,11 @@ fun MapContent(
                 PrintUserLocation(location = state.location)
                 PrintDirections(directions = state.directions)
 
-                if (state.directions.isEmpty())
-                    AnimateCameraToUserLocation(
-                        location = state.location,
-                        cameraPositionState = cameraPositionState
-                    )
-                else
-                    AnimateCameraToDirections(
-                        directions = state.directions,
-                        cameraPositionState = cameraPositionState
-                    )
-
-
-                if (state.stage.geoPoints == null) {
-                    AnimateCameraToBetxi(betxi = betxi, cameraPositionState = cameraPositionState)
-                } else if (state.location == null && state.directions.isEmpty()) {
-                    // Animate the camera to the first geo point of the stage
-                    AnimateCameraToFirstStagePoint(
-                        stage = state.stage,
-                        cameraPositionState = cameraPositionState
-                    )
-                }
+                HandleCameraAnimations(
+                    state = state,
+                    cameraPositionState = cameraPositionState,
+                    betxi = betxi
+                )
             }
 
             AssistChip(
@@ -536,15 +520,48 @@ fun MapContent(
 }
 
 @Composable
+fun HandleCameraAnimations(
+    state: MapsScreenUIState,
+    cameraPositionState: CameraPositionState,
+    betxi: LatLng
+) {
+    when {
+        state.directions.isNotEmpty() -> {
+            AnimateCameraToDirections(
+                directions = state.directions,
+                cameraPositionState = cameraPositionState
+            )
+        }
+        state.location != null -> {
+            AnimateCameraToUserLocation(
+                location = state.location,
+                cameraPositionState = cameraPositionState
+            )
+        }
+        state.stage.geoPoints == null -> {
+            AnimateCameraToBetxi(betxi = betxi, cameraPositionState = cameraPositionState)
+        }
+        else -> {
+            AnimateCameraToFirstStagePoint(
+                stage = state.stage,
+                cameraPositionState = cameraPositionState
+            )
+        }
+    }
+}
+
+@Composable
 fun AnimateCameraToBetxi(
     betxi: LatLng,
     cameraPositionState: CameraPositionState
 ) {
     val targetPosition = LatLng(betxi.latitude, betxi.longitude)
-    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
-    LaunchedEffect(cameraUpdate) {
-        delay(500)
-        cameraPositionState.animate(cameraUpdate, durationMs = 2000)
+    LaunchedEffect(targetPosition) {
+        delay(2000)
+        cameraPositionState.animate(
+            CameraUpdateFactory.newLatLngZoom(targetPosition, 15f),
+            durationMs = 2000
+        )
     }
 }
 
@@ -553,12 +570,52 @@ fun AnimateCameraToFirstStagePoint(
     stage: Stage,
     cameraPositionState: CameraPositionState
 ) {
-    stage.geoPoints?.first()?.let { geoPoint ->
-        val targetPosition = LatLng(geoPoint.latitude, geoPoint.longitude)
-        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
-        LaunchedEffect(cameraUpdate) {
+    val firstPoint = stage.geoPoints?.firstOrNull()?.let {
+        LatLng(it.latitude, it.longitude)
+    }
+    if (firstPoint != null) {
+        LaunchedEffect(firstPoint) {
+            delay(2000)
+            cameraPositionState.animate(
+                CameraUpdateFactory.newLatLngZoom(firstPoint, 15f),
+                durationMs = 2000
+            )
+        }
+    }
+}
+
+@Composable
+fun AnimateCameraToDirections(
+    directions: List<List<Double>>,
+    cameraPositionState: CameraPositionState
+) {
+    if (directions.isNotEmpty()) {
+        LaunchedEffect(directions) {
             delay(500)
-            cameraPositionState.animate(cameraUpdate, durationMs = 2000)
+            val (zoomLevel, center) = calculateZoomLevel(directions)
+            cameraPositionState.animate(
+                CameraUpdateFactory.newLatLngZoom(center, zoomLevel),
+                durationMs = 2000
+            )
+        }
+    }
+}
+
+@Composable
+fun AnimateCameraToUserLocation(
+    location: Location?,
+    cameraPositionState: CameraPositionState
+) {
+    val userPosition = location?.let {
+        LatLng(it.latitude, it.longitude)
+    }
+    if (userPosition != null) {
+        LaunchedEffect(userPosition) {
+            delay(500)
+            cameraPositionState.animate(
+                CameraUpdateFactory.newLatLngZoom(userPosition, 15f),
+                durationMs = 2000
+            )
         }
     }
 }
@@ -574,55 +631,28 @@ fun PrintDirections(
 }
 
 @Composable
-fun AnimateCameraToDirections(
-    directions: List<List<Double>>,
-    cameraPositionState: CameraPositionState
-) {
-    if (directions.isNotEmpty()) {
-        // Obtain a center point between the first and last points of state.directions
-        LaunchedEffect(Unit) {
-            val (zoomLevel, center) = calculateZoomLevel(directions)
-            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(center, zoomLevel)
-            cameraPositionState.animate(cameraUpdate, durationMs = 2000)
-        }
-    }
-}
-
-@Composable
 fun PrintUserLocation(
     location: Location?,
 ) {
     val context = LocalContext.current
-    val icon = context.bitmapDescriptorFromVector(R.drawable.location_circle, 0.7f)
+    val icon = remember {
+        context.bitmapDescriptorFromVector(R.drawable.location_circle, 0.7f)
+    }
+
+    val markerState = remember { MarkerState() }
+
+    // Update marker state only when location changes
+    LaunchedEffect(location) {
+        location?.let {
+            markerState.position = LatLng(it.latitude, it.longitude)
+        }
+    }
 
     Marker(
-        state = MarkerState(
-            LatLng(
-                location?.latitude ?: 0.0,
-                location?.longitude ?: 0.0
-            )
-        ),
-        title = "User Location",
+        state = markerState,
         icon = icon,
-
-        )
-}
-
-@Composable
-fun AnimateCameraToUserLocation(
-    location: Location?,
-    cameraPositionState: CameraPositionState
-) {
-    // Animate the camera to the user's location
-    val targetPosition = LatLng(
-        location?.latitude ?: 0.0,
-        location?.longitude ?: 0.0
+        onClick = { true }
     )
-    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPosition, 15f)
-    LaunchedEffect(cameraUpdate) {
-        delay(500)
-        cameraPositionState.animate(cameraUpdate, durationMs = 2000)
-    }
 }
 
 fun calculateZoomLevel(directions: List<List<Double>>): Pair<Float, LatLng> {
