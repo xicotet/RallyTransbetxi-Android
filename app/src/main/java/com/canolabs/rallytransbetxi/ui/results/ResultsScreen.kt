@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -62,6 +64,9 @@ fun ResultsScreen(
         viewModel.fetchStages()
         viewModel.fetchLanguage(sharedPreferences)
     }
+
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
 
     if (pullRefreshState.isRefreshing) {
         LaunchedEffect(true) {
@@ -104,36 +109,32 @@ fun ResultsScreen(
 
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.fillMaxSize()
-            ) { page ->
+            ) {  page ->
                 when (page) {
                     0 -> {
-                        Box(modifier = Modifier.fillMaxSize()) {
-                            Column {
-                                RacingCategorySegmentedButton(
-                                    selectedRacingCategories = state.selectedRacingCategories,
-                                    onSelectedTabIndexChange = { tabIndex ->
-                                        if (state.selectedRacingCategories.any { it.getTabIndex() == tabIndex }) {
-                                            viewModel.removeSelectedRacingCategoryWithIndex(tabIndex)
-                                        } else {
-                                            viewModel.addSelectedRacingCategoryWithIndex(tabIndex)
-                                        }
+                        Column(modifier = Modifier.defaultMinSize(minHeight = screenHeight)) {
+                            RacingCategorySegmentedButton(
+                                selectedRacingCategories = state.selectedRacingCategories,
+                                onSelectedTabIndexChange = { tabIndex ->
+                                    if (state.selectedRacingCategories.any { it.getTabIndex() == tabIndex }) {
+                                        viewModel.removeSelectedRacingCategoryWithIndex(tabIndex)
+                                    } else {
+                                        viewModel.addSelectedRacingCategoryWithIndex(tabIndex)
                                     }
-                                )
-                                GlobalResultsTab(
-                                    results = state.globalResults,
-                                    isLoading = state.isLoading,
-                                    state = state,
-                                    navController = navController
-                                )
-                            }
+                                }
+                            )
+                            GlobalResultsTab(
+                                results = state.globalResults,
+                                isLoading = state.isLoading,
+                                state = state,
+                                navController = navController
+                            )
                         }
                     }
 
                     1 -> {
                         Column(
-                            modifier = Modifier
-                                .fillMaxSize()
+                            modifier = Modifier.defaultMinSize(minHeight = screenHeight)
                         ) {
                             StagesResultsTab(
                                 stages = state.stages,
