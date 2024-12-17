@@ -1,6 +1,5 @@
 package com.canolabs.rallytransbetxi.ui.rally.featured
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -59,9 +58,8 @@ fun HallOfFameScreen(
     onBackClick: () -> Unit
 ) {
     val state = viewModel.state.collectAsState()
-    Log.d("HallOfFameServiceImpl", "Enters HallOfFameScreen.kt")
+
     LaunchedEffect(Unit) {
-        Log.d("HallOfFameServiceImpl", "Enters HallOfFameScreen.kt LaunchedEffect")
         viewModel.fetchHallOfFame()
     }
 

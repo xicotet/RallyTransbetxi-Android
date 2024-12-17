@@ -146,6 +146,7 @@ fun NewsDetailScreen(
                                 .clip(RectangleShape)
                                 .fillMaxWidth()
                                 .height(200.dp)
+                                .padding(vertical = 8.dp)
                                 .background(brush = brush)
                         )
                     }
@@ -158,6 +159,7 @@ fun NewsDetailScreen(
                                     .clip(RectangleShape)
                                     .fillMaxWidth()
                                     .height(200.dp)
+                                    .padding(vertical = 8.dp)
                                     .background(brush = brush)
                             )
                         }

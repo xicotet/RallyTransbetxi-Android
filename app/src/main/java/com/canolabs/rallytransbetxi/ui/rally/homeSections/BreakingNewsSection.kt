@@ -26,6 +26,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -72,7 +74,8 @@ import java.util.Locale
 fun BreakingNewsSection(
     state: RallyScreenUIState,
     viewModel: RallyScreenViewModel,
-    navController: NavController
+    navController: NavController,
+    darkThemeState: MutableState<Boolean>
 ) {
     Surface(
         modifier = Modifier
@@ -222,6 +225,9 @@ fun BreakingNewsSection(
                                                 painter = newsPainter,
                                                 contentDescription = null,
                                                 contentScale = ContentScale.Fit,
+                                                colorFilter = if (darkThemeState.value && newsPainter.state is AsyncImagePainter.State.Error) ColorFilter.tint(
+                                                    Color.White
+                                                ) else null,
                                                 modifier = Modifier
                                                     .clip(RectangleShape)
                                                     .padding(vertical = 8.dp)
@@ -286,7 +292,7 @@ fun BreakingNewsSection(
 
 @Composable
 fun getBreakingNewsCardGradient(): Brush {
-    return  Brush.linearGradient(
+    return Brush.linearGradient(
         colors = listOf(
             MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
             MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f)
