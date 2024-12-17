@@ -258,6 +258,8 @@ fun BottomSheetStageResults(
                                         )
                                     }
 
+                                    Spacer(modifier = Modifier.size(PaddingMedium))
+
                                     if (!isComingFromMaps) {
                                         OutlinedButton(
                                             shape = MaterialTheme.shapes.extraLarge,
@@ -268,8 +270,7 @@ fun BottomSheetStageResults(
                                                 disabledContentColor = MaterialTheme.colorScheme.primary
                                             ),
                                             modifier = Modifier
-                                                .align(Alignment.CenterVertically)
-                                                .padding(start = PaddingSmall),
+                                                .align(Alignment.CenterVertically),
                                             border = BorderStroke(
                                                 2.dp,
                                                 MaterialTheme.colorScheme.scrim
@@ -291,11 +292,12 @@ fun BottomSheetStageResults(
                                         }
                                     }
 
+                                    Spacer(modifier = Modifier.size(PaddingMedium))
+
                                     IconButton(
                                         onClick = { viewModel.setIsBottomSheetSearchBarVisible(true) },
                                         modifier = Modifier
                                             .align(Alignment.CenterVertically)
-                                            .padding(start = PaddingSmall)
                                     ) {
                                         Icon(
                                             painter = painterResource(id = R.drawable.search),

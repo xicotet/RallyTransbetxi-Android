@@ -199,7 +199,7 @@ fun ResultsScreenHeader(
                         }
                     }
 
-                    Spacer(modifier = Modifier.size(PaddingSmall))
+                    Spacer(modifier = Modifier.size(PaddingMedium))
 
                     IconButton(
                         onClick = { viewModel.setIsSearchBarVisible(true) },
