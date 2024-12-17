@@ -546,6 +546,7 @@ fun MapContent(
                     mapsState = state,
                     viewModel = resultsViewModel,
                     isComingFromMaps = true,
+                    bottomSheetState = resultsBottomSheetState,
                     navController = navController
                 )
             }

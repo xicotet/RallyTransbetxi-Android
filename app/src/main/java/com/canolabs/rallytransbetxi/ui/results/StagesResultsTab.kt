@@ -114,6 +114,7 @@ fun StagesResultsTab(
             BottomSheetStageResults(
                 resultsState = state,
                 viewModel = viewModel,
+                bottomSheetState = bottomSheetState,
                 navController = navController
             )
         }
