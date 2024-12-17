@@ -3,7 +3,11 @@ package com.canolabs.rallytransbetxi.ui.results
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -13,9 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -43,10 +46,12 @@ import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
 import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ResultsScreenHeader(
     viewModel: ResultsScreenViewModel,
-    isRaceProgressStatusBarVisible: MutableState<Boolean>
+    isRaceProgressStatusBarVisible: MutableState<Boolean>,
+    pagerState: PagerState
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -174,18 +179,24 @@ fun ResultsScreenHeader(
                         .align(Alignment.CenterVertically)
                         .padding(horizontal = PaddingRegular)
                 ) {
-                    IconButton(
-                        onClick = { isRaceProgressStatusBarVisible.value = !isRaceProgressStatusBarVisible.value },
-                        modifier = Modifier
-                            .size(48.dp)
+                    AnimatedVisibility(
+                        visible = pagerState.currentPage == 0,
+                        enter = fadeIn(animationSpec = tween(durationMillis = 300)) + slideInVertically(initialOffsetY = { it }),
+                        exit = fadeOut(animationSpec = tween(durationMillis = 300)) + slideOutVertically { it }
                     ) {
-                        Icon(
-                            imageVector = Icons.Outlined.CheckCircle,
-                            contentDescription = null,
-                            tint = if (isRaceProgressStatusBarVisible.value) MaterialTheme.colorScheme.tertiaryContainer
-                            else LocalContentColor.current,
-                            modifier = backgroundModifier.size(48.dp)
-                        )
+                        IconButton(
+                            onClick = { isRaceProgressStatusBarVisible.value = !isRaceProgressStatusBarVisible.value },
+                            modifier = Modifier
+                                .size(48.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.circle_notifications),
+                                contentDescription = null,
+                                tint = if (isRaceProgressStatusBarVisible.value) MaterialTheme.colorScheme.tertiaryContainer
+                                else LocalContentColor.current,
+                                modifier = backgroundModifier.size(48.dp)
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.size(PaddingSmall))

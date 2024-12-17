@@ -109,7 +109,8 @@ fun ResultsScreen(
 
             ResultsScreenHeader(
                 viewModel = viewModel,
-                isRaceProgressStatusBarVisible = isRaceProgressStatusBarVisible
+                isRaceProgressStatusBarVisible = isRaceProgressStatusBarVisible,
+                pagerState = pagerState
             )
 
             TabRow(
