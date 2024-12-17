@@ -60,6 +60,9 @@
     <string name="text_size_large">Grande</string>
     <string name="app_version">Versión de la app</string>
     <string name="developed_by_pablo_cano">Desarrollado por Pablo Cano</string>
+    <string name="send_feedback">Enviar comentarios</string>
+    <string name="send_feedback_explanation">¿Has encontrado algún error o tienes alguna sugerencia? ¡Nos encantaría saberlo! A continuación se abrirá tu aplicación de correo electrónico.</string>
+    <string name="error_no_email_app">No se ha encontrado ninguna aplicación de correo electrónico para enviar los comentarios.</string>
 
     // Permission bottom sheet
     <string name="permission_location_title">Permiso de ubicación</string>
@@ -131,5 +134,6 @@
     <string name="not_now">Ahora no</string>
     <string name="next">Siguiente</string>
     <string name="end">Finalizar</string>
+    <string name="cancel">Cancelar</string>
     <string name="update_now">Actualizar ahora</string>
 </resources>

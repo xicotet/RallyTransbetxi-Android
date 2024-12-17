@@ -60,6 +60,9 @@
     <string name="text_size_large">Gran</string>
     <string name="app_version">Versió de l\'app</string>
     <string name="developed_by_pablo_cano">Desenvolupat per Pablo Cano</string>
+    <string name="send_feedback">Enviar comentaris</string>
+    <string name="send_feedback_explanation">Has trobat algun error o tens alguna suggerència? Ens encantaria saber-ho! A continuació s\'obrirà la teua aplicació de correu electrònic.</string>
+    <string name="error_no_email_app">No s\'ha trobat cap aplicació de correu electrònic per enviar els comentaris.</string>
 
     // Permission denied bottom sheet
     <string name="permission_location_title">Permís de localització</string>
@@ -131,5 +134,6 @@
     <string name="not_now">Ara no</string>
     <string name="next">Següent</string>
     <string name="end">Finalitzar</string>
+    <string name="cancel">Cancelar</string>
     <string name="update_now">Actualitzar ara</string>
 </resources>
