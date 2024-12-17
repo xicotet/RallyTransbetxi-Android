@@ -109,7 +109,7 @@ fun ResultsScreen(
 
             HorizontalPager(
                 state = pagerState,
-            ) {  page ->
+            ) { page ->
                 when (page) {
                     0 -> {
                         Column(modifier = Modifier.defaultMinSize(minHeight = screenHeight)) {

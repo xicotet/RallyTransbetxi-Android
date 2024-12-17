@@ -186,7 +186,6 @@ class RallyScreenViewModel @Inject constructor(
         }
     }
 
-
     /*
      * App Settings related functions
      */

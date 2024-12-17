@@ -28,7 +28,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
 
-
 @Composable
 fun RestaurantCardShimmer(modifier: Modifier) {
     Box(
@@ -139,8 +138,6 @@ fun RestaurantCardShimmer(modifier: Modifier) {
                     }
                 }
             }
-            // Shimmer for the restaurant image
-
         }
     }
 }
