@@ -332,6 +332,7 @@ fun Navigation(
                         )
                     ) {
                         SponsorsScreen(
+                            viewModel = rallyScreenViewModel,
                             onBackClick = { navController.popBackStack() }
                         )
                     }

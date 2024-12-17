@@ -11,9 +11,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
@@ -159,7 +160,8 @@ fun MapsScreen(
                         Box(
                             modifier = Modifier
                                 .height(24.dp)
-                                .width(96.dp)
+                                .fillMaxWidth(0.9f)
+                                .padding(horizontal = 16.dp)
                                 .background(brush = brush)
                         )
                     }
@@ -185,6 +187,7 @@ fun MapsScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.size(32.dp),
                             contentDescription = null
                         )
                     }

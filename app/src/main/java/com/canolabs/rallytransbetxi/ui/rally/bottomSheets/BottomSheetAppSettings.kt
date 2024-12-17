@@ -43,6 +43,7 @@ import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.entities.Theme
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenUIState
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
+import com.canolabs.rallytransbetxi.ui.rally.dialogs.FeedbackDialog
 
 @Composable
 fun BottomSheetAppSettings(
@@ -67,6 +68,7 @@ fun BottomSheetAppSettings(
     )
 
     val showInfoDialog = remember { mutableStateOf(false) }
+    val showFeedbackDialog = remember { mutableStateOf(false) }
 
     if (state.language == null || state.theme == null || state.directionsProfile == null
         || state.fontSizeFactor == null
@@ -80,7 +82,9 @@ fun BottomSheetAppSettings(
             )
         }
     } else if (showInfoDialog.value) {
-        SettingsInfoDialog(showInfoDialog)
+        SettingsInfoDialog(showInfoDialog = showInfoDialog)
+    } else if (showFeedbackDialog.value) {
+        FeedbackDialog(showFeedbackDialog = showFeedbackDialog)
     } else {
         Column(
             modifier = Modifier
@@ -510,7 +514,7 @@ fun BottomSheetAppSettings(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.Start,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
@@ -524,6 +528,31 @@ fun BottomSheetAppSettings(
                         style = scaledBodyMedium,
                         fontWeight = FontWeight.Light,
                     )
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    IconButton(
+                        onClick = {
+                            showFeedbackDialog.value = true
+                        },
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clip(CircleShape)
+                            .border(
+                                1.dp,
+                                MaterialTheme.colorScheme.primary,
+                                CircleShape
+                            )
+                            .background(MaterialTheme.colorScheme.onPrimary)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.feedback),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
         }

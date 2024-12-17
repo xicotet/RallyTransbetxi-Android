@@ -203,7 +203,7 @@ fun FeaturedSection(
                         .align(Alignment.CenterHorizontally)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.restaurant_outlined),
+                        painter = painterResource(id = R.drawable.restaurant_icon),
                         modifier = Modifier.size(48.dp),
                         tint = MaterialTheme.colorScheme.onSurface,
                         contentDescription = null

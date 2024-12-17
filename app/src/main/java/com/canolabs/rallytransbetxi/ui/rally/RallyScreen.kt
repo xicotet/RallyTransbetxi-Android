@@ -150,10 +150,12 @@ fun RallyScreen(
                         state = state,
                         viewModel = viewModel,
                     )
+
                     BreakingNewsSection(
                         state = state,
                         viewModel = viewModel,
-                        navController = navController
+                        navController = navController,
+                        darkThemeState = darkThemeState
                     )
 
                     ActivityProgramSection(

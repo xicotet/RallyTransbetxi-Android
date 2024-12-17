@@ -111,7 +111,6 @@ fun OnboardingFlow(
                         disabledContainerColor = onboardingButtonDisabledBackground,
                         disabledContentColor = onboardingButtonDisabledContent
                     ),
-                    enabled = selectedLanguage.value != null || pagerState.currentPage != 2,
                     shape = RoundedCornerShape(32),
                     modifier = Modifier
                         .fillMaxWidth()

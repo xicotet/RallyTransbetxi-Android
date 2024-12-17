@@ -33,6 +33,9 @@
     <string name="open_in_maps">Abrir en Google Maps</string>
     <string name="do_you_want_to_open">¿Quieres abrir</string>
     <string name="in_google_maps">en Google Maps?</string>
+    <string name="restaurant_opened">Abierto</string>
+    <string name="restaurant_closed">Cerrado</string>
+    <string name="open_in_google_maps">Abrir en Google Maps</string>
 
     // Maps destination
     <string name="navigate">Navegar</string>
@@ -57,6 +60,9 @@
     <string name="text_size_large">Grande</string>
     <string name="app_version">Versión de la app</string>
     <string name="developed_by_pablo_cano">Desarrollado por Pablo Cano</string>
+    <string name="send_feedback">Enviar comentarios</string>
+    <string name="send_feedback_explanation">¿Has encontrado algún error o tienes alguna sugerencia? ¡Nos encantaría saberlo! A continuación se abrirá tu aplicación de correo electrónico.</string>
+    <string name="error_no_email_app">No se ha encontrado ninguna aplicación de correo electrónico para enviar los comentarios.</string>
 
     // Permission bottom sheet
     <string name="permission_location_title">Permiso de ubicación</string>
@@ -128,5 +134,6 @@
     <string name="not_now">Ahora no</string>
     <string name="next">Siguiente</string>
     <string name="end">Finalizar</string>
+    <string name="cancel">Cancelar</string>
     <string name="update_now">Actualizar ahora</string>
 </resources>

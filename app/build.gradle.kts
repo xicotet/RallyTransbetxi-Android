@@ -19,6 +19,8 @@ val keystoreProperties = Properties()
 
 // Load the keystore.properties file
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+println("Resolved path: ${file(keystoreProperties["storeFile"] as String).absolutePath}") // TODO: Remove this print before production-ready
+println("Keystore exists: ${file(keystoreProperties["storeFile"] as String).exists()}") // TODO: Remove this print before production-ready
 
 android {
     namespace = "com.canolabs.rallytransbetxi"
