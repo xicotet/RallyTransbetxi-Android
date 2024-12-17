@@ -1,7 +1,14 @@
 package com.canolabs.rallytransbetxi.ui.results
 
 import android.content.SharedPreferences
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -10,15 +17,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.TabRow
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -26,8 +38,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +53,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
+import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -58,6 +75,7 @@ fun ResultsScreen(
     val pullRefreshState = rememberPullToRefreshState()
 
     val scrollState = rememberScrollState()
+    val isRaceProgressStatusBarVisible = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.fetchGlobalResults()
@@ -89,7 +107,10 @@ fun ResultsScreen(
                 .verticalScroll(scrollState)
         ) {
 
-            ResultsScreenHeader(viewModel = viewModel)
+            ResultsScreenHeader(
+                viewModel = viewModel,
+                isRaceProgressStatusBarVisible = isRaceProgressStatusBarVisible
+            )
 
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
@@ -173,6 +194,63 @@ fun ResultsScreen(
                     )
                 }
             )
+        }
+
+        val raceProgressTextVerticalScroll = rememberScrollState()
+        LaunchedEffect(isRaceProgressStatusBarVisible.value) {
+            // If text is quite large, start automatic scrolling
+            if (isRaceProgressStatusBarVisible.value) {
+                delay(1000)
+                raceProgressTextVerticalScroll.animateScrollTo(
+                    raceProgressTextVerticalScroll.maxValue,
+                    animationSpec = tween(3000)
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = isRaceProgressStatusBarVisible.value,
+            modifier = Modifier.align(Alignment.BottomCenter),
+            enter = fadeIn(animationSpec = tween(durationMillis = 600)) + slideInVertically(
+                initialOffsetY = { it }),
+            exit = fadeOut(animationSpec = tween(durationMillis = 600)) + slideOutVertically(
+                targetOffsetY = { it })
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+                    .padding(PaddingRegular)
+                    .background(
+                        MaterialTheme.colorScheme.tertiaryContainer,
+                        RoundedCornerShape(8.dp)
+                    )
+                    .padding(PaddingMedium),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Vertical scrolling text
+                Text(
+                    text = "Race Progress Status: Results are confirmed and finally!",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(raceProgressTextVerticalScroll) // Vertical scrolling
+                        .padding(end = 16.dp) // Add padding to avoid text touching the edge
+                )
+
+                // Close button (cross icon) centered vertically
+                IconButton(
+                    onClick = { isRaceProgressStatusBarVisible.value = false },
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                }
+            }
         }
     }
 }
