@@ -2,13 +2,9 @@ package com.canolabs.rallytransbetxi.ui.stages
 
 import android.content.SharedPreferences
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -63,7 +59,9 @@ fun StagesScreen(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Column {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()) // Make the column scrollable
+            ) {
                 StagesScreenHeader(
                     stagesViewModel = stagesViewModel
                 )
@@ -104,46 +102,44 @@ fun StageList(
         }
     }
 
-    LazyColumn {
-        if (state.isLoading) {
-            item {
-                Shimmer {
-                    Box(
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .size(width = 250.dp, height = 32.dp)
-                            .clip(MaterialTheme.shapes.small)
-                            .background(brush = it)
-                    )
-                }
-            }
-            items(5) {
-                StageCardShimmer()
+    // For each date group, render the date and stages
+    groupedStagesByDate.entries.forEach { entry ->
+        // Only show dates with at least one matching stage
+        if (entry.value.isNotEmpty()) {
+            Text(
+                text = entry.key ?: "",
+                style = MaterialTheme.typography.labelLarge,
+                fontFamily = robotoFamily,
+                modifier = Modifier.padding(PaddingRegular),
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+
+            // Render the Stage cards for each stage in the group
+            entry.value.forEach { stage ->
+                StageCard(
+                    stage = stage,
+                    onStageCardClick = { stageSelected, fastAction ->
+                        navController.navigate("${Screens.Maps.route}/${stageSelected.acronym}/$fastAction")
+                    },
+                )
             }
         }
+    }
 
-        // Iterate over the grouped stages by date
-        groupedStagesByDate.entries.forEach { entry ->
-            // Only show dates with at least one matching stage
-            if (entry.value.isNotEmpty()) {
-                item {
-                    Text(
-                        text = entry.key ?: "",
-                        style = MaterialTheme.typography.labelLarge,
-                        fontFamily = robotoFamily,
-                        modifier = Modifier.padding(PaddingRegular),
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-                items(entry.value) { stage ->
-                    StageCard(
-                        stage = stage,
-                        onStageCardClick = { stageSelected, fastAction ->
-                            navController.navigate("${Screens.Maps.route}/${stageSelected.acronym}/$fastAction")
-                        },
-                    )
-                }
-            }
+    // Show shimmer loading effect if necessary
+    if (state.isLoading) {
+        Shimmer {
+            Box(
+                modifier = Modifier
+                    .padding(12.dp)
+                    .size(width = 250.dp, height = 32.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .background(brush = it)
+            )
+        }
+
+        repeat(5) {
+            StageCardShimmer()
         }
     }
 }
