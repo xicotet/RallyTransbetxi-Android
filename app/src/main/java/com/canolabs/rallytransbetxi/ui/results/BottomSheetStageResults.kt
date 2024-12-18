@@ -3,11 +3,9 @@ package com.canolabs.rallytransbetxi.ui.results
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -24,11 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -43,7 +37,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -65,14 +58,12 @@ import com.canolabs.rallytransbetxi.ui.maps.MapsScreenUIState
 import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 import com.canolabs.rallytransbetxi.ui.navigation.Screens
 import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
-import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
 import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun BottomSheetStageResults(
     resultsState: ResultsScreenUIState,
@@ -91,10 +82,10 @@ fun BottomSheetStageResults(
         }
     }
 
-    val isRaceProgressStatusBarVisible = remember { mutableStateOf(false) }
+    val isRaceProgressBoxVisible = remember { mutableStateOf(false) }
 
     // Create the modifier with the conditional background for the race status icon
-    val backgroundModifier = if (isRaceProgressStatusBarVisible.value) {
+    val backgroundModifier = if (isRaceProgressBoxVisible.value) {
         Modifier.background(
             brush = Brush.radialGradient(
                 colors = listOf(
@@ -106,18 +97,6 @@ fun BottomSheetStageResults(
         )
     } else {
         Modifier
-    }
-
-    val raceProgressTextVerticalScroll = rememberScrollState()
-    LaunchedEffect(isRaceProgressStatusBarVisible.value) {
-        // If text is quite large, start automatic scrolling
-        if (isRaceProgressStatusBarVisible.value) {
-            delay(1000)
-            raceProgressTextVerticalScroll.animateScrollTo(
-                raceProgressTextVerticalScroll.maxValue,
-                animationSpec = tween(3000)
-            )
-        }
     }
 
     Box(
@@ -239,8 +218,8 @@ fun BottomSheetStageResults(
                                 ) {
                                     IconButton(
                                         onClick = {
-                                            isRaceProgressStatusBarVisible.value = !isRaceProgressStatusBarVisible.value
-                                            if (bottomSheetState.currentValue == SheetValue.PartiallyExpanded && isRaceProgressStatusBarVisible.value) {
+                                            isRaceProgressBoxVisible.value = !isRaceProgressBoxVisible.value
+                                            if (bottomSheetState.currentValue == SheetValue.PartiallyExpanded && isRaceProgressBoxVisible.value) {
                                                 coroutineScope.launch {
                                                     bottomSheetState.expand()
                                                 }
@@ -252,7 +231,7 @@ fun BottomSheetStageResults(
                                         Icon(
                                             painter = painterResource(id = R.drawable.circle_notifications),
                                             contentDescription = null,
-                                            tint = if (isRaceProgressStatusBarVisible.value) MaterialTheme.colorScheme.tertiaryContainer
+                                            tint = if (isRaceProgressBoxVisible.value) MaterialTheme.colorScheme.tertiaryContainer
                                             else LocalContentColor.current,
                                             modifier = backgroundModifier.size(48.dp)
                                         )
@@ -426,51 +405,6 @@ fun BottomSheetStageResults(
             }
         }
 
-        AnimatedVisibility(
-            visible = isRaceProgressStatusBarVisible.value,
-            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 64.dp),
-            enter = fadeIn(animationSpec = tween(durationMillis = 600)) + slideInVertically(
-                initialOffsetY = { it }),
-            exit = fadeOut(animationSpec = tween(durationMillis = 600)) + slideOutVertically(
-                targetOffsetY = { it })
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .padding(PaddingRegular)
-                    .background(
-                        MaterialTheme.colorScheme.tertiaryContainer,
-                        RoundedCornerShape(8.dp)
-                    )
-                    .padding(PaddingMedium),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Vertical scrolling text
-                Text(
-                    text = "Race Progress Status: Results are confirmed and finally!",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    modifier = Modifier
-                        .weight(1f)
-                        .verticalScroll(raceProgressTextVerticalScroll) // Vertical scrolling
-                        .padding(end = 16.dp) // Add padding to avoid text touching the edge
-                )
-
-                // Close button (cross icon) centered vertically
-                IconButton(
-                    onClick = { isRaceProgressStatusBarVisible.value = false },
-                    modifier = Modifier.size(24.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onTertiaryContainer
-                    )
-                }
-            }
-        }
-
         if (isScrollToTopVisible) {
             FloatingActionButton(
                 onClick = {
@@ -491,5 +425,10 @@ fun BottomSheetStageResults(
                 }
             )
         }
+
+        RaceProgressBox(
+            isVisible = isRaceProgressBoxVisible,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp),
+        )
     }
 }
