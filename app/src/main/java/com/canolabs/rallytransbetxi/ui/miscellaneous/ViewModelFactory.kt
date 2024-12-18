@@ -7,7 +7,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.CanAccessToAppUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreActivitiesCollapsedUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreNewsCollapsedUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetAreWarningCollapsedUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetAreStatementsCollapsedUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetBetxiRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUseCase
@@ -23,7 +23,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetTeamsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetThemeSettingsUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetWarningsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetStatementsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.InsertSettingsUseCase
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
@@ -34,7 +34,7 @@ import javax.inject.Inject
 
 class RallyViewModelFactory @Inject constructor(
     private val getNewsUseCase: GetNewsUseCase,
-    private val getWarningsUseCase: GetWarningsUseCase,
+    private val getStatementsUseCase: GetStatementsUseCase,
     private val getRestaurantsUseCase: GetRestaurantsUseCase,
     private val getHallOfFameUseCase: GetHallOfFameUseCase,
     private val getActivitiesUseCase: GetActivitiesUseCase,
@@ -45,7 +45,7 @@ class RallyViewModelFactory @Inject constructor(
     private val getNotificationPermissionCounterUseCase: GetNotificationPermissionCounterUseCase,
     private val getAreActivitiesCollapsed: GetAreActivitiesCollapsedUseCase,
     private val getAreNewsCollapsedUseCase: GetAreNewsCollapsedUseCase,
-    private val getAreWarningCollapsedUseCase: GetAreWarningCollapsedUseCase,
+    private val getAreStatementsCollapsedUseCase: GetAreStatementsCollapsedUseCase,
     private val canAccessToAppUseCase: CanAccessToAppUseCase,
     private val getBetxiRestaurantsUseCase: GetBetxiRestaurantsUseCase,
     private val getNumberOfSponsorsUseCase: GetNumberOfSponsorsUseCase
@@ -55,7 +55,7 @@ class RallyViewModelFactory @Inject constructor(
             modelClass.isAssignableFrom(RallyScreenViewModel::class.java) -> {
                 RallyScreenViewModel(
                     getNewsUseCase,
-                    getWarningsUseCase,
+                    getStatementsUseCase,
                     getRestaurantsUseCase,
                     getHallOfFameUseCase,
                     getActivitiesUseCase,
@@ -66,7 +66,7 @@ class RallyViewModelFactory @Inject constructor(
                     getNotificationPermissionCounterUseCase,
                     getAreActivitiesCollapsed,
                     getAreNewsCollapsedUseCase,
-                    getAreWarningCollapsedUseCase,
+                    getAreStatementsCollapsedUseCase,
                     canAccessToAppUseCase,
                     getBetxiRestaurantsUseCase,
                     getNumberOfSponsorsUseCase

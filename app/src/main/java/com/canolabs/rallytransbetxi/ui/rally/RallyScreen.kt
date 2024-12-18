@@ -38,13 +38,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
-import com.canolabs.rallytransbetxi.ui.rally.dialogs.WarningDialog
+import com.canolabs.rallytransbetxi.ui.rally.dialogs.StatementDialog
 import com.canolabs.rallytransbetxi.ui.rally.bottomSheets.BottomSheetAppSettings
 import com.canolabs.rallytransbetxi.ui.rally.featured.FeaturedSection
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.ActivityProgramSection
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.BreakingNewsSection
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.NotificationPermission
-import com.canolabs.rallytransbetxi.ui.rally.homeSections.WarningsSection
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.StatementsSection
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.HomeSectionShimmer
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.HomeSectionType
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
@@ -72,7 +72,7 @@ fun RallyScreen(
     LaunchedEffect(Unit) {
         viewModel.fetchNews()
         viewModel.fetchActivities()
-        viewModel.fetchWarnings()
+        viewModel.fetchStatements()
 
         // Get the initial theme state. It will take some ms to initialize
         viewModel.updateInitialThemeState(darkThemeState, isSystemInDarkTheme)
@@ -80,8 +80,8 @@ fun RallyScreen(
         viewModel.updateInitialFontSizeFactor(fontScaleState)
         // Get the initial profile. It will take some ms to initialize
         viewModel.updateInitialProfile()
-        // Get the initial state of warnings section (if it's collapsed or not)
-        viewModel.fetchAreWarningsCollapsed()
+        // Get the initial state of statements section (if it's collapsed or not)
+        viewModel.fetchAreStatementsCollapsed()
         // Get the initial state of breaking news section (if it's collapsed or not)
         viewModel.fetchAreNewsCollapsed()
         // Get the initial state of activities section (if it's collapsed or not)
@@ -97,7 +97,7 @@ fun RallyScreen(
             delay(1500)
             viewModel.fetchNews()
             viewModel.fetchActivities()
-            viewModel.fetchWarnings()
+            viewModel.fetchStatements()
             pullRefreshState.endRefresh()
         }
     }
@@ -111,7 +111,7 @@ fun RallyScreen(
         ) {
             item {
                 if (state.isDialogShowing) {
-                    WarningDialog(
+                    StatementDialog(
                         viewModel = viewModel,
                     )
                 }
@@ -142,11 +142,11 @@ fun RallyScreen(
                 )
 
                 if (state.isLoading) {
-                    HomeSectionShimmer(type = HomeSectionType.WARNINGS)
+                    HomeSectionShimmer(type = HomeSectionType.STATEMENTS)
                     HomeSectionShimmer(type = HomeSectionType.NEWS)
                     HomeSectionShimmer(type = HomeSectionType.ACTIVITIES)
                 } else {
-                    WarningsSection(
+                    StatementsSection(
                         state = state,
                         viewModel = viewModel,
                     )

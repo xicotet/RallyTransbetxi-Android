@@ -4,7 +4,7 @@ import com.canolabs.rallytransbetxi.data.models.responses.Activity
 import com.canolabs.rallytransbetxi.data.models.responses.HallOfFame
 import com.canolabs.rallytransbetxi.data.models.responses.News
 import com.canolabs.rallytransbetxi.data.models.responses.PlaceResponse
-import com.canolabs.rallytransbetxi.data.models.responses.Warning
+import com.canolabs.rallytransbetxi.data.models.responses.Statement
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 import com.canolabs.rallytransbetxi.domain.entities.FontSizeFactor
 import com.canolabs.rallytransbetxi.domain.entities.Language
@@ -18,7 +18,7 @@ data class RallyScreenUIState(
     val hallOfFame: List<HallOfFame> = emptyList(),
     val restaurants: List<PlaceResponse> = emptyList(),
     val numberOfSponsors: Int = 0,
-    val warnings: List<Warning> = emptyList(),
+    val statements: List<Statement> = emptyList(),
     val isHallOfFameLoading: Boolean = false,
     val language: Language? = null,
     val theme: Theme? = null,
@@ -26,9 +26,9 @@ data class RallyScreenUIState(
     val fontSizeFactor: FontSizeFactor? = null,
     val notificationPermissionCounter: Int? = null,
     val isDialogShowing: Boolean = false,
-    val warningShownOnDialog: Warning? = null,
-    val areWarningsCollapsed: Boolean = true,
-    val isShowAllWarningsEnabled: Boolean = false,
+    val statementShownOnDialog: Statement? = null,
+    val areStatementsCollapsed: Boolean = true,
+    val isShowAllStatementsEnabled: Boolean = false,
     val areBreakingNewsCollapsed: Boolean = false,
     val isShowAllBreakingNewsEnabled: Boolean = false,
     val areActivitiesCollapsed: Boolean = false,
@@ -70,8 +70,8 @@ fun MutableStateFlow<RallyScreenUIState>.setIsDialogShowing(isDialogShowing: Boo
     value = value.copy(isDialogShowing = isDialogShowing)
 }
 
-fun MutableStateFlow<RallyScreenUIState>.setWarningShownOnDialog(warning: Warning) {
-    value = value.copy(warningShownOnDialog = warning)
+fun MutableStateFlow<RallyScreenUIState>.setStatementShownOnDialog(statement: Statement) {
+    value = value.copy(statementShownOnDialog = statement)
 }
 
 fun MutableStateFlow<RallyScreenUIState>.setRestaurants(restaurants: List<PlaceResponse>) {
@@ -82,16 +82,16 @@ fun MutableStateFlow<RallyScreenUIState>.setNumberOfSponsors(numberOfSponsors: I
     value = value.copy(numberOfSponsors = numberOfSponsors)
 }
 
-fun MutableStateFlow<RallyScreenUIState>.setWarnings(warnings: List<Warning>) {
-    value = value.copy(warnings = warnings)
+fun MutableStateFlow<RallyScreenUIState>.setStatements(statements: List<Statement>) {
+    value = value.copy(statements = statements)
 }
 
-fun MutableStateFlow<RallyScreenUIState>.setAreWarningsCollapsed(areWarningsCollapsed: Boolean) {
-    value = value.copy(areWarningsCollapsed = areWarningsCollapsed)
+fun MutableStateFlow<RallyScreenUIState>.setAreStatementsCollapsed(areStatementsCollapsed: Boolean) {
+    value = value.copy(areStatementsCollapsed = areStatementsCollapsed)
 }
 
-fun MutableStateFlow<RallyScreenUIState>.setIsShowAllWarningsEnabled(isShowAllWarningsEnabled: Boolean) {
-    value = value.copy(isShowAllWarningsEnabled = isShowAllWarningsEnabled)
+fun MutableStateFlow<RallyScreenUIState>.setIsShowAllStatementsEnabled(isShowAllStatmentsEnabled: Boolean) {
+    value = value.copy(isShowAllStatementsEnabled = isShowAllStatmentsEnabled)
 }
 
 fun MutableStateFlow<RallyScreenUIState>.setHallOfFame(hallOfFame: List<HallOfFame>) {

@@ -15,7 +15,7 @@ import com.canolabs.rallytransbetxi.data.sources.local.dao.ResultDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.StagesDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.TeamDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.VersionsDao
-import com.canolabs.rallytransbetxi.data.sources.local.dao.WarningDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.StatementDao
 import com.canolabs.rallytransbetxi.data.sources.local.database.AppDatabase
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DATABASE_NAME
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_ACTIVITIES_COLLAPSED
@@ -133,7 +133,7 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideWarningDao(appDatabase: AppDatabase): WarningDao {
-        return appDatabase.warningsDao()
+    fun provideStatementDao(appDatabase: AppDatabase): StatementDao {
+        return appDatabase.statementsDao()
     }
 }

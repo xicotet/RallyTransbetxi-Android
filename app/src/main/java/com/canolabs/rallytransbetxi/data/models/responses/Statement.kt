@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.google.firebase.Timestamp
 
 @Entity
-data class Warning(
+data class Statement(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val titleEs: String = "",
     val titleEn: String = "",
