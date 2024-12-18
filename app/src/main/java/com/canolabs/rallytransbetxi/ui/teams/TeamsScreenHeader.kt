@@ -149,6 +149,7 @@ fun TeamsScreenHeader(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .padding(horizontal = PaddingRegular)
+                        .size(48.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.search),
