@@ -75,23 +75,16 @@ fun SponsorsScreen(
 
     LaunchedEffect(state.value.numberOfSponsors) {
         try {
-            // Wait until the number of sponsors is greater than 0
             val totalSponsors = state.value.numberOfSponsors
             if (totalSponsors > 0) {
-                // Launch coroutines for all image downloads concurrently
-                val urls = coroutineScope {
-                    (1..totalSponsors).map { i ->
-                        async {
-                            val sponsorImagePath = "${SPONSORS_IMAGE_PREFIX}$i${SPONSORS_IMAGE_EXTENSION}"
-                            val sponsorStorageRef =
-                                storage.reference.child("${Constants.SPONSORS_FOLDER}$sponsorImagePath")
-                            sponsorStorageRef.downloadUrl.await().toString()
-                        }
-                    }.awaitAll()
-                }
+                for (i in 1..totalSponsors) {
+                    val sponsorImagePath = "${SPONSORS_IMAGE_PREFIX}$i${SPONSORS_IMAGE_EXTENSION}"
+                    val sponsorStorageRef = storage.reference.child("${Constants.SPONSORS_FOLDER}$sponsorImagePath")
 
-                // Add all URLs to the list at once
-                sponsorImageUrls.addAll(urls)
+                    val sponsorUrl = sponsorStorageRef.downloadUrl.await()
+                    sponsorImageUrls.add(sponsorUrl.toString())
+                    Log.d("SponsorsScreen", "Sponsor Image URL: $sponsorUrl")
+                }
             }
         } catch (e: Exception) {
             errorDuringInitialization.value = true
