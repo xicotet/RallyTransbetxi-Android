@@ -1,8 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.navigation
 
 import android.content.SharedPreferences
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.*
@@ -29,6 +27,14 @@ import androidx.navigation.navArgument
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreen
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
 import com.canolabs.rallytransbetxi.ui.miscellaneous.UpdateAppVersionScreen
+import com.canolabs.rallytransbetxi.ui.navigation.NavigationTransitions.Companion.enterFromBottomTransition
+import com.canolabs.rallytransbetxi.ui.navigation.NavigationTransitions.Companion.enterTransition
+import com.canolabs.rallytransbetxi.ui.navigation.NavigationTransitions.Companion.exitToBottomTransition
+import com.canolabs.rallytransbetxi.ui.navigation.NavigationTransitions.Companion.exitTransition
+import com.canolabs.rallytransbetxi.ui.navigation.NavigationTransitions.Companion.popEnterFromBottomTransition
+import com.canolabs.rallytransbetxi.ui.navigation.NavigationTransitions.Companion.popEnterTransition
+import com.canolabs.rallytransbetxi.ui.navigation.NavigationTransitions.Companion.popExitToBottomTransition
+import com.canolabs.rallytransbetxi.ui.navigation.NavigationTransitions.Companion.popExitTransition
 import com.canolabs.rallytransbetxi.ui.onboarding.OnboardingFlow
 import com.canolabs.rallytransbetxi.ui.rally.*
 import com.canolabs.rallytransbetxi.ui.rally.featured.EatScreen
@@ -204,163 +210,91 @@ fun Navigation(
                             nullable = true
                             defaultValue = ""
                         }
-                    )
+                    ),
+                    enterTransition = { enterTransition },
+                    exitTransition = { exitTransition },
+                    popEnterTransition = { popEnterTransition },
+                    popExitTransition = { popExitTransition }
                 ) {
-                    val currentRoute =
-                        navController.currentBackStackEntryAsState().value?.destination?.route
-                    val isVisible = currentRoute?.contains(Screens.Maps.route) ?: false
-
-                    AnimatedVisibility(
-                        visible = isVisible,
-                        enter = fadeIn(animationSpec = tween(500)) + slideInHorizontally(
-                            initialOffsetX = { it },
-                            animationSpec = tween(700)
-                        ),
-                        exit = fadeOut(animationSpec = tween(500)) + slideOutHorizontally(
-                            targetOffsetX = { -it },
-                            animationSpec = tween(700)
-                        )
-                    ) {
-                        MapsScreen(
-                            mapsViewModel = mapsScreenViewModel,
-                            resultsViewModel = resultsScreenViewModel,
-                            onBackClick = { navController.popBackStack() },
-                            darkThemeState = darkThemeState,
-                            stageAcronym = it.arguments?.getString("stageAcronym") ?: "",
-                            fastAction = it.arguments?.getString("fastAction") ?: "",
-                            navController = navController,
-                            sharedPreferences = sharedPreferences
-                        )
-                    }
+                    MapsScreen(
+                        mapsViewModel = mapsScreenViewModel,
+                        resultsViewModel = resultsScreenViewModel,
+                        onBackClick = { navController.popBackStack() },
+                        darkThemeState = darkThemeState,
+                        stageAcronym = it.arguments?.getString("stageAcronym") ?: "",
+                        fastAction = it.arguments?.getString("fastAction") ?: "",
+                        navController = navController,
+                        sharedPreferences = sharedPreferences
+                    )
                 }
                 composable(
                     route = "${Screens.TeamDetail.route}/{teamNumber}",
                     arguments = listOf(
                         navArgument("teamNumber") { type = NavType.StringType },
-                    )
+                    ),
+                    enterTransition = { enterTransition },
+                    exitTransition = { exitTransition },
+                    popEnterTransition = { popEnterTransition },
+                    popExitTransition = { popExitTransition }
                 ) {
-                    val currentRoute =
-                        navController.currentBackStackEntryAsState().value?.destination?.route
-                    val isVisible = currentRoute?.contains(Screens.TeamDetail.route) ?: false
-
-                    AnimatedVisibility(
-                        visible = isVisible,
-                        enter = fadeIn(animationSpec = tween(500)) + slideInHorizontally(
-                            initialOffsetX = { it },
-                            animationSpec = tween(700)
-                        ),
-                        exit = fadeOut(animationSpec = tween(500)) + slideOutHorizontally(
-                            targetOffsetX = { -it },
-                            animationSpec = tween(700)
-                        )
-                    ) {
-                        TeamDetailScreen(
-                            teamNumber = it.arguments?.getString("teamNumber") ?: "",
-                            teamsViewModel = teamsScreenViewModel,
-                            onBackClick = { navController.popBackStack() }
-                        )
-                    }
+                    TeamDetailScreen(
+                        teamNumber = it.arguments?.getString("teamNumber") ?: "",
+                        teamsViewModel = teamsScreenViewModel,
+                        onBackClick = { navController.popBackStack() }
+                    )
                 }
                 composable(
                     route = "${Screens.NewsDetail.route}/{newsNumber}",
                     arguments = listOf(
                         navArgument("newsNumber") { type = NavType.StringType },
-                    )
+                    ),
+                    enterTransition = { enterTransition },
+                    exitTransition = { exitTransition },
+                    popEnterTransition = { popEnterTransition },
+                    popExitTransition = { popExitTransition }
                 ) {
-                    val currentRoute =
-                        navController.currentBackStackEntryAsState().value?.destination?.route
-                    val isVisible = currentRoute?.contains(Screens.NewsDetail.route) ?: false
-
-                    AnimatedVisibility(
-                        visible = isVisible,
-                        enter = fadeIn(animationSpec = tween(500)) + scaleIn(
-                            initialScale = 0.8f,
-                            animationSpec = tween(700)
-                        ),
-                        exit = fadeOut(animationSpec = tween(500)) + scaleOut(
-                            targetScale = 1.2f,
-                            animationSpec = tween(700)
-                        )
-                    ) {
-                        NewsDetailScreen(
-                            newsNumber = it.arguments?.getString("newsNumber") ?: "",
-                            viewModel = rallyScreenViewModel,
-                            onBackClick = { navController.popBackStack() }
-                        )
-                    }
+                    NewsDetailScreen(
+                        newsNumber = it.arguments?.getString("newsNumber") ?: "",
+                        viewModel = rallyScreenViewModel,
+                        onBackClick = { navController.popBackStack() }
+                    )
                 }
                 composable(
                     route = Screens.HallOfFame.route,
+                    enterTransition = { enterFromBottomTransition },
+                    exitTransition = { exitToBottomTransition },
+                    popEnterTransition = { popEnterFromBottomTransition },
+                    popExitTransition = { popExitToBottomTransition }
                 ) {
-                    val currentRoute =
-                        navController.currentBackStackEntryAsState().value?.destination?.route
-                    val isVisible = currentRoute?.contains(Screens.HallOfFame.route) ?: false
-
-                    AnimatedVisibility(
-                        visible = isVisible,
-                        enter = fadeIn(animationSpec = tween(500)) + slideInHorizontally(
-                            initialOffsetX = { it },
-                            animationSpec = tween(700)
-                        ),
-                        exit = fadeOut(animationSpec = tween(500)) + slideOutHorizontally(
-                            targetOffsetX = { -it },
-                            animationSpec = tween(700)
-                        )
-                    ) {
-                        HallOfFameScreen(
-                            viewModel = rallyScreenViewModel,
-                            onBackClick = { navController.popBackStack() }
-                        )
-                    }
+                    HallOfFameScreen(
+                        viewModel = rallyScreenViewModel,
+                        onBackClick = { navController.popBackStack() }
+                    )
                 }
                 composable(
                     route = Screens.Sponsors.route,
+                    enterTransition = { enterFromBottomTransition },
+                    exitTransition = { exitToBottomTransition },
+                    popEnterTransition = { popEnterFromBottomTransition },
+                    popExitTransition = { popExitToBottomTransition }
                 ) {
-                    val currentRoute =
-                        navController.currentBackStackEntryAsState().value?.destination?.route
-                    val isVisible = currentRoute?.contains(Screens.Sponsors.route) ?: false
-
-                    AnimatedVisibility(
-                        visible = isVisible,
-                        enter = fadeIn(animationSpec = tween(500)) + slideInHorizontally(
-                            initialOffsetX = { it },
-                            animationSpec = tween(700)
-                        ),
-                        exit = fadeOut(animationSpec = tween(500)) + slideOutHorizontally(
-                            targetOffsetX = { -it },
-                            animationSpec = tween(700)
-                        )
-                    ) {
-                        SponsorsScreen(
-                            viewModel = rallyScreenViewModel,
-                            onBackClick = { navController.popBackStack() }
-                        )
-                    }
+                    SponsorsScreen(
+                        viewModel = rallyScreenViewModel,
+                        onBackClick = { navController.popBackStack() }
+                    )
                 }
                 composable(
                     route = Screens.Eat.route,
+                    enterTransition = { enterFromBottomTransition },
+                    exitTransition = { exitToBottomTransition },
+                    popEnterTransition = { popEnterFromBottomTransition },
+                    popExitTransition = { popExitToBottomTransition }
                 ) {
-                    val currentRoute =
-                        navController.currentBackStackEntryAsState().value?.destination?.route
-                    val isVisible = currentRoute?.contains(Screens.Eat.route) ?: false
-
-                    AnimatedVisibility(
-                        visible = isVisible,
-                        enter = fadeIn(animationSpec = tween(500)) + slideInHorizontally(
-                            initialOffsetX = { it },
-                            animationSpec = tween(700)
-                        ),
-                        exit = fadeOut(animationSpec = tween(500)) + slideOutHorizontally(
-                            targetOffsetX = { -it },
-                            animationSpec = tween(700)
-                        )
-                    ) {
-                        EatScreen(
-                            viewModel = rallyScreenViewModel,
-                            onBackClick = { navController.popBackStack() },
-                            darkThemeState = darkThemeState
-                        )
-                    }
+                    EatScreen(
+                        viewModel = rallyScreenViewModel,
+                        onBackClick = { navController.popBackStack() },
+                        darkThemeState = darkThemeState
+                    )
                 }
             }
         }
