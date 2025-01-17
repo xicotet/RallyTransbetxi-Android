@@ -34,6 +34,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.canolabs.rallytransbetxi.data.models.responses.Result
+import com.canolabs.rallytransbetxi.domain.entities.Language
+import com.canolabs.rallytransbetxi.ui.teams.toOrdinal
 import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
@@ -42,7 +44,8 @@ import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 fun ResultCard(
     result: Result,
     position: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    language: Language
 ) {
     Column {
         if (result.disqualified) {
@@ -90,7 +93,7 @@ fun ResultCard(
                         modifier = Modifier.fillMaxHeight()
                     ) {
                         Text(
-                            text = position.toString(),
+                            text = toOrdinal(position, language),
                             fontFamily = antaFamily,
                             style = MaterialTheme.typography.headlineMedium,
                             color = MaterialTheme.colorScheme.onPrimaryContainer,

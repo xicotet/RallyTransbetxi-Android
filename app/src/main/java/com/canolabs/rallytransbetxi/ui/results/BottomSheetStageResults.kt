@@ -54,6 +54,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenUIState
 import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 import com.canolabs.rallytransbetxi.ui.navigation.Screens
@@ -71,7 +72,8 @@ fun BottomSheetStageResults(
     viewModel: ResultsScreenViewModel,
     bottomSheetState: SheetState,
     isComingFromMaps: Boolean = false,
-    navController: NavController
+    navController: NavController,
+    language: Language
 ) {
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -396,7 +398,8 @@ fun BottomSheetStageResults(
                                         navController.navigate(
                                             "${Screens.TeamDetail.route}/${result.team.number}"
                                         )
-                                    }
+                                    },
+                                    language = language
                                 )
                             }
                         }

@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.teams
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -69,15 +70,27 @@ import com.canolabs.rallytransbetxi.utils.Constants
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
+import android.icu.text.MessageFormat
+import com.canolabs.rallytransbetxi.domain.entities.Language
+import java.util.*
+
+fun toOrdinal(position: Int, language: Language): String {
+    val formatter = MessageFormat("{0,ordinal}", Locale.forLanguageTag(language.getLanguageCode()))  // TODO: Ensure this works when we add german and english support
+    return formatter.format(arrayOf(position))
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeamDetailScreen(
     teamNumber: String,
     teamsViewModel: TeamsScreenViewModel,
+    sharedPreferences: SharedPreferences,
     onBackClick: () -> Unit
 ) {
     val state = teamsViewModel.state.collectAsState()
+
+    val language = sharedPreferences.getString("SelectedLanguage", Locale.getDefault().language)
+    val ordinalLanguage = Language.entries.find { it.getLanguageCode() == language }!!
 
     val hasFetchedGlobalResult = remember { mutableStateOf(false) }
 
@@ -332,7 +345,8 @@ fun TeamDetailScreen(
                         }
                     } else {
                         Text(
-                            text = stringResource(id = R.string.category_position) + ": " + state.value.categoryResult,
+                            text = stringResource(id = R.string.category_position) + ": "
+                                    + toOrdinal(state.value.categoryResult, ordinalLanguage),
                             fontSize = 20.sp,
                             fontFamily = ezraFamily,
                             fontWeight = FontWeight.Normal,
@@ -361,7 +375,8 @@ fun TeamDetailScreen(
                         }
                     } else {
                         Text(
-                            text = stringResource(id = R.string.overall_position) + ": " + state.value.globalResult,
+                            text = stringResource(id = R.string.overall_position) + ": " +
+                                    toOrdinal(state.value.globalResult, ordinalLanguage),
                             fontSize = 20.sp,
                             fontFamily = ezraFamily,
                             fontWeight = FontWeight.Normal,
@@ -497,12 +512,12 @@ fun TeamDetailScreen(
                             verticalAlignment = Alignment.Bottom
                         ) {
                             Text(
-                                text = state.value.bestStagePosition.toString(),
+                                text = toOrdinal(state.value.bestStagePosition, ordinalLanguage),
                                 fontSize = 32.sp,
                                 fontFamily = ezraFamily,
                                 fontWeight = FontWeight.Normal,
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(8.dp)
+                                modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
                             )
                             if (state.value.numberOfTimesBestPosition > 1) {
                                 Text(

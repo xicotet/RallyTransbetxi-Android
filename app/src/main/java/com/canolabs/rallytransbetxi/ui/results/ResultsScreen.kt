@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
 import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
 import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
@@ -157,7 +158,8 @@ fun ResultsScreen(
                                 results = state.globalResults,
                                 isLoading = state.isLoading,
                                 state = state,
-                                navController = navController
+                                navController = navController,
+                                language = state.language ?: Language.GERMAN // Because german ordinals are 1. 2. 3. ...
                             )
                         }
                     }
@@ -171,7 +173,8 @@ fun ResultsScreen(
                                 isLoading = state.isLoading,
                                 state = state,
                                 viewModel = viewModel,
-                                navController = navController
+                                navController = navController,
+                                language = state.language ?: Language.GERMAN // Because german ordinals are 1. 2. 3. ...
                             )
                             Spacer(modifier = Modifier.weight(1f))
                         }

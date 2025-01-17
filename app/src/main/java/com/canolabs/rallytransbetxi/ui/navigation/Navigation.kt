@@ -240,6 +240,7 @@ fun Navigation(
                     TeamDetailScreen(
                         teamNumber = it.arguments?.getString("teamNumber") ?: "",
                         teamsViewModel = teamsScreenViewModel,
+                        sharedPreferences = sharedPreferences,
                         onBackClick = { navController.popBackStack() }
                     )
                 }
