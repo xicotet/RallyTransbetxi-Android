@@ -10,6 +10,7 @@ import com.canolabs.rallytransbetxi.data.sources.local.dao.AppSettingsDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.CategoryDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.HallOfFameDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.NewsDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.RaceWarningDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.RestaurantDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.ResultDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.StagesDao
@@ -75,8 +76,8 @@ object DatabaseModule {
                 AppDatabase::class.java,
                 DATABASE_NAME
             )
-                .addCallback(callback)
                 .fallbackToDestructiveMigration()
+                .addCallback(callback)
                 .build()
         }
         return appDatabase
@@ -135,5 +136,10 @@ object DatabaseModule {
     @Provides
     fun provideStatementDao(appDatabase: AppDatabase): StatementDao {
         return appDatabase.statementsDao()
+    }
+
+    @Provides
+    fun provideRaceWarningDao(appDatabase: AppDatabase): RaceWarningDao {
+        return appDatabase.raceWarningDao()
     }
 }

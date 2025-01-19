@@ -60,6 +60,7 @@ fun StagesResultsTab(
                 coroutineScope.launch {
                     viewModel.setSelectedStage(stageSelected)
                     viewModel.fetchStagesResults(stageSelected.acronym)
+                    viewModel.fetchStageRaceWarning(stageSelected.acronym)
                     viewModel.setIsBottomSheetVisible(true)
                     bottomSheetState.show()
                 }
@@ -116,6 +117,7 @@ fun StagesResultsTab(
             BottomSheetStageResults(
                 resultsState = state,
                 viewModel = viewModel,
+                stageRaceWarning = state.raceWarning,
                 bottomSheetState = bottomSheetState,
                 navController = navController,
                 language = language

@@ -14,11 +14,13 @@ import com.canolabs.rallytransbetxi.data.models.responses.News
 import com.canolabs.rallytransbetxi.data.models.responses.Restaurant
 import com.canolabs.rallytransbetxi.data.models.responses.Statement
 import com.canolabs.rallytransbetxi.data.models.responses.HallOfFame
+import com.canolabs.rallytransbetxi.data.models.responses.RaceWarning
 import com.canolabs.rallytransbetxi.data.sources.local.dao.ActivityDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.AppSettingsDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.CategoryDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.HallOfFameDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.NewsDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.RaceWarningDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.RestaurantDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.ResultDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.StagesDao
@@ -43,8 +45,9 @@ import com.canolabs.rallytransbetxi.data.sources.local.typeConverters.TimestampC
         News::class,
         HallOfFame::class,
         Restaurant::class,
-        Statement::class
-    ], version = 1
+        Statement::class,
+        RaceWarning::class
+    ], version = 2
 )
 @TypeConverters(
     TimestampConverter::class,
@@ -65,4 +68,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun hallOfFameDao(): HallOfFameDao
     abstract fun restaurantDao(): RestaurantDao
     abstract fun statementsDao(): StatementDao
+    abstract fun raceWarningDao(): RaceWarningDao
 }

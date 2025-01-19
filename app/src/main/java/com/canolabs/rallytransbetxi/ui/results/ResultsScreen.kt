@@ -42,7 +42,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,6 +59,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.data.models.responses.RaceWarning
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
 import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
@@ -84,12 +84,18 @@ fun ResultsScreen(
     val pullRefreshState = rememberPullToRefreshState()
 
     val scrollState = rememberScrollState()
-    val isRaceProgressBoxVisible = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.fetchGlobalResults()
+        viewModel.fetchGlobalRaceWarning()
         viewModel.fetchStages()
         viewModel.fetchLanguage(sharedPreferences)
+    }
+
+    LaunchedEffect(pagerState.targetPage) {
+        if (pagerState.currentPage == 0) {
+            viewModel.fetchGlobalRaceWarning()
+        }
     }
 
     val configuration = LocalConfiguration.current
@@ -99,6 +105,7 @@ fun ResultsScreen(
         LaunchedEffect(true) {
             delay(1500)
             viewModel.fetchGlobalResults()
+            viewModel.fetchGlobalRaceWarning()
             viewModel.fetchStages()
             viewModel.fetchLanguage(sharedPreferences)
             pullRefreshState.endRefresh()
@@ -116,11 +123,7 @@ fun ResultsScreen(
                 .verticalScroll(scrollState)
         ) {
 
-            ResultsScreenHeader(
-                viewModel = viewModel,
-                isRaceProgressStatusBarVisible = isRaceProgressBoxVisible,
-                pagerState = pagerState
-            )
+            ResultsScreenHeader(viewModel = viewModel)
 
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
@@ -209,7 +212,8 @@ fun ResultsScreen(
         }
 
         RaceProgressBox(
-            isVisible = isRaceProgressBoxVisible,
+            raceWarning = state.raceWarning,
+            language = state.language,
             modifier = Modifier
                 .align(Alignment.BottomCenter),
             pagerState = pagerState
@@ -242,24 +246,30 @@ fun ResultsTab(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RaceProgressBox(
-    isVisible: MutableState<Boolean>,
+    raceWarning: RaceWarning?,
+    language: Language?,
     modifier: Modifier = Modifier,
     pagerState: PagerState? = null,
     dragDismissThreshold: Float = 150f
 ) {
     var dragOffset by remember { mutableFloatStateOf(0f) } // Track the vertical drag offset
+    val isVisible = remember { mutableStateOf(true) }
 
     // Reset dragOffset when isVisible changes to true
-    LaunchedEffect(isVisible.value) {
-        if (isVisible.value) {
+    LaunchedEffect(raceWarning) {
+        if (raceWarning != null) {
             dragOffset = 0f
+            isVisible.value = true
+        } else {
+            isVisible.value = false
         }
     }
 
     val isPagerStateVisible = pagerState?.currentPage == 0 || pagerState == null
+    val content = getRaceWarningContentByLanguage(raceWarning, language)
 
     AnimatedVisibility(
-        visible = isVisible.value && isPagerStateVisible,
+        visible = isVisible.value && isPagerStateVisible && content.isNotEmpty(),
         modifier = modifier
             .padding(horizontal = PaddingRegular, vertical = PaddingSmall)
             .offset { IntOffset(0, dragOffset.toInt()) },
@@ -296,7 +306,7 @@ fun RaceProgressBox(
                 }
         ) {
             Text(
-                text = "Race Progress Status: Results are confirmed and finally! Race Progress Status: Results are confirmed and finally!",
+                text = content,
                 style = MaterialTheme.typography.bodyLarge,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
@@ -318,5 +328,18 @@ fun RaceProgressBox(
                 )
             }
         }
+    }
+}
+
+fun getRaceWarningContentByLanguage(
+    globalResultsWarning: RaceWarning?,
+    language: Language?
+): String {
+    return when (language) {
+        Language.CATALAN -> globalResultsWarning?.contentCa ?: ""
+        Language.ENGLISH -> globalResultsWarning?.contentEn ?: ""
+        Language.SPANISH -> globalResultsWarning?.contentEs ?: ""
+        Language.GERMAN -> globalResultsWarning?.contentDe ?: ""
+        else -> ""
     }
 }

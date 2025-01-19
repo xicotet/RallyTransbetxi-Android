@@ -11,6 +11,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetAreStatementsCollapsedUse
 import com.canolabs.rallytransbetxi.domain.usecases.GetBetxiRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalRaceWarningUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetHallOfFameUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
@@ -19,6 +20,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetNumberOfSponsorsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStageByAcronymUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetStageRaceWarningUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetTeamsUseCase
@@ -138,6 +140,8 @@ class TeamsViewModelFactory @Inject constructor(
 class ResultsViewModelFactory @Inject constructor(
     private val getGlobalResultsUseCase: GetGlobalResultsUseCase,
     private val getStagesResultsUseCase: GetStagesResultsUseCase,
+    private val getGlobalRaceWarningUseCase: GetGlobalRaceWarningUseCase,
+    private val getStageRaceWarningUseCase: GetStageRaceWarningUseCase,
     private val getStagesUseCase: GetStagesUseCase
 ) : ViewModelProvider.NewInstanceFactory() {
 
@@ -146,6 +150,8 @@ class ResultsViewModelFactory @Inject constructor(
             return ResultsScreenViewModel(
                 getGlobalResultsUseCase,
                 getStagesResultsUseCase,
+                getGlobalRaceWarningUseCase,
+                getStageRaceWarningUseCase,
                 getStagesUseCase
             ) as T
         }

@@ -119,6 +119,7 @@ fun MapContent(
 
     LaunchedEffect(Unit) {
         resultsViewModel.fetchStagesResults(stageAcronym)
+        resultsViewModel.fetchStageRaceWarning(stageAcronym)
     }
 
     val isMapReady = remember { mutableStateOf(false) }
@@ -546,6 +547,7 @@ fun MapContent(
                     resultsState = resultsState,
                     mapsState = state,
                     viewModel = resultsViewModel,
+                    stageRaceWarning = resultsState.raceWarning,
                     isComingFromMaps = true,
                     bottomSheetState = resultsBottomSheetState,
                     navController = navController,
