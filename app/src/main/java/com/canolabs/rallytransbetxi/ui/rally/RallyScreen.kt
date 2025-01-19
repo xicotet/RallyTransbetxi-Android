@@ -28,6 +28,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -90,7 +92,11 @@ fun RallyScreen(
         viewModel.fetchLanguage(sharedPreferences)
     }
 
-    NotificationPermission(viewModel)
+    val showNotificationPermissionBottomSheet = remember { mutableStateOf(false) }
+    NotificationPermission(
+        viewModel = viewModel,
+        showNotificationPermissionBottomSheet = showNotificationPermissionBottomSheet
+    )
 
     if (pullRefreshState.isRefreshing) {
         LaunchedEffect(true) {
@@ -110,7 +116,7 @@ fun RallyScreen(
             verticalArrangement = Arrangement.Center
         ) {
             item {
-                if (state.isDialogShowing) {
+                if (state.isDialogShowing && showNotificationPermissionBottomSheet.value.not()) {
                     StatementDialog(
                         viewModel = viewModel,
                     )
