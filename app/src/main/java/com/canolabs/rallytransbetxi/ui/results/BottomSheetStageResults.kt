@@ -86,21 +86,6 @@ fun BottomSheetStageResults(
 
     val isRaceProgressBoxVisible = remember { mutableStateOf(false) }
 
-    // Create the modifier with the conditional background for the race status icon
-    val backgroundModifier = if (isRaceProgressBoxVisible.value) {
-        Modifier.background(
-            brush = Brush.radialGradient(
-                colors = listOf(
-                    MaterialTheme.colorScheme.primary,
-                    MaterialTheme.colorScheme.secondary
-                )
-            ),
-            shape = RoundedCornerShape(24.dp)
-        )
-    } else {
-        Modifier
-    }
-
     Box(
         Modifier
             .fillMaxSize()
@@ -218,29 +203,6 @@ fun BottomSheetStageResults(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    IconButton(
-                                        onClick = {
-                                            isRaceProgressBoxVisible.value = !isRaceProgressBoxVisible.value
-                                            if (bottomSheetState.currentValue == SheetValue.PartiallyExpanded && isRaceProgressBoxVisible.value) {
-                                                coroutineScope.launch {
-                                                    bottomSheetState.expand()
-                                                }
-                                            }
-                                        },
-                                        modifier = Modifier
-                                            .align(Alignment.CenterVertically)
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.circle_notifications),
-                                            contentDescription = null,
-                                            tint = if (isRaceProgressBoxVisible.value) MaterialTheme.colorScheme.tertiaryContainer
-                                            else LocalContentColor.current,
-                                            modifier = backgroundModifier.size(48.dp)
-                                        )
-                                    }
-
-                                    Spacer(modifier = Modifier.size(PaddingMedium))
-
                                     if (!isComingFromMaps) {
                                         OutlinedButton(
                                             shape = MaterialTheme.shapes.extraLarge,

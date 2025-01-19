@@ -179,28 +179,6 @@ fun ResultsScreenHeader(
                         .align(Alignment.CenterVertically)
                         .padding(horizontal = PaddingRegular)
                 ) {
-                    AnimatedVisibility(
-                        visible = pagerState.currentPage == 0,
-                        enter = fadeIn(animationSpec = tween(durationMillis = 300)) + slideInVertically(initialOffsetY = { it }),
-                        exit = fadeOut(animationSpec = tween(durationMillis = 300)) + slideOutVertically { it }
-                    ) {
-                        IconButton(
-                            onClick = { isRaceProgressStatusBarVisible.value = !isRaceProgressStatusBarVisible.value },
-                            modifier = Modifier
-                                .size(48.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.circle_notifications),
-                                contentDescription = null,
-                                tint = if (isRaceProgressStatusBarVisible.value) MaterialTheme.colorScheme.tertiaryContainer
-                                else LocalContentColor.current,
-                                modifier = backgroundModifier.size(48.dp)
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.size(PaddingMedium))
-
                     IconButton(
                         onClick = { viewModel.setIsSearchBarVisible(true) },
                         modifier = Modifier
