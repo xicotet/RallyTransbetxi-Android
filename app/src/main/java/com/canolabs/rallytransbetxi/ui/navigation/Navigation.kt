@@ -1,6 +1,10 @@
 package com.canolabs.rallytransbetxi.ui.navigation
 
 import android.content.SharedPreferences
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.*
@@ -68,7 +72,7 @@ fun Navigation(
     }
 
     val navController = rememberNavController()
-    val screens = listOf(
+    val navBarScreens = listOf(
         Screens.Rally,
         Screens.Stages,
         Screens.Results,
@@ -88,21 +92,21 @@ fun Navigation(
 
     if (blockApp.value) {
         UpdateAppVersionScreen()
-    } else if (finishedOnboarding.value.not()) {
-        OnboardingFlow(
-            finishedOnboarding = finishedOnboarding,
-            sharedPreferences = sharedPreferences,
-            changeLanguage = { language ->
-                changeLocale(language)
-            }
-        )
     } else {
         Scaffold(
             bottomBar = {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
 
-                if (shouldDisplayNavigationBar(currentRoute)) {
+                val shouldShowNavBar = shouldDisplayNavigationBar(currentRoute)
+
+                AnimatedVisibility(
+                    visible = shouldShowNavBar,
+                    enter = slideInVertically(
+                        initialOffsetY = { it }, // Slide in from bottom
+                        animationSpec = tween(durationMillis = 400)
+                    ) + fadeIn(animationSpec = tween(durationMillis = 300)),
+                ) {
                     NavigationBar(
                         containerColor = MaterialTheme.colorScheme.surface,
                         tonalElevation = 3.dp,
@@ -111,7 +115,7 @@ fun Navigation(
                             recomposeNavbar.value = false
                         }
 
-                        screens.forEach { screen ->
+                        navBarScreens.forEach { screen ->
                             NavigationBarItem(
                                 icon = {
                                     Box(
@@ -120,7 +124,7 @@ fun Navigation(
                                                 if (currentRoute == screen.route) RoundedCornerShape(
                                                     32
                                                 ) else RoundedCornerShape(0.dp)
-                                            ) // Rounded shape for active
+                                            )
                                             .background(
                                                 if (currentRoute == screen.route) MaterialTheme.colorScheme.primaryContainer
                                                 else Color.Transparent
@@ -164,10 +168,10 @@ fun Navigation(
         ) { innerPadding ->
             NavHost(
                 navController,
-                startDestination = Screens.Rally.route,
+                startDestination = if (finishedOnboarding.value.not()) Screens.Onboarding.route else Screens.Rally.route,
                 modifier = Modifier.padding(innerPadding)
             ) {
-                screens.forEach { screen ->
+                navBarScreens.forEach { screen ->
                     composable(screen.route) {
                         when (screen) {
                             Screens.Rally -> RallyScreen(
@@ -201,6 +205,18 @@ fun Navigation(
                     }
                 }
 
+                composable(
+                    route = Screens.Onboarding.route,
+                    exitTransition = { popExitTransition },
+                ) {
+                    OnboardingFlow(
+                        finishedOnboarding = finishedOnboarding,
+                        sharedPreferences = sharedPreferences,
+                        changeLanguage = { language ->
+                            changeLocale(language)
+                        }
+                    )
+                }
                 composable(
                     route = "${Screens.Maps.route}/{stageAcronym}/{fastAction}",
                     arguments = listOf(

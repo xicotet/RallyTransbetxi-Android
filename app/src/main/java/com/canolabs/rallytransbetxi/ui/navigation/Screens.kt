@@ -9,7 +9,7 @@ sealed class Screens(
     val iconUnselected: Int? = null,
     val hasNavigationBar: Boolean = true
 ) {
-
+    data object Onboarding : Screens("onboarding", hasNavigationBar = false)
     data object Rally : Screens("rally", R.string.rally, R.drawable.home_filled, R.drawable.home_outlined)
     data object Stages : Screens("stages", R.string.stages, R.drawable.map_filled, R.drawable.map_outlined)
     data object Results : Screens("results", R.string.results, R.drawable.sports_score, R.drawable.sports_score)
