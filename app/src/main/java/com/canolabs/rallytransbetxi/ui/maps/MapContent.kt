@@ -67,6 +67,7 @@ import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
+import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.miscellaneous.bitmapDescriptorFromVector
 import com.canolabs.rallytransbetxi.ui.results.BottomSheetStageResults
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
@@ -118,6 +119,7 @@ fun MapContent(
 
     LaunchedEffect(Unit) {
         resultsViewModel.fetchStagesResults(stageAcronym)
+        resultsViewModel.fetchStageRaceWarning(stageAcronym)
     }
 
     val isMapReady = remember { mutableStateOf(false) }
@@ -545,8 +547,11 @@ fun MapContent(
                     resultsState = resultsState,
                     mapsState = state,
                     viewModel = resultsViewModel,
+                    stageRaceWarning = resultsState.raceWarning,
                     isComingFromMaps = true,
-                    navController = navController
+                    bottomSheetState = resultsBottomSheetState,
+                    navController = navController,
+                    language = state.language ?: Language.GERMAN // Because german ordinals are 1. 2. 3. ...
                 )
             }
         } else if (state.isPermissionDeniedBottomSheetVisible) {

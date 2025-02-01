@@ -28,6 +28,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,13 +40,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
-import com.canolabs.rallytransbetxi.ui.rally.dialogs.WarningDialog
+import com.canolabs.rallytransbetxi.ui.rally.dialogs.StatementDialog
 import com.canolabs.rallytransbetxi.ui.rally.bottomSheets.BottomSheetAppSettings
 import com.canolabs.rallytransbetxi.ui.rally.featured.FeaturedSection
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.ActivityProgramSection
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.BreakingNewsSection
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.NotificationPermission
-import com.canolabs.rallytransbetxi.ui.rally.homeSections.WarningsSection
+import com.canolabs.rallytransbetxi.ui.rally.homeSections.StatementsSection
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.HomeSectionShimmer
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.HomeSectionType
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
@@ -72,7 +74,7 @@ fun RallyScreen(
     LaunchedEffect(Unit) {
         viewModel.fetchNews()
         viewModel.fetchActivities()
-        viewModel.fetchWarnings()
+        viewModel.fetchStatements()
 
         // Get the initial theme state. It will take some ms to initialize
         viewModel.updateInitialThemeState(darkThemeState, isSystemInDarkTheme)
@@ -80,8 +82,8 @@ fun RallyScreen(
         viewModel.updateInitialFontSizeFactor(fontScaleState)
         // Get the initial profile. It will take some ms to initialize
         viewModel.updateInitialProfile()
-        // Get the initial state of warnings section (if it's collapsed or not)
-        viewModel.fetchAreWarningsCollapsed()
+        // Get the initial state of statements section (if it's collapsed or not)
+        viewModel.fetchAreStatementsCollapsed()
         // Get the initial state of breaking news section (if it's collapsed or not)
         viewModel.fetchAreNewsCollapsed()
         // Get the initial state of activities section (if it's collapsed or not)
@@ -90,14 +92,18 @@ fun RallyScreen(
         viewModel.fetchLanguage(sharedPreferences)
     }
 
-    NotificationPermission(viewModel)
+    val showNotificationPermissionBottomSheet = remember { mutableStateOf(false) }
+    NotificationPermission(
+        viewModel = viewModel,
+        showNotificationPermissionBottomSheet = showNotificationPermissionBottomSheet
+    )
 
     if (pullRefreshState.isRefreshing) {
         LaunchedEffect(true) {
             delay(1500)
             viewModel.fetchNews()
             viewModel.fetchActivities()
-            viewModel.fetchWarnings()
+            viewModel.fetchStatements()
             pullRefreshState.endRefresh()
         }
     }
@@ -110,8 +116,8 @@ fun RallyScreen(
             verticalArrangement = Arrangement.Center
         ) {
             item {
-                if (state.isDialogShowing) {
-                    WarningDialog(
+                if (state.isDialogShowing && showNotificationPermissionBottomSheet.value.not()) {
+                    StatementDialog(
                         viewModel = viewModel,
                     )
                 }
@@ -142,11 +148,11 @@ fun RallyScreen(
                 )
 
                 if (state.isLoading) {
-                    HomeSectionShimmer(type = HomeSectionType.WARNINGS)
+                    HomeSectionShimmer(type = HomeSectionType.STATEMENTS)
                     HomeSectionShimmer(type = HomeSectionType.NEWS)
                     HomeSectionShimmer(type = HomeSectionType.ACTIVITIES)
                 } else {
-                    WarningsSection(
+                    StatementsSection(
                         state = state,
                         viewModel = viewModel,
                     )

@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +33,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,9 +52,6 @@ import com.canolabs.rallytransbetxi.utils.Constants.Companion.SPONSORS_IMAGE_EXT
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.SPONSORS_IMAGE_PREFIX
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,23 +71,16 @@ fun SponsorsScreen(
 
     LaunchedEffect(state.value.numberOfSponsors) {
         try {
-            // Wait until the number of sponsors is greater than 0
             val totalSponsors = state.value.numberOfSponsors
             if (totalSponsors > 0) {
-                // Launch coroutines for all image downloads concurrently
-                val urls = coroutineScope {
-                    (1..totalSponsors).map { i ->
-                        async {
-                            val sponsorImagePath = "${SPONSORS_IMAGE_PREFIX}$i${SPONSORS_IMAGE_EXTENSION}"
-                            val sponsorStorageRef =
-                                storage.reference.child("${Constants.SPONSORS_FOLDER}$sponsorImagePath")
-                            sponsorStorageRef.downloadUrl.await().toString()
-                        }
-                    }.awaitAll()
-                }
+                for (i in 1..totalSponsors) {
+                    val sponsorImagePath = "${SPONSORS_IMAGE_PREFIX}$i${SPONSORS_IMAGE_EXTENSION}"
+                    val sponsorStorageRef = storage.reference.child("${Constants.SPONSORS_FOLDER}$sponsorImagePath")
 
-                // Add all URLs to the list at once
-                sponsorImageUrls.addAll(urls)
+                    val sponsorUrl = sponsorStorageRef.downloadUrl.await()
+                    sponsorImageUrls.add(sponsorUrl.toString())
+                    Log.d("SponsorsScreen", "Sponsor Image URL: $sponsorUrl")
+                }
             }
         } catch (e: Exception) {
             errorDuringInitialization.value = true
@@ -133,7 +122,7 @@ fun SponsorsScreen(
                         onClick = onBackClick,
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            painter = painterResource(R.drawable.close),
                             modifier = Modifier.size(32.dp),
                             contentDescription = "Localized description"
                         )

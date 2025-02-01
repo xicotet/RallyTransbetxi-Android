@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.data.models.responses.Result
+import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 import com.canolabs.rallytransbetxi.ui.navigation.Screens
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
@@ -22,7 +23,8 @@ fun GlobalResultsTab(
     results: List<Result>,
     isLoading: Boolean,
     state: ResultsScreenUIState,
-    navController: NavController
+    navController: NavController,
+    language: Language
 ) {
     if (isLoading) {
         for (i in 0..3) {
@@ -95,7 +97,8 @@ fun GlobalResultsTab(
                             navController.navigate(
                                 "${Screens.TeamDetail.route}/${result.team.number}"
                             )
-                        }
+                        },
+                        language = language
                     )
                 }
             }

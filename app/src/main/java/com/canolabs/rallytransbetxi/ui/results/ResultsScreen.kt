@@ -1,7 +1,13 @@
 package com.canolabs.rallytransbetxi.ui.results
 
 import android.content.SharedPreferences
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -9,16 +15,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.TabRow
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -26,18 +39,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.data.models.responses.RaceWarning
+import com.canolabs.rallytransbetxi.domain.entities.Language
+import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
+import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
+import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -61,8 +87,15 @@ fun ResultsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.fetchGlobalResults()
+        viewModel.fetchGlobalRaceWarning()
         viewModel.fetchStages()
         viewModel.fetchLanguage(sharedPreferences)
+    }
+
+    LaunchedEffect(pagerState.targetPage) {
+        if (pagerState.currentPage == 0) {
+            viewModel.fetchGlobalRaceWarning()
+        }
     }
 
     val configuration = LocalConfiguration.current
@@ -72,6 +105,7 @@ fun ResultsScreen(
         LaunchedEffect(true) {
             delay(1500)
             viewModel.fetchGlobalResults()
+            viewModel.fetchGlobalRaceWarning()
             viewModel.fetchStages()
             viewModel.fetchLanguage(sharedPreferences)
             pullRefreshState.endRefresh()
@@ -127,7 +161,8 @@ fun ResultsScreen(
                                 results = state.globalResults,
                                 isLoading = state.isLoading,
                                 state = state,
-                                navController = navController
+                                navController = navController,
+                                language = state.language ?: Language.GERMAN // Because german ordinals are 1. 2. 3. ...
                             )
                         }
                     }
@@ -141,7 +176,8 @@ fun ResultsScreen(
                                 isLoading = state.isLoading,
                                 state = state,
                                 viewModel = viewModel,
-                                navController = navController
+                                navController = navController,
+                                language = state.language ?: Language.GERMAN // Because german ordinals are 1. 2. 3. ...
                             )
                             Spacer(modifier = Modifier.weight(1f))
                         }
@@ -174,6 +210,14 @@ fun ResultsScreen(
                 }
             )
         }
+
+        RaceProgressBox(
+            raceWarning = state.raceWarning,
+            language = state.language,
+            modifier = Modifier
+                .align(Alignment.BottomCenter),
+            pagerState = pagerState
+        )
     }
 }
 
@@ -196,5 +240,106 @@ fun ResultsTab(
             fontFamily = robotoFamily,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun RaceProgressBox(
+    raceWarning: RaceWarning?,
+    language: Language?,
+    modifier: Modifier = Modifier,
+    pagerState: PagerState? = null,
+    dragDismissThreshold: Float = 150f
+) {
+    var dragOffset by remember { mutableFloatStateOf(0f) } // Track the vertical drag offset
+    val isVisible = remember { mutableStateOf(true) }
+
+    // Reset dragOffset when isVisible changes to true
+    LaunchedEffect(raceWarning) {
+        if (raceWarning != null) {
+            dragOffset = 0f
+            isVisible.value = true
+        } else {
+            isVisible.value = false
+        }
+    }
+
+    val isPagerStateVisible = pagerState?.currentPage == 0 || pagerState == null
+    val content = getRaceWarningContentByLanguage(raceWarning, language)
+
+    AnimatedVisibility(
+        visible = isVisible.value && isPagerStateVisible && content.isNotEmpty(),
+        modifier = modifier
+            .padding(horizontal = PaddingRegular, vertical = PaddingSmall)
+            .offset { IntOffset(0, dragOffset.toInt()) },
+        enter = fadeIn() + slideInVertically { it },
+        exit = fadeOut() + slideOutVertically { it }
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+                .background(
+                    MaterialTheme.colorScheme.tertiaryContainer,
+                    RoundedCornerShape(16.dp)
+                )
+                .padding(PaddingMedium)
+                .pointerInput(Unit) {
+                    detectVerticalDragGestures(
+                        onDragStart = { /* Optional: Add drag start logic here */ },
+                        onVerticalDrag = { change, dragAmount ->
+                            change.consume() // Consume the touch event
+                            dragOffset = (dragOffset + dragAmount).coerceAtLeast(0f)
+                        },
+                        onDragEnd = {
+                            if (dragOffset > dragDismissThreshold) {
+                                isVisible.value = false // Dismiss the element
+                            } else {
+                                dragOffset = 0f // Reset position
+                            }
+                        },
+                        onDragCancel = {
+                            dragOffset = 0f // Reset position on cancel
+                        }
+                    )
+                }
+        ) {
+            Text(
+                text = content,
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(end = 16.dp) // Add padding to avoid text touching the edge
+            )
+
+            // Close button (cross icon) centered vertically
+            IconButton(
+                onClick = { isVisible.value = false },
+                modifier = Modifier.size(48.dp).align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onTertiaryContainer
+                )
+            }
+        }
+    }
+}
+
+fun getRaceWarningContentByLanguage(
+    globalResultsWarning: RaceWarning?,
+    language: Language?
+): String {
+    return when (language) {
+        Language.CATALAN -> globalResultsWarning?.contentCa ?: ""
+        Language.ENGLISH -> globalResultsWarning?.contentEn ?: ""
+        Language.SPANISH -> globalResultsWarning?.contentEs ?: ""
+        Language.GERMAN -> globalResultsWarning?.contentDe ?: ""
+        else -> ""
     }
 }

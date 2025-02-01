@@ -23,8 +23,8 @@ interface AppSettingsDao {
     @Query("SELECT notificationPermissionCounter FROM appsetting WHERE id = 1")
     suspend fun getNotificationPermissionCounter(): Int
 
-    @Query("SELECT areWarningsCollapsed FROM appsetting WHERE id = 1")
-    suspend fun getAreWarningsCollapsed(): Boolean
+    @Query("SELECT areStatementsCollapsed FROM appsetting WHERE id = 1")
+    suspend fun getAreStatementsCollapsed(): Boolean
 
     @Query("SELECT areNewsCollapsed FROM appsetting WHERE id = 1")
     suspend fun getAreNewsCollapsed(): Boolean

@@ -28,6 +28,14 @@ class StagesScreenViewModel @Inject constructor(
         }
     }
 
+    fun setIsSearchBarVisible(isSearchBarVisible: Boolean) {
+        _state.setIsSearchBarVisible(isSearchBarVisible)
+    }
+
+    fun setSearchText(searchText: String) {
+        _state.setSearchText(searchText)
+    }
+
     fun fetchLanguage(sharedPreferences: SharedPreferences) {
         viewModelScope.launch {
             val language = sharedPreferences.getString("SelectedLanguage", Locale.getDefault().language)

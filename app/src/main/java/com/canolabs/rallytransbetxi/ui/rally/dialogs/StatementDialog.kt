@@ -26,13 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.canolabs.rallytransbetxi.R
-import com.canolabs.rallytransbetxi.data.models.responses.Warning
+import com.canolabs.rallytransbetxi.data.models.responses.Statement
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 
 @Composable
-fun WarningDialog(
+fun StatementDialog(
     viewModel: RallyScreenViewModel,
 ) {
     val state = viewModel.state.collectAsState()
@@ -58,12 +58,12 @@ fun WarningDialog(
                     horizontalArrangement = Arrangement.Center,
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.notification_important),
+                        painter = painterResource(id = R.drawable.mail),
                         contentDescription = null,
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     Text(
-                        text = stringResource(id = R.string.warnings),
+                        text = stringResource(id = R.string.statements),
                         textAlign = TextAlign.Center,
                         fontFamily = robotoFamily,
                         fontWeight = FontWeight.Bold
@@ -71,8 +71,8 @@ fun WarningDialog(
                 }
 
                 Text(
-                    text = getWarningTitleByLanguage(
-                        state.value.warningShownOnDialog!!,
+                    text = getStatementTitleByLanguage(
+                        state.value.statementShownOnDialog!!,
                         state.value.language
                     ),
                     modifier = Modifier
@@ -84,8 +84,8 @@ fun WarningDialog(
                 )
 
                 Text(
-                    text = getWarningContentByLanguage(
-                        state.value.warningShownOnDialog!!,
+                    text = getStatementContentByLanguage(
+                        state.value.statementShownOnDialog!!,
                         state.value.language
                     ),
                     modifier = Modifier
@@ -122,22 +122,22 @@ fun WarningDialog(
     }
 }
 
-fun getWarningTitleByLanguage(warning: Warning, language: Language?): String {
+fun getStatementTitleByLanguage(statement: Statement, language: Language?): String {
     return when (language) {
-        Language.SPANISH -> warning.titleEs
-        Language.CATALAN -> warning.titleCa
-        Language.ENGLISH -> warning.titleEn
-        Language.GERMAN -> warning.titleDe
-        null -> warning.titleEs
+        Language.SPANISH -> statement.titleEs
+        Language.CATALAN -> statement.titleCa
+        Language.ENGLISH -> statement.titleEn
+        Language.GERMAN -> statement.titleDe
+        null -> statement.titleEs
     }
 }
 
-fun getWarningContentByLanguage(warning: Warning, language: Language?): String {
+fun getStatementContentByLanguage(statement: Statement, language: Language?): String {
     return when (language) {
-        Language.SPANISH -> warning.contentEs
-        Language.CATALAN -> warning.contentCa
-        Language.ENGLISH -> warning.contentEn
-        Language.GERMAN -> warning.contentDe
-        null -> warning.contentEs
+        Language.SPANISH -> statement.contentEs
+        Language.CATALAN -> statement.contentCa
+        Language.ENGLISH -> statement.contentEn
+        Language.GERMAN -> statement.contentDe
+        null -> statement.contentEs
     }
 }

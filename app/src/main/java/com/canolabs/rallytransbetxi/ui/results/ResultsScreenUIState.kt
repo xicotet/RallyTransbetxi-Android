@@ -1,5 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.results
 
+import com.canolabs.rallytransbetxi.data.models.responses.RaceWarning
 import com.canolabs.rallytransbetxi.ui.miscellaneous.UIState
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 data class ResultsScreenUIState(
     val globalResults: List<Result> = emptyList(),
     val stageResults: List<Result> = emptyList(),
+    val raceWarning: RaceWarning? = null,
     val stages: List<Stage> = emptyList(),
     val language: Language? = null,
     val stageSelected: Stage = Stage(),
@@ -29,6 +31,10 @@ fun MutableStateFlow<ResultsScreenUIState>.setIsLoading(isLoading: Boolean) {
 
 fun MutableStateFlow<ResultsScreenUIState>.setGlobalResults(results: List<Result>) {
     value = value.copy(globalResults = results)
+}
+
+fun MutableStateFlow<ResultsScreenUIState>.setRaceWarning(raceWarning: RaceWarning?) {
+    value = value.copy(raceWarning = raceWarning)
 }
 
 fun MutableStateFlow<ResultsScreenUIState>.setStages(stages: List<Stage>) {

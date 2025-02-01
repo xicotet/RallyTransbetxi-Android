@@ -10,7 +10,7 @@ data class AppSetting(
     val profile: String,
     val fontSizeFactor: Float,
     val notificationPermissionCounter: Int,
-    val areWarningsCollapsed: Boolean,
+    val areStatementsCollapsed: Boolean,
     val areNewsCollapsed: Boolean,
     val areActivitiesCollapsed: Boolean,
     // val language: String, // Not used since we store it in SharedPreferences
