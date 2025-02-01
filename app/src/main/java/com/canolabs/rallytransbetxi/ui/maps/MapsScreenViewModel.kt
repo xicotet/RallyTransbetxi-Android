@@ -19,7 +19,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,7 +61,7 @@ class MapsScreenViewModel @Inject constructor(
     }
 
     fun getDirections() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             _state.setIsLoadingDirections(true)
             // We cannot get directions if we don't have the user location
             while (_state.value.location == null) {
