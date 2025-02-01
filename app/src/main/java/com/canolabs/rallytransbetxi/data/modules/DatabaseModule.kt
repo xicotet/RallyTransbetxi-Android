@@ -10,12 +10,13 @@ import com.canolabs.rallytransbetxi.data.sources.local.dao.AppSettingsDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.CategoryDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.HallOfFameDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.NewsDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.RaceWarningDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.RestaurantDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.ResultDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.StagesDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.TeamDao
 import com.canolabs.rallytransbetxi.data.sources.local.dao.VersionsDao
-import com.canolabs.rallytransbetxi.data.sources.local.dao.WarningDao
+import com.canolabs.rallytransbetxi.data.sources.local.dao.StatementDao
 import com.canolabs.rallytransbetxi.data.sources.local.database.AppDatabase
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DATABASE_NAME
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_ACTIVITIES_COLLAPSED
@@ -75,8 +76,8 @@ object DatabaseModule {
                 AppDatabase::class.java,
                 DATABASE_NAME
             )
-                .addCallback(callback)
                 .fallbackToDestructiveMigration()
+                .addCallback(callback)
                 .build()
         }
         return appDatabase
@@ -133,7 +134,12 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideWarningDao(appDatabase: AppDatabase): WarningDao {
-        return appDatabase.warningsDao()
+    fun provideStatementDao(appDatabase: AppDatabase): StatementDao {
+        return appDatabase.statementsDao()
+    }
+
+    @Provides
+    fun provideRaceWarningDao(appDatabase: AppDatabase): RaceWarningDao {
+        return appDatabase.raceWarningDao()
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,10 +27,12 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotificationPermission(viewModel: RallyScreenViewModel) {
+fun NotificationPermission(
+    viewModel: RallyScreenViewModel,
+    showNotificationPermissionBottomSheet: MutableState<Boolean>
+) {
     val activity = LocalContext.current as MainActivity
     val state = viewModel.state.collectAsState()
-    var showBottomSheet by remember { mutableStateOf(false) }
     var hasShownBottomSheet by remember { mutableStateOf(false) }
     val permissionBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
@@ -54,30 +57,30 @@ fun NotificationPermission(viewModel: RallyScreenViewModel) {
                 viewModel.setNotificationPermissionCounter(0)
             } else {
                 delay(500)
-                showBottomSheet = viewModel.shouldShowNotificationPermissionSheet()
-                hasShownBottomSheet = showBottomSheet
+                showNotificationPermissionBottomSheet.value = viewModel.shouldShowNotificationPermissionSheet()
+                hasShownBottomSheet = showNotificationPermissionBottomSheet.value
             }
             delay(1000)
             viewModel.insertSettings()
         }
     }
 
-    LaunchedEffect(showBottomSheet) {
-        if (showBottomSheet) {
+    LaunchedEffect(showNotificationPermissionBottomSheet) {
+        if (showNotificationPermissionBottomSheet.value) {
             coroutineScope.launch {
                 permissionBottomSheetState.show()
             }
         }
     }
 
-    if (showBottomSheet) {
+    if (showNotificationPermissionBottomSheet.value) {
         ModalBottomSheet(
             sheetState = permissionBottomSheetState,
             dragHandle = {},
             onDismissRequest = {
                 coroutineScope.launch {
                     permissionBottomSheetState.hide()
-                    showBottomSheet = false
+                    showNotificationPermissionBottomSheet.value = false
                 }
             },
         ) {
@@ -87,7 +90,7 @@ fun NotificationPermission(viewModel: RallyScreenViewModel) {
                     coroutineScope.launch {
                         permissionBottomSheetState.hide()
                     }
-                    showBottomSheet = false
+                    showNotificationPermissionBottomSheet.value = false
                 }
             )
         }

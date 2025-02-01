@@ -1,6 +1,9 @@
 package com.canolabs.rallytransbetxi.ui.results
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -39,106 +42,127 @@ fun ResultsScreenHeader(
 ) {
     val state by viewModel.state.collectAsState()
 
-    if (state.isSearchBarVisible) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = PaddingLarge, horizontal = PaddingMedium),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextField(
-                value = state.searchText,
-                onValueChange = viewModel::setSearchText,
+    // Animated search bar visibility
+    AnimatedVisibility(
+        visible = state.isSearchBarVisible,
+        enter = slideInHorizontally(initialOffsetX = { it }) + fadeIn(animationSpec = tween(durationMillis = 300)),
+    ) {
+        if (state.isSearchBarVisible) {
+            Row(
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(start = PaddingSmall, end = PaddingSmall)
-                    .height(56.dp)
-                    .clip(RoundedCornerShape(32))
-                    .border(
-                        2.dp,
-                        MaterialTheme.colorScheme.onSurface,
-                        RoundedCornerShape(32)
+                    .fillMaxWidth()
+                    .padding(vertical = PaddingLarge, horizontal = PaddingMedium),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextField(
+                    value = state.searchText,
+                    onValueChange = viewModel::setSearchText,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = PaddingSmall, end = PaddingSmall)
+                        .height(56.dp)
+                        .clip(RoundedCornerShape(32))
+                        .border(
+                            2.dp,
+                            MaterialTheme.colorScheme.onSurface,
+                            RoundedCornerShape(32)
+                        ),
+                    colors = TextFieldDefaults.colors().copy(
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        cursorColor = MaterialTheme.colorScheme.onSurface
                     ),
-                colors = TextFieldDefaults.colors().copy(
-                    focusedContainerColor = MaterialTheme.colorScheme.surface,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = MaterialTheme.colorScheme.onSurface
-                ),
-                shape = RoundedCornerShape(32),
-                singleLine = true,
-                placeholder = { Text(stringResource(id = R.string.search)) },
-                leadingIcon = {
+                    shape = RoundedCornerShape(32),
+                    singleLine = true,
+                    placeholder = { Text(stringResource(id = R.string.search)) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.search),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    },
+                    trailingIcon = {
+                        AnimatedVisibility(visible = state.searchText.isNotEmpty()) {
+                            IconButton(
+                                onClick = { viewModel.setSearchText("") },
+                                modifier = Modifier.size(24.dp),
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.close),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                        }
+                    }
+                )
+
+                IconButton(
+                    onClick = { viewModel.setIsSearchBarVisible(false) },
+                    modifier = Modifier
+                        .padding(end = PaddingSmall)
+                        .size(56.dp)
+                        .border(
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            shape = RoundedCornerShape(32)
+                        ),
+                ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.search),
+                        painter = painterResource(id = R.drawable.close),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp)
                     )
-                },
-                trailingIcon = {
-                    AnimatedVisibility(visible = state.searchText.isNotEmpty()) {
-                        IconButton(
-                            onClick = { viewModel.setSearchText("") },
-                            modifier = Modifier.size(24.dp),
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.close),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    }
                 }
-            )
-
-            IconButton(
-                onClick = { viewModel.setIsSearchBarVisible(false) },
-                modifier = Modifier
-                    .padding(end = PaddingSmall)
-                    .size(56.dp)
-                    .border(
-                        width = 2.dp,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        shape = RoundedCornerShape(32)
-                    ),
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.close),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp)
-                )
             }
         }
-    } else {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(id = R.string.results),
-                style = MaterialTheme.typography.displaySmall,
-                fontFamily = ezraFamily,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(
-                        top = PaddingHuge,
-                        start = PaddingRegular,
-                        end = PaddingHuge,
-                        bottom = PaddingLarge
-                    )
-            )
-            IconButton(
-                onClick = { viewModel.setIsSearchBarVisible(true) },
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(horizontal = PaddingRegular)
+    }
+
+    // Other UI components
+    AnimatedVisibility(
+        visible = !state.isSearchBarVisible,
+        enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(animationSpec = tween(durationMillis = 300)),
+    ) {
+        if (!state.isSearchBarVisible) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.search),
-                    contentDescription = null,
-                    modifier = Modifier.size(48.dp)
+                // Placing the Results title on the left side
+                Text(
+                    text = stringResource(id = R.string.results),
+                    style = MaterialTheme.typography.displaySmall,
+                    fontFamily = ezraFamily,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(
+                            top = PaddingHuge,
+                            start = PaddingRegular,
+                            end = PaddingHuge,
+                            bottom = PaddingLarge
+                        )
                 )
+                // Moving the icons closer to the right
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(horizontal = PaddingRegular)
+                ) {
+                    IconButton(
+                        onClick = { viewModel.setIsSearchBarVisible(true) },
+                        modifier = Modifier
+                            .size(48.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.search),
+                            contentDescription = null,
+                            modifier = Modifier.size(48.dp)
+                        )
+                    }
+                }
             }
         }
     }

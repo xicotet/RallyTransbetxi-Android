@@ -1,7 +1,11 @@
 package com.canolabs.rallytransbetxi.ui.results
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,11 +23,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -43,22 +49,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.R
+import com.canolabs.rallytransbetxi.data.models.responses.RaceWarning
+import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenUIState
 import com.canolabs.rallytransbetxi.ui.miscellaneous.removeDiacriticalMarks
 import com.canolabs.rallytransbetxi.ui.navigation.Screens
-import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
+import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
 import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun BottomSheetStageResults(
     resultsState: ResultsScreenUIState,
     mapsState: MapsScreenUIState? = null,
     viewModel: ResultsScreenViewModel,
+    stageRaceWarning: RaceWarning? = null,
+    bottomSheetState: SheetState,
     isComingFromMaps: Boolean = false,
-    navController: NavController
+    navController: NavController,
+    language: Language
 ) {
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -102,119 +114,135 @@ fun BottomSheetStageResults(
                             modifier = Modifier
                                 .padding(start = 8.dp, end = 8.dp, bottom = 16.dp)
                         )
-                        if (resultsState.isBottomSheetSearchBarVisible) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                TextField(
-                                    value = resultsState.searchText,
-                                    onValueChange = viewModel::setSearchText,
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .padding(start = PaddingSmall, end = PaddingSmall)
-                                        .height(56.dp)
-                                        .clip(RoundedCornerShape(32))
-                                        .border(
-                                            2.dp,
-                                            MaterialTheme.colorScheme.onSurface,
-                                            RoundedCornerShape(32)
+                        AnimatedVisibility(
+                            visible = resultsState.isBottomSheetSearchBarVisible,
+                            enter = slideInHorizontally(initialOffsetX = { it }) + fadeIn(animationSpec = tween(durationMillis = 300)),
+                        ) {
+                            if (resultsState.isBottomSheetSearchBarVisible) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    TextField(
+                                        value = resultsState.searchText,
+                                        onValueChange = viewModel::setSearchText,
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .padding(start = PaddingSmall, end = PaddingSmall)
+                                            .height(56.dp)
+                                            .clip(RoundedCornerShape(32))
+                                            .border(
+                                                2.dp,
+                                                MaterialTheme.colorScheme.onSurface,
+                                                RoundedCornerShape(32)
+                                            ),
+                                        colors = TextFieldDefaults.colors().copy(
+                                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                                            focusedIndicatorColor = Color.Transparent,
+                                            unfocusedIndicatorColor = Color.Transparent,
+                                            cursorColor = MaterialTheme.colorScheme.onSurface
                                         ),
-                                    colors = TextFieldDefaults.colors().copy(
-                                        focusedContainerColor = MaterialTheme.colorScheme.surface,
-                                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                                        focusedIndicatorColor = Color.Transparent,
-                                        unfocusedIndicatorColor = Color.Transparent,
-                                        cursorColor = MaterialTheme.colorScheme.onSurface
-                                    ),
-                                    shape = RoundedCornerShape(32),
-                                    singleLine = true,
-                                    placeholder = { Text(stringResource(id = R.string.search)) },
-                                    leadingIcon = {
+                                        shape = RoundedCornerShape(32),
+                                        singleLine = true,
+                                        placeholder = { Text(stringResource(id = R.string.search)) },
+                                        leadingIcon = {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.search),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(24.dp)
+                                            )
+                                        },
+                                        trailingIcon = {
+                                            AnimatedVisibility(visible = resultsState.searchText.isNotEmpty()) {
+                                                IconButton(
+                                                    onClick = { viewModel.setSearchText("") },
+                                                    modifier = Modifier.size(24.dp),
+                                                ) {
+                                                    Icon(
+                                                        painter = painterResource(id = R.drawable.close),
+                                                        contentDescription = null,
+                                                        modifier = Modifier.size(24.dp)
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    )
+                                    IconButton(
+                                        onClick = { viewModel.setIsBottomSheetSearchBarVisible(false) },
+                                        modifier = Modifier
+                                            .padding(end = PaddingSmall)
+                                            .size(56.dp)
+                                            .border(
+                                                width = 2.dp,
+                                                color = MaterialTheme.colorScheme.onSurface,
+                                                shape = RoundedCornerShape(32)
+                                            ),
+                                    ) {
                                         Icon(
-                                            painter = painterResource(id = R.drawable.search),
+                                            painter = painterResource(id = R.drawable.close),
                                             contentDescription = null,
                                             modifier = Modifier.size(24.dp)
                                         )
-                                    },
-                                    trailingIcon = {
-                                        AnimatedVisibility(visible = resultsState.searchText.isNotEmpty()) {
-                                            IconButton(
-                                                onClick = { viewModel.setSearchText("") },
-                                                modifier = Modifier.size(24.dp),
-                                            ) {
-                                                Icon(
-                                                    painter = painterResource(id = R.drawable.close),
-                                                    contentDescription = null,
-                                                    modifier = Modifier.size(24.dp)
-                                                )
-                                            }
-                                        }
                                     }
-                                )
-                                IconButton(
-                                    onClick = { viewModel.setIsBottomSheetSearchBarVisible(false) },
-                                    modifier = Modifier
-                                        .padding(end = PaddingSmall)
-                                        .size(56.dp)
-                                        .border(
-                                            width = 2.dp,
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            shape = RoundedCornerShape(32)
-                                        ),
-                                ) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.close),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp)
-                                    )
                                 }
                             }
-                        } else {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                if (!isComingFromMaps)
-                                    OutlinedButton(
-                                        shape = MaterialTheme.shapes.extraLarge,
-                                        colors = ButtonColors(
-                                            containerColor = MaterialTheme.colorScheme.primary,
-                                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                                            disabledContainerColor = MaterialTheme.colorScheme.primary,
-                                            disabledContentColor = MaterialTheme.colorScheme.primary
-                                        ),
-                                        border = BorderStroke(
-                                            2.dp,
-                                            MaterialTheme.colorScheme.scrim
-                                        ),
-                                        onClick = {
-                                            val fastAction: String? = null
-                                            navController.navigate("${Screens.Maps.route}/${resultsState.stageSelected.acronym}/${fastAction}")
+                        }
+
+                        AnimatedVisibility(
+                            visible = !resultsState.isBottomSheetSearchBarVisible,
+                            enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(animationSpec = tween(durationMillis = 300)),
+                        ) {
+                            if (!resultsState.isBottomSheetSearchBarVisible) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    if (!isComingFromMaps) {
+                                        OutlinedButton(
+                                            shape = MaterialTheme.shapes.extraLarge,
+                                            colors = ButtonColors(
+                                                containerColor = MaterialTheme.colorScheme.primary,
+                                                contentColor = MaterialTheme.colorScheme.onPrimary,
+                                                disabledContainerColor = MaterialTheme.colorScheme.primary,
+                                                disabledContentColor = MaterialTheme.colorScheme.primary
+                                            ),
+                                            modifier = Modifier
+                                                .align(Alignment.CenterVertically),
+                                            border = BorderStroke(
+                                                2.dp,
+                                                MaterialTheme.colorScheme.scrim
+                                            ),
+                                            onClick = {
+                                                val fastAction: String? = null
+                                                navController.navigate("${Screens.Maps.route}/${resultsState.stageSelected.acronym}/${fastAction}")
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.map_outlined),
+                                                contentDescription = null
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = stringResource(id = R.string.map),
+                                                fontFamily = robotoFamily,
+                                            )
                                         }
+                                    }
+
+                                    Spacer(modifier = Modifier.size(PaddingMedium))
+
+                                    IconButton(
+                                        onClick = { viewModel.setIsBottomSheetSearchBarVisible(true) },
+                                        modifier = Modifier
+                                            .align(Alignment.CenterVertically)
                                     ) {
                                         Icon(
-                                            painter = painterResource(id = R.drawable.map_outlined),
-                                            contentDescription = null
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text(
-                                            text = stringResource(id = R.string.map),
-                                            fontFamily = robotoFamily,
+                                            painter = painterResource(id = R.drawable.search),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(48.dp)
                                         )
                                     }
-                                IconButton(
-                                    onClick = { viewModel.setIsBottomSheetSearchBarVisible(true) },
-                                    modifier = Modifier
-                                        .align(Alignment.CenterVertically)
-                                        .padding(horizontal = PaddingRegular)
-                                ) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.search),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(48.dp)
-                                    )
                                 }
                             }
                         }
@@ -327,7 +355,8 @@ fun BottomSheetStageResults(
                                         navController.navigate(
                                             "${Screens.TeamDetail.route}/${result.team.number}"
                                         )
-                                    }
+                                    },
+                                    language = language
                                 )
                             }
                         }
@@ -356,5 +385,11 @@ fun BottomSheetStageResults(
                 }
             )
         }
+
+        RaceProgressBox(
+            raceWarning = stageRaceWarning,
+            language = language,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp),
+        )
     }
 }

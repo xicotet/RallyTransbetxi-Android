@@ -1,4 +1,4 @@
-package com.canolabs.rallytransbetxi.ui.teams
+package com.canolabs.rallytransbetxi.ui.stages
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -37,10 +37,10 @@ import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 
 @Composable
-fun TeamsScreenHeader(
-    viewModel: TeamsScreenViewModel,
+fun StagesScreenHeader(
+    stagesViewModel: StagesScreenViewModel
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by stagesViewModel.state.collectAsState()
 
     // Animated visibility for search bar
     AnimatedVisibility(
@@ -56,7 +56,7 @@ fun TeamsScreenHeader(
             ) {
                 TextField(
                     value = state.searchText,
-                    onValueChange = viewModel::setSearchText,
+                    onValueChange = stagesViewModel::setSearchText,
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = PaddingSmall, end = PaddingSmall)
@@ -87,7 +87,7 @@ fun TeamsScreenHeader(
                     trailingIcon = {
                         AnimatedVisibility(visible = state.searchText.isNotEmpty()) {
                             IconButton(
-                                onClick = { viewModel.setSearchText("") },
+                                onClick = { stagesViewModel.setSearchText("") },
                                 modifier = Modifier.size(24.dp),
                             ) {
                                 Icon(
@@ -101,7 +101,7 @@ fun TeamsScreenHeader(
                 )
 
                 IconButton(
-                    onClick = { viewModel.setIsSearchBarVisible(false) },
+                    onClick = { stagesViewModel.setIsSearchBarVisible(false) },
                     modifier = Modifier
                         .padding(end = PaddingSmall)
                         .size(56.dp)
@@ -132,7 +132,7 @@ fun TeamsScreenHeader(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = stringResource(id = R.string.teams),
+                    text = stringResource(id = R.string.stages),
                     style = MaterialTheme.typography.displaySmall,
                     fontFamily = ezraFamily,
                     modifier = Modifier
@@ -145,7 +145,7 @@ fun TeamsScreenHeader(
                         )
                 )
                 IconButton(
-                    onClick = { viewModel.setIsSearchBarVisible(true) },
+                    onClick = { stagesViewModel.setIsSearchBarVisible(true) },
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .padding(horizontal = PaddingRegular)

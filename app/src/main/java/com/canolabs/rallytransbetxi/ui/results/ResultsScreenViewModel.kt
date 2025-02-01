@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.data.models.responses.Stage
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.entities.RacingCategory
+import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalRaceWarningUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetStageRaceWarningUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +23,8 @@ import javax.inject.Inject
 class ResultsScreenViewModel @Inject constructor(
     private val getGlobalResultsUseCase: GetGlobalResultsUseCase,
     private val getStagesResultsUseCase: GetStagesResultsUseCase,
+    private val getGlobalRaceWarningUseCase: GetGlobalRaceWarningUseCase,
+    private val getStageRaceWarningUseCase: GetStageRaceWarningUseCase,
     private val getStagesUseCase: GetStagesUseCase
 ): ViewModel() {
     private var _state = MutableStateFlow(ResultsScreenUIState())
@@ -39,6 +43,20 @@ class ResultsScreenViewModel @Inject constructor(
             _state.setIsBottomSheetLoading(true)
             _state.setStageResults(getStagesResultsUseCase.invoke(stageAcronym))
             _state.setIsBottomSheetLoading(false)
+        }
+    }
+
+    fun fetchGlobalRaceWarning() {
+        viewModelScope.launch {
+            _state.setRaceWarning(null)
+            _state.setRaceWarning(getGlobalRaceWarningUseCase.invoke())
+        }
+    }
+
+    fun fetchStageRaceWarning(stageId: String) {
+        viewModelScope.launch {
+            _state.setRaceWarning(null)
+            _state.setRaceWarning(getStageRaceWarningUseCase.invoke(stageId))
         }
     }
 

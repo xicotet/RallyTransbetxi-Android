@@ -11,7 +11,7 @@ class InsertSettingsUseCase @Inject constructor(
         profile: String,
         fontSizeFactor: Float,
         notificationPermissionCounter: Int,
-        areWarningsCollapsed: Boolean,
+        areStatementsCollapsed: Boolean,
         areNewsCollapsed: Boolean,
         areActivitiesCollapsed: Boolean
     ) {
@@ -20,7 +20,7 @@ class InsertSettingsUseCase @Inject constructor(
             profile,
             fontSizeFactor,
             notificationPermissionCounter,
-            areWarningsCollapsed,
+            areStatementsCollapsed,
             areNewsCollapsed,
             areActivitiesCollapsed
         )

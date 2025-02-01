@@ -33,7 +33,7 @@ fun HomeSectionShimmer(type: HomeSectionType) {
         val brush = when (type) {
             HomeSectionType.NEWS -> getBreakingNewsCardGradient()
             HomeSectionType.ACTIVITIES -> getActivityProgramCardGradient()
-            HomeSectionType.WARNINGS -> getWarningSectionCardGradient()
+            HomeSectionType.STATEMENTS -> getStatementSectionCardGradient()
         }
 
         Column(

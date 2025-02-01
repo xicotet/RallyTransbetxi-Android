@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canolabs.rallytransbetxi.BuildConfig
 import com.canolabs.rallytransbetxi.data.models.responses.PlaceResponse
-import com.canolabs.rallytransbetxi.data.models.responses.Warning
+import com.canolabs.rallytransbetxi.data.models.responses.Statement
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 import com.canolabs.rallytransbetxi.domain.entities.FontSizeFactor
 import com.canolabs.rallytransbetxi.domain.entities.Language
@@ -16,7 +16,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.CanAccessToAppUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetActivitiesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreActivitiesCollapsedUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetAreNewsCollapsedUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetAreWarningCollapsedUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetAreStatementsCollapsedUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetBetxiRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetFontSizeFactorSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetHallOfFameUseCase
@@ -26,7 +26,7 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetNumberOfSponsorsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetThemeSettingsUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetWarningsUseCase
+import com.canolabs.rallytransbetxi.domain.usecases.GetStatementsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.InsertSettingsUseCase
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.PLACES_NEARBY_SEARCH_MANUAL_EXCLUDED_RESTAURANTS
@@ -43,7 +43,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RallyScreenViewModel @Inject constructor(
     private val getNewsUseCase: GetNewsUseCase,
-    private val getWarningsUseCase: GetWarningsUseCase,
+    private val getStatementsUseCase: GetStatementsUseCase,
     private val getRestaurantsUseCase: GetRestaurantsUseCase,
     private val getHallOfFameUseCase: GetHallOfFameUseCase,
     private val getActivitiesUseCase: GetActivitiesUseCase,
@@ -54,7 +54,7 @@ class RallyScreenViewModel @Inject constructor(
     private val getNotificationPermissionCounterUseCase: GetNotificationPermissionCounterUseCase,
     private val getAreActivitiesCollapsed: GetAreActivitiesCollapsedUseCase,
     private val getAreNewsCollapsedUseCase: GetAreNewsCollapsedUseCase,
-    private val getAreWarningCollapsedUseCase: GetAreWarningCollapsedUseCase,
+    private val getAreStatementsCollapsedUseCase: GetAreStatementsCollapsedUseCase,
     private val canAccessToAppUseCase: CanAccessToAppUseCase,
     private val getBetxiRestaurantsUseCase: GetBetxiRestaurantsUseCase,
     private val getNumberOfSponsorsUseCase: GetNumberOfSponsorsUseCase
@@ -98,16 +98,16 @@ class RallyScreenViewModel @Inject constructor(
         }
     }
 
-    fun fetchWarnings() {
+    fun fetchStatements() {
         viewModelScope.launch {
             _state.setIsLoading(true)
 
-            val warnings = getWarningsUseCase.invoke()
-            _state.setWarnings(warnings)
+            val statements = getStatementsUseCase.invoke()
+            _state.setStatements(statements)
 
-            if (warnings.any { it.needsToBePromptedAsDialog }) {
+            if (statements.any { it.needsToBePromptedAsDialog }) {
                 _state.setIsDialogShowing(true)
-                _state.setWarningShownOnDialog(warnings.first { it.needsToBePromptedAsDialog })
+                _state.setStatementShownOnDialog(statements.first { it.needsToBePromptedAsDialog })
             }
 
             _state.setIsLoading(false)
@@ -231,9 +231,9 @@ class RallyScreenViewModel @Inject constructor(
         }
     }
 
-    fun fetchAreWarningsCollapsed() {
+    fun fetchAreStatementsCollapsed() {
         viewModelScope.launch {
-            _state.setAreWarningsCollapsed(getAreWarningCollapsedUseCase.invoke())
+            _state.setAreStatementsCollapsed(getAreStatementsCollapsedUseCase.invoke())
         }
     }
 
@@ -284,7 +284,7 @@ class RallyScreenViewModel @Inject constructor(
             val profile = _state.value.directionsProfile?.getDatabaseName()!!
             val fontSizeFactor = _state.value.fontSizeFactor?.value()!!
             val notificationPermissionCounter = _state.value.notificationPermissionCounter!!
-            val areWarningsCollapsed = _state.value.areWarningsCollapsed
+            val areStatements = _state.value.areStatementsCollapsed
             val areNewsCollapsed = _state.value.areBreakingNewsCollapsed
             val areActivitiesCollapsed = _state.value.areActivitiesCollapsed
 
@@ -293,7 +293,7 @@ class RallyScreenViewModel @Inject constructor(
                 profile,
                 fontSizeFactor,
                 notificationPermissionCounter,
-                areWarningsCollapsed,
+                areStatements,
                 areNewsCollapsed,
                 areActivitiesCollapsed
             )
@@ -304,8 +304,8 @@ class RallyScreenViewModel @Inject constructor(
      * Setters and toggles that can be called from the UI
      */
 
-    fun toggleWarnings() {
-        _state.setAreWarningsCollapsed(!_state.value.areWarningsCollapsed)
+    fun toggleStatements() {
+        _state.setAreStatementsCollapsed(!_state.value.areStatementsCollapsed)
     }
 
     fun toggleBreakingNews() {
@@ -316,8 +316,8 @@ class RallyScreenViewModel @Inject constructor(
         _state.setAreActivitiesCollapsed(!_state.value.areActivitiesCollapsed)
     }
 
-    fun toggleShowAllWarnings() {
-        _state.setIsShowAllWarningsEnabled(!_state.value.isShowAllWarningsEnabled)
+    fun toggleShowAllStatements() {
+        _state.setIsShowAllStatementsEnabled(!_state.value.isShowAllStatementsEnabled)
     }
 
     fun toggleShowAllActivities() {
@@ -332,8 +332,8 @@ class RallyScreenViewModel @Inject constructor(
         _state.setIsDialogShowing(isVisible)
     }
 
-    fun setWarningShownOnDialog(warning: Warning) {
-        _state.setWarningShownOnDialog(warning)
+    fun setStatementShownOnDialog(statement: Statement) {
+        _state.setStatementShownOnDialog(statement)
     }
 
     fun setIsSettingsBottomSheetVisible(isVisible: Boolean) {

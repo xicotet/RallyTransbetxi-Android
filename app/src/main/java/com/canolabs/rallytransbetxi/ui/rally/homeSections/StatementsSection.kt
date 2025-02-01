@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.dp
 import com.canolabs.rallytransbetxi.R
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenUIState
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
-import com.canolabs.rallytransbetxi.ui.rally.dialogs.getWarningContentByLanguage
-import com.canolabs.rallytransbetxi.ui.rally.dialogs.getWarningTitleByLanguage
+import com.canolabs.rallytransbetxi.ui.rally.dialogs.getStatementContentByLanguage
+import com.canolabs.rallytransbetxi.ui.rally.dialogs.getStatementTitleByLanguage
 import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
@@ -44,7 +44,7 @@ import com.canolabs.rallytransbetxi.utils.DateTimeUtils
 import java.util.Locale
 
 @Composable
-fun WarningsSection(
+fun StatementsSection(
     state: RallyScreenUIState,
     viewModel: RallyScreenViewModel,
 ) {
@@ -55,25 +55,25 @@ fun WarningsSection(
         shape = RoundedCornerShape(8.dp),
         shadowElevation = cardsElevation,
         onClick = {
-            viewModel.toggleWarnings()
+            viewModel.toggleStatements()
             viewModel.insertSettings()
         }
     ) {
         Column(
             modifier = Modifier
-                .background(brush = getWarningSectionCardGradient())
+                .background(brush = getStatementSectionCardGradient())
                 .padding(16.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.notification_important),
+                    painter = painterResource(id = R.drawable.mail),
                     contentDescription = null,
                     modifier = Modifier.size(36.dp)
                 )
                 Text(
-                    text = stringResource(id = R.string.warnings).uppercase(Locale.ROOT),
+                    text = stringResource(id = R.string.statements).uppercase(Locale.ROOT),
                     style = MaterialTheme.typography.headlineMedium,
                     fontFamily = ezraFamily,
                     fontWeight = FontWeight.Bold,
@@ -85,11 +85,11 @@ fun WarningsSection(
                 )
                 IconButton(
                     onClick = {
-                        viewModel.toggleWarnings()
+                        viewModel.toggleStatements()
                         viewModel.insertSettings()
                     }
                 ) {
-                    if (!state.areWarningsCollapsed) {
+                    if (!state.areStatementsCollapsed) {
                         Icon(
                             painter = painterResource(id = R.drawable.collapse_all),
                             modifier = Modifier
@@ -114,11 +114,11 @@ fun WarningsSection(
             }
 
             if (!state.isLoading) {
-                AnimatedVisibility(visible = state.areWarningsCollapsed.not()) {
+                AnimatedVisibility(visible = state.areStatementsCollapsed.not()) {
                     Column {
                         val warningsToShow =
-                            if (state.isShowAllWarningsEnabled) state.warnings
-                            else state.warnings.take(Constants.DEFAULT_WARNINGS)
+                            if (state.isShowAllStatementsEnabled) state.statements
+                            else state.statements.take(Constants.DEFAULT_WARNINGS)
 
                         warningsToShow.forEach { warning ->
                             Card(
@@ -126,7 +126,7 @@ fun WarningsSection(
                                     .fillMaxWidth()
                                     .wrapContentHeight(),
                                 onClick = {
-                                    viewModel.setWarningShownOnDialog(warning)
+                                    viewModel.setStatementShownOnDialog(warning)
                                     viewModel.setIsDialogShowing(true)
                                 },
                                 colors = CardColors(
@@ -142,7 +142,7 @@ fun WarningsSection(
                                         .fillMaxWidth(),
                                 ) {
                                     Text(
-                                        text = getWarningTitleByLanguage(warning, state.language),
+                                        text = getStatementTitleByLanguage(warning, state.language),
                                         style = MaterialTheme.typography.titleMedium,
                                         fontFamily = robotoFamily,
                                         color = MaterialTheme.colorScheme.onSurface,
@@ -170,7 +170,7 @@ fun WarningsSection(
                                     }
 
                                     Text(
-                                        text = getWarningContentByLanguage(warning, state.language),
+                                        text = getStatementContentByLanguage(warning, state.language),
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontFamily = robotoFamily,
                                         color = MaterialTheme.colorScheme.onSurface,
@@ -181,13 +181,13 @@ fun WarningsSection(
                             }
                         }
 
-                        if (state.warnings.size > Constants.DEFAULT_WARNINGS) {
+                        if (state.statements.size > Constants.DEFAULT_WARNINGS) {
                             ClickableText(
                                 text = AnnotatedString(
-                                    if (state.isShowAllWarningsEnabled) stringResource(id = R.string.show_less)
+                                    if (state.isShowAllStatementsEnabled) stringResource(id = R.string.show_less)
                                     else stringResource(id = R.string.show_all_male)
                                 ),
-                                onClick = { viewModel.toggleShowAllWarnings() },
+                                onClick = { viewModel.toggleShowAllStatements() },
                                 modifier = Modifier
                                     .padding(8.dp)
                                     .align(Alignment.CenterHorizontally),
@@ -202,7 +202,7 @@ fun WarningsSection(
 }
 
 @Composable
-fun getWarningSectionCardGradient(): Brush {
+fun getStatementSectionCardGradient(): Brush {
     return Brush.linearGradient(
         colors = listOf(
             MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.55f),
