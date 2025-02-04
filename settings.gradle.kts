@@ -14,4 +14,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "RallyTransbetxi"
-include(":app")
+include(":androidApp")
