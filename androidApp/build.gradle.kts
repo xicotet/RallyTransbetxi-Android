@@ -2,12 +2,12 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services")
-    id("com.google.dagger.hilt.android")
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("com.google.firebase.crashlytics")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.google.dagger.hilt)
+    alias(libs.plugins.maps.platform.secrets)
+    alias(libs.plugins.firebase.crashlytics)
     kotlin("kapt")
 }
 
@@ -84,69 +84,69 @@ android {
 }
 
 dependencies {
-    val roomVersion = "2.6.1"
+    implementation(libs.androidx.core.ktx.v1131)
+    implementation(libs.androidx.lifecycle.runtime.ktx.v283)
 
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
+    implementation(libs.androidx.activity.compose) // Compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui) // Compose
+    implementation(libs.androidx.ui.graphics) // Compose
+    implementation(libs.androidx.ui.tooling.preview) // Compose
+    implementation(libs.androidx.material3) // Compose
+    implementation(libs.androidx.navigation.compose) // Compose
 
-    implementation("androidx.activity:activity-compose:1.9.0") // Compose
-    implementation(platform("androidx.compose:compose-bom:2024.06.00")) // Compose
-    implementation("androidx.compose.ui:ui") // Compose
-    implementation("androidx.compose.ui:ui-graphics") // Compose
-    implementation("androidx.compose.ui:ui-tooling-preview") // Compose
-    implementation("androidx.compose.material3:material3") // Compose
-    implementation("androidx.navigation:navigation-compose:2.7.7") // Compose
+    implementation(libs.maps.compose) // Maps Compose
+    implementation(libs.play.services.maps) // Maps
 
-    implementation("com.google.maps.android:maps-compose:2.11.4") // Maps Compose
-    implementation("com.google.android.gms:play-services-maps:19.0.0") // Maps
+    implementation(platform(libs.firebase.bom)) // Firebase BoM
+    implementation(libs.firebase.analytics) // Firebase Analytics
+    implementation(libs.firebase.crashlytics) // Firebase Crashlytics
+    implementation(libs.firebase.storage.ktx) // Firebase Storage
+    implementation(libs.firebase.firestore) // Cloud Firestore
+    implementation(libs.firebase.messaging) // Firebase Messaging
+    implementation(libs.firebase.appcheck.playintegrity) // Firebase App Check
+    implementation(libs.integrity) // Play Integrity
+    implementation(libs.firebase.config.ktx) // Remote config
 
-    implementation(platform("com.google.firebase:firebase-bom:33.1.1")) // Firebase BoM
-    implementation("com.google.firebase:firebase-analytics") // Firebase Analytics
-    implementation("com.google.firebase:firebase-crashlytics") // Firebase Crashlytics
-    implementation("com.google.firebase:firebase-storage-ktx") // Firebase Storage
-    implementation("com.google.firebase:firebase-firestore") // Cloud Firestore
-    implementation("com.google.firebase:firebase-messaging") // Firebase Messaging
-    implementation("com.google.firebase:firebase-appcheck-playintegrity") // Firebase App Check
-    implementation("com.google.android.play:integrity:1.4.0") // Play Integrity
-    implementation("com.google.firebase:firebase-config-ktx") // Remote config
+    implementation(libs.play.services.location) // Location services
 
-    implementation("com.google.android.gms:play-services-location:21.3.0") // Location services
+    implementation(libs.androidx.vectordrawable) // Vector Drawable
 
-    implementation("androidx.vectordrawable:vectordrawable:1.2.0") // Vector Drawable
 
-    implementation("de.charlex.compose:revealswipe:2.0.0-beta01") // Reveal Swipe
+    implementation(libs.revealswipe) // Reveal Swipe
+    // Reveal Swipe
 
-    implementation("com.google.dagger:hilt-android:2.50") // Hilt
-    kapt("com.google.dagger:hilt-android-compiler:2.50") // Hilt
+    implementation(libs.hilt.android.v250) // Hilt
+    kapt(libs.hilt.android.compiler) // Hilt
 
-    implementation("androidx.room:room-ktx:$roomVersion") // Room
-    implementation("androidx.room:room-runtime:$roomVersion") // Room
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")  // Room
+    implementation(libs.androidx.room.ktx.v261) // Room
+    implementation(libs.androidx.room.runtime.v261) // Room
+    annotationProcessor(libs.androidx.room.compiler.v261)  // Room
 
     //noinspection KaptUsageInsteadOfKsp
-    kapt("androidx.room:room-compiler:$roomVersion") // Kotlin annotation processing tool (kapt)
+    kapt(libs.androidx.room.compiler.v261) // Kotlin annotation processing tool (kapt)
 
-    implementation("io.coil-kt:coil-compose:2.6.0") // Coil
+    implementation(libs.coil.compose) // Coil
 
-    implementation("androidx.core:core-splashscreen:1.0.1") // Splash Screen
+    implementation(libs.androidx.core.splashscreen) // Splash Screen
 
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.23") // Kotlin Reflect
+    implementation(libs.kotlin.reflect) // Kotlin Reflect
 
-    implementation("com.squareup.retrofit2:retrofit:2.11.0") // Retrofit
-    implementation("com.google.code.gson:gson:2.10.1") // Gson Converter
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0") // Gson Converter
+    implementation(libs.retrofit.v2110) // Retrofit
+    implementation(libs.gson) // Gson Converter
+    implementation(libs.converter.gson.v2110) // Gson Converter
 
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1") // OkHttp Logging Interceptor
+    implementation(libs.logging.interceptor.v491) // OkHttp Logging Interceptor
 
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation(libs.androidx.appcompat.v170)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.06.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }
 
 kapt {
