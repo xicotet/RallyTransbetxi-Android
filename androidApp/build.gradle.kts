@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.google.dagger.hilt)
     alias(libs.plugins.maps.platform.secrets)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.compose.compiler)
     kotlin("kapt")
 }
 
@@ -84,6 +86,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":shared"))
     implementation(libs.androidx.core.ktx.v1131)
     implementation(libs.androidx.lifecycle.runtime.ktx.v283)
 

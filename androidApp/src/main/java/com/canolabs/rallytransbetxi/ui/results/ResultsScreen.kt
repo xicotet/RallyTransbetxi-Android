@@ -36,12 +36,9 @@ import androidx.compose.material3.TabRow
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,7 +46,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -65,10 +61,8 @@ import com.canolabs.rallytransbetxi.ui.theme.PaddingMedium
 import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
 import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ResultsScreen(
     viewModel: ResultsScreenViewModel,
@@ -79,9 +73,6 @@ fun ResultsScreen(
     val titles = listOf(R.string.global, R.string.stages)
     val pagerState = rememberPagerState(pageCount = { titles.size })
     val coroutineScope = rememberCoroutineScope()
-
-    // Remember the refreshing state
-    val pullRefreshState = rememberPullToRefreshState()
 
     val scrollState = rememberScrollState()
 
@@ -101,21 +92,9 @@ fun ResultsScreen(
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
 
-    if (pullRefreshState.isRefreshing) {
-        LaunchedEffect(true) {
-            delay(1500)
-            viewModel.fetchGlobalResults()
-            viewModel.fetchGlobalRaceWarning()
-            viewModel.fetchStages()
-            viewModel.fetchLanguage(sharedPreferences)
-            pullRefreshState.endRefresh()
-        }
-    }
-
     Box(
         Modifier
             .fillMaxSize()
-            .nestedScroll(pullRefreshState.nestedScrollConnection)
     ) {
         Column(
             modifier = Modifier
@@ -186,10 +165,6 @@ fun ResultsScreen(
             }
         }
 
-        PullToRefreshContainer(
-            modifier = Modifier.align(Alignment.TopCenter),
-            state = pullRefreshState,
-        )
 
         if (scrollState.value > 100 && pagerState.currentPage == 0) {
             FloatingActionButton(

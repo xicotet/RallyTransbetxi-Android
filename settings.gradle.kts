@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "RallyTransbetxi"
 include(":androidApp")
+include(":shared")

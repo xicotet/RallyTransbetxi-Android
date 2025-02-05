@@ -6,16 +6,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.canolabs.rallytransbetxi.ui.miscellaneous.Shimmer
@@ -24,9 +20,7 @@ import com.canolabs.rallytransbetxi.ui.navigation.Screens
 import com.canolabs.rallytransbetxi.ui.theme.PaddingRegular
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
-import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StagesScreen(
     stagesViewModel: StagesScreenViewModel,
@@ -34,26 +28,16 @@ fun StagesScreen(
     sharedPreferences: SharedPreferences
 ) {
     val state by stagesViewModel.state.collectAsState()
-    val pullRefreshState = rememberPullToRefreshState()
 
     LaunchedEffect(Unit) {
         stagesViewModel.fetchStages()
         stagesViewModel.fetchLanguage(sharedPreferences)
     }
 
-    if (pullRefreshState.isRefreshing) {
-        LaunchedEffect(true) {
-            delay(1500)
-            stagesViewModel.fetchStages()
-            stagesViewModel.fetchLanguage(sharedPreferences)
-            pullRefreshState.endRefresh()
-        }
-    }
 
     Box(
         Modifier
             .fillMaxSize()
-            .nestedScroll(pullRefreshState.nestedScrollConnection)
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -68,10 +52,6 @@ fun StagesScreen(
                 StageList(state, navController)
             }
         }
-        PullToRefreshContainer(
-            modifier = Modifier.align(Alignment.TopCenter),
-            state = pullRefreshState,
-        )
     }
 }
 

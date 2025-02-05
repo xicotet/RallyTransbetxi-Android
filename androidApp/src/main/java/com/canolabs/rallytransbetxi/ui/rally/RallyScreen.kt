@@ -20,8 +20,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -50,7 +47,6 @@ import com.canolabs.rallytransbetxi.ui.rally.homeSections.StatementsSection
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.HomeSectionShimmer
 import com.canolabs.rallytransbetxi.ui.rally.homeSections.HomeSectionType
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -67,7 +63,6 @@ fun RallyScreen(
     val state by viewModel.state.collectAsState()
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
-    val pullRefreshState = rememberPullToRefreshState()
 
     val isSystemInDarkTheme = isSystemInDarkTheme()
 
@@ -98,20 +93,9 @@ fun RallyScreen(
         showNotificationPermissionBottomSheet = showNotificationPermissionBottomSheet
     )
 
-    if (pullRefreshState.isRefreshing) {
-        LaunchedEffect(true) {
-            delay(1500)
-            viewModel.fetchNews()
-            viewModel.fetchActivities()
-            viewModel.fetchStatements()
-            pullRefreshState.endRefresh()
-        }
-    }
-
     Box(
         Modifier
-            .fillMaxSize()
-            .nestedScroll(pullRefreshState.nestedScrollConnection)) {
+            .fillMaxSize()) {
         LazyColumn(
             verticalArrangement = Arrangement.Center
         ) {
@@ -223,9 +207,5 @@ fun RallyScreen(
                 }
             }
         }
-        PullToRefreshContainer(
-            modifier = Modifier.align(Alignment.TopCenter),
-            state = pullRefreshState,
-        )
     }
 }
