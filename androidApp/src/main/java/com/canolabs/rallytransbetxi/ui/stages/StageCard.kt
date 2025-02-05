@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,51 +26,13 @@ import com.canolabs.rallytransbetxi.ui.theme.PaddingSmall
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
-import de.charlex.compose.RevealSwipe
 
 @Composable
 fun StageCard(
     stage: Stage,
     onStageCardClick: (Stage, String) -> Unit,
 ) {
-    RevealSwipe(
-        modifier = Modifier.padding(vertical = 5.dp),
-        backgroundCardStartColor = MaterialTheme.colorScheme.primaryContainer,
-        backgroundCardEndColor = MaterialTheme.colorScheme.primaryContainer,
-        backgroundCardModifier = Modifier.padding(PaddingMedium),
-        backgroundEndActionLabel = "Directions",
-        backgroundStartActionLabel = "Delete",
-        hiddenContentEnd = {
-            IconButton(
-                onClick = {
-                    onStageCardClick(stage, "getDirections")
-                },
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = PaddingSmall),
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.directions_outlined),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.size(36.dp)
-                )
-            }
-        },
-        hiddenContentStart = {
-            IconButton(
-                onClick = {
-                    onStageCardClick(stage, "results")
-                },
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = PaddingSmall),
-            ) {
-                Icon(
-                    painterResource(id = R.drawable.sports_score),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.size(36.dp)
-                )
-            }
-        }
-    ) {
+
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -138,5 +99,4 @@ fun StageCard(
                 }
             }
         }
-    }
 }
