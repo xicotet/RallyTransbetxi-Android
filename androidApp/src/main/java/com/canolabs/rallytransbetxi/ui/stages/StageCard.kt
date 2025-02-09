@@ -33,70 +33,70 @@ fun StageCard(
     onStageCardClick: (Stage, String) -> Unit,
 ) {
 
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(PaddingSmall),
-            onClick = { onStageCardClick(stage, "nothing") },
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(PaddingSmall),
+        onClick = { onStageCardClick(stage, "nothing") },
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stage.acronym,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontFamily = ezraFamily,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        modifier = Modifier.padding(PaddingMedium)
-                    )
-                    Text(
-                        text = stage.name,
-                        fontFamily = robotoFamily,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
+                Text(
+                    text = stage.acronym,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontFamily = ezraFamily,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.padding(PaddingMedium)
+                )
+                Text(
+                    text = stage.name,
+                    fontFamily = robotoFamily,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
 
-                Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.route_filled),
-                        contentDescription = "Route icon",
-                        modifier = Modifier
-                            .padding(PaddingMedium)
-                            .size(36.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "${stage.distance} km",
-                        fontFamily = robotoFamily,
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Icon(
-                        painter = painterResource(id = R.drawable.schedule_filled),
-                        contentDescription = "Clock icon",
-                        modifier = Modifier
-                            .padding(
-                                start = PaddingRegular,
-                                end = PaddingSmall
-                            )
-                            .size(24.dp),
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.route_filled),
+                    contentDescription = "Route icon",
+                    modifier = Modifier
+                        .padding(PaddingMedium)
+                        .size(36.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "${stage.distance} km",
+                    fontFamily = robotoFamily,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Icon(
+                    painter = painterResource(id = R.drawable.schedule_filled),
+                    contentDescription = "Clock icon",
+                    modifier = Modifier
+                        .padding(
+                            start = PaddingRegular,
+                            end = PaddingSmall
+                        )
+                        .size(24.dp),
+                )
+                Spacer(modifier = Modifier.width(4.dp))
 
-                    Text(
-                        text = DateTimeUtils.formatTimeFromSeconds(stage.startTime?.seconds ?: 0),
-                        fontFamily = robotoFamily,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
+                Text(
+                    text = DateTimeUtils.formatTimeFromSeconds(stage.startTime?.seconds ?: 0),
+                    fontFamily = robotoFamily,
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
         }
+    }
 }
