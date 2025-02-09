@@ -2,7 +2,7 @@
 .gradle/
 build/
 
-# Local configuration file (sdk path, etc)
+# Local configuration files (SDK path, etc.)
 local.properties
 keystore.properties
 
@@ -19,9 +19,32 @@ output.json
 # IntelliJ
 *.iml
 .idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
+.idea/caches/
+.idea/libraries/
+.idea/shelf/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/profiles_settings.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml
+.idea/datasources.xml
+.idea/dataSources.ids
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+.idea/assetWizardSettings.xml
+.idea/gradle.xml
+.idea/jarRepositories.xml
+.idea/navEditor.xml
+.navigation/
+!/gradle/wrapper/gradle-wrapper.jar
 
 # Keystore files
 *.jks
@@ -33,6 +56,48 @@ google-services.json
 # Android Profiling
 *.hprof
 
-#App release
+# App release
 *.aab
 /app/release/app-release.aab
+
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcworkspace/contents.xcworkspacedata/
+/*.gcno
+**/xcshareddata/WorkspaceSettings.xcsettings
+*.xcuserstate
+*.xcscheme
+*.xcworkspace
+xcuserdata/
+
+# CocoaPods
+Pods/
+
+## iOS App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# macOS
+.DS_Store
+
+# Generated files
+bin/
+gen/
+*.class
+*.dex
+
+# Additional KMP-specific rules
+/*/build/
+/*/local.properties
+/*/out
+/*/*/build
+/*/*/production
+*~
+*.swp
+
+# Kotlin/Native and KMP build artifacts
+*.klib
+.konan/
