@@ -1,13 +1,12 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
 import com.canolabs.rallytransbetxi.data.models.responses.Result
-import com.canolabs.rallytransbetxi.data.repositories.ResultsRepositoryImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.repositories.ResultsRepository
 
-class GetGlobalResultsUseCase @Inject constructor(
-    private val resultsRepositoryImpl: ResultsRepositoryImpl
+class GetGlobalResultsUseCase(
+    private val resultsRepository: ResultsRepository
 ) {
     suspend operator fun invoke(): List<Result> {
-        return resultsRepositoryImpl.getGlobalResults()
+        return resultsRepository.getGlobalResults()
     }
 }

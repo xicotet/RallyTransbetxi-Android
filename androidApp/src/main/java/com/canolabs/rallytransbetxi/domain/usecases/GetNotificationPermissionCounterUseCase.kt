@@ -1,12 +1,11 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
-import com.canolabs.rallytransbetxi.data.repositories.AppSettingsRepositoryImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.repositories.AppSettingsRepository
 
-class GetNotificationPermissionCounterUseCase @Inject constructor(
-    private val appSettingsRepositoryImpl: AppSettingsRepositoryImpl
+class GetNotificationPermissionCounterUseCase(
+    private val appSettingsRepository: AppSettingsRepository
 )  {
     suspend operator fun invoke(): Int {
-        return appSettingsRepositoryImpl.getNotificationPermissionCounter()
+        return appSettingsRepository.getNotificationPermissionCounter()
     }
 }

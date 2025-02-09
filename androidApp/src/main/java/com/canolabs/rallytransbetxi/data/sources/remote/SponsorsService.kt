@@ -3,13 +3,12 @@ package com.canolabs.rallytransbetxi.data.sources.remote
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 interface SponsorsService {
     suspend fun fetchNumberOfSponsors(): Int
 }
 
-class SponsorsServiceImpl @Inject constructor(
+class SponsorsServiceImpl(
     private val firebaseFirestore: FirebaseFirestore
 ) : SponsorsService {
 

@@ -4,13 +4,12 @@ import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Version
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 interface VersionsService {
     suspend fun fetchVersion(name: String): Version?
 }
 
-class VersionsServiceImpl @Inject constructor(
+class VersionsServiceImpl(
     private val firebaseFirestore: FirebaseFirestore
 ) : VersionsService {
     override suspend fun fetchVersion(name: String): Version? {

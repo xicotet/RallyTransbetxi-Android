@@ -1,4 +1,5 @@
 package com.canolabs.rallytransbetxi.data.repositories
+
 import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.requests.Circle
 import com.canolabs.rallytransbetxi.data.models.requests.LocationRestriction
@@ -10,7 +11,6 @@ import com.canolabs.rallytransbetxi.utils.Constants
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.PLACES_FIELD_MASK
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.PLACES_NEARBY_SEARCH_EXCLUDED_TYPES
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.PLACES_NEARBY_SEARCH_RADIUS
-import javax.inject.Inject
 
 interface PlacesRepository {
     suspend fun getBetxiRestaurants(
@@ -20,7 +20,7 @@ interface PlacesRepository {
     ): List<PlaceResponse>
 }
 
-class PlacesRepositoryImpl @Inject constructor(
+class PlacesRepositoryImpl(
     private val placesService: PlacesService
 ) : PlacesRepository {
 

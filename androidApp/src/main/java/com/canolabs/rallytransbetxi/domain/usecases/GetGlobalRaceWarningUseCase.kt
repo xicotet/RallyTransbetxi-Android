@@ -1,10 +1,9 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
-import com.canolabs.rallytransbetxi.data.repositories.RaceWarningsRepositoryImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.repositories.RaceWarningsRepository
 
-class GetGlobalRaceWarningUseCase @Inject constructor(
-    private val raceWarningsRepository: RaceWarningsRepositoryImpl
+class GetGlobalRaceWarningUseCase(
+    private val raceWarningsRepository: RaceWarningsRepository
 ) {
     suspend operator fun invoke() = raceWarningsRepository.getGlobalRaceWarning()
 }

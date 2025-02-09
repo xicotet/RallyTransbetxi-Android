@@ -3,7 +3,6 @@ package com.canolabs.rallytransbetxi.data.repositories
 import com.canolabs.rallytransbetxi.data.models.responses.AppSetting
 import com.canolabs.rallytransbetxi.data.sources.local.dao.AppSettingsDao
 import kotlinx.coroutines.delay
-import javax.inject.Inject
 
 interface AppSettingsRepository {
     suspend fun insertSetting(
@@ -25,7 +24,7 @@ interface AppSettingsRepository {
     suspend fun isDatabaseInitialized(): Boolean
 }
 
-class AppSettingsRepositoryImpl @Inject constructor(
+class AppSettingsRepositoryImpl(
     private val appSettingsDao: AppSettingsDao
 )  : AppSettingsRepository {
 

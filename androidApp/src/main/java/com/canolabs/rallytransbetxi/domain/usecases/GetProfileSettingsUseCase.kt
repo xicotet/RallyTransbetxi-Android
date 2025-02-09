@@ -1,14 +1,13 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
-import com.canolabs.rallytransbetxi.data.repositories.AppSettingsRepositoryImpl
+import com.canolabs.rallytransbetxi.data.repositories.AppSettingsRepository
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
-import javax.inject.Inject
 
-class GetProfileSettingsUseCase @Inject constructor(
-    private val appSettingsRepositoryImpl: AppSettingsRepositoryImpl
+class GetProfileSettingsUseCase(
+    private val appSettingsRepository: AppSettingsRepository
 ) {
     suspend operator fun invoke(): DirectionsProfile {
-        val profileString = appSettingsRepositoryImpl.getProfile()
+        val profileString = appSettingsRepository.getProfile()
         return DirectionsProfile.entries.first { it.getDatabaseName() == profileString }
     }
 }

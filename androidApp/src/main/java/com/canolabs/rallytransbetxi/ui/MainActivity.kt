@@ -17,9 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.canolabs.rallytransbetxi.ui.maps.MapsScreenViewModel
-import com.canolabs.rallytransbetxi.ui.miscellaneous.MainActivityViewModelFactory
 import com.canolabs.rallytransbetxi.ui.navigation.Navigation
 import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 import com.canolabs.rallytransbetxi.ui.results.ResultsScreenViewModel
@@ -40,17 +38,13 @@ import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.initialize
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 import java.util.Locale
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var viewModelFactory: MainActivityViewModelFactory
     private lateinit var connectivityObserver: ConnectivityObserver
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -102,25 +96,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val stagesScreenViewModel: StagesScreenViewModel = viewModel(
-                        factory = viewModelFactory
-                    )
-
-                    val teamsScreenViewModel: TeamsScreenViewModel = viewModel(
-                        factory = viewModelFactory
-                    )
-
-                    val resultsScreenViewModel: ResultsScreenViewModel = viewModel(
-                        factory = viewModelFactory
-                    )
-
-                    val mapsScreenViewModel: MapsScreenViewModel = viewModel(
-                        factory = viewModelFactory
-                    )
-
-                    val rallyScreenViewModel: RallyScreenViewModel = viewModel(
-                        factory = viewModelFactory
-                    )
+                    val stagesScreenViewModel: StagesScreenViewModel = koinViewModel<StagesScreenViewModel>()
+                    val teamsScreenViewModel: TeamsScreenViewModel = koinViewModel<TeamsScreenViewModel>()
+                    val resultsScreenViewModel: ResultsScreenViewModel = koinViewModel<ResultsScreenViewModel>()
+                    val mapsScreenViewModel: MapsScreenViewModel = koinViewModel<MapsScreenViewModel>()
+                    val rallyScreenViewModel: RallyScreenViewModel = koinViewModel<RallyScreenViewModel>()
 
                     fun changeLocale(locale: String) {
                         changeAppLocale(this, locale, recomposeNavbar)

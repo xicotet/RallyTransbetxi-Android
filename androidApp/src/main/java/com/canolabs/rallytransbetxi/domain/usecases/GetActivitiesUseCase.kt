@@ -1,13 +1,12 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
 import com.canolabs.rallytransbetxi.data.models.responses.Activity
-import com.canolabs.rallytransbetxi.data.repositories.ActivitiesRepositoryImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.repositories.ActivitiesRepository
 
-class GetActivitiesUseCase @Inject constructor(
-    private val activitiesRepositoryImpl: ActivitiesRepositoryImpl
+class GetActivitiesUseCase(
+    private val activitiesRepository: ActivitiesRepository
 ) {
     suspend operator fun invoke(): List<Activity> {
-        return activitiesRepositoryImpl.getActivities()
+        return activitiesRepository.getActivities()
     }
 }

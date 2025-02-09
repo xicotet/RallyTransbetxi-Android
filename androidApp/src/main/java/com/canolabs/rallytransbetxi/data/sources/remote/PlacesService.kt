@@ -7,7 +7,6 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface PlacesService {
-
     @POST("./places:searchNearby") // The './' notation is needed so retrofit can handle correctly the colon
     suspend fun searchNearbyRestaurants(
         @Header("X-Goog-Api-Key") apiKey: String,

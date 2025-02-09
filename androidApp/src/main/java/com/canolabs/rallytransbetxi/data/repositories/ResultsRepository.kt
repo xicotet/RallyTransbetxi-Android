@@ -1,21 +1,21 @@
 package com.canolabs.rallytransbetxi.data.repositories
+
 import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.data.sources.local.dao.ResultDao
-import com.canolabs.rallytransbetxi.data.sources.remote.ResultsServiceImpl
-import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkCheckerImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.sources.remote.ResultsService
+import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkChecker
 
 interface ResultsRepository {
     suspend fun getGlobalResults(): List<Result>
     suspend fun getStageResults(stageId: String): List<Result>
 }
 
-class ResultsRepositoryImpl @Inject constructor(
-    private val resultsServiceImpl: ResultsServiceImpl,
+class ResultsRepositoryImpl(
+    private val resultsService: ResultsService,
     private val resultsDao: ResultDao,
-    private val versionsRepositoryImpl: VersionsRepositoryImpl,
-    private val networkChecker: NetworkCheckerImpl
+    private val versionsRepository: VersionsRepository,
+    private val networkChecker: NetworkChecker
 ): ResultsRepository {
     companion object {
         private const val TAG = "ResultsRepositoryImpl"
@@ -26,7 +26,7 @@ class ResultsRepositoryImpl @Inject constructor(
         val versionName = "global_results"
         Log.d(TAG, "getGlobalResults() called")
 
-        val localVersionCount = versionsRepositoryImpl.countLocalStoredVersionsByName(versionName)
+        val localVersionCount = versionsRepository.countLocalStoredVersionsByName(versionName)
         Log.d(TAG, "Local version count for '$versionName': $localVersionCount")
 
         // If there is no stable network connection, fetch from local storage
@@ -41,13 +41,13 @@ class ResultsRepositoryImpl @Inject constructor(
 
         if (localVersionCount == 0) {
             Log.d(TAG, "No local version found")
-            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName) ?: return emptyList()
+            val apiVersion = versionsRepository.getApiVersion(versionName) ?: return emptyList()
             Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
-            versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
+            versionsRepository.insertLocalStoredVersion(versionName, apiVersion)
             Log.d(TAG, "Inserted API version into local storage: $apiVersion")
 
-            val results = resultsServiceImpl.fetchGlobalResults().map { it.copy(isGlobal = true) }
+            val results = resultsService.fetchGlobalResults().map { it.copy(isGlobal = true) }
             Log.d(TAG, "Fetched global results from API: ${results.size} results")
 
             resultsDao.insertResults(results)
@@ -57,10 +57,10 @@ class ResultsRepositoryImpl @Inject constructor(
             return results
         }
 
-        val localVersion = versionsRepositoryImpl.getLocalStoredVersion(versionName)
+        val localVersion = versionsRepository.getLocalStoredVersion(versionName)
         Log.d(TAG, "Fetched local version for '$versionName': $localVersion")
 
-        val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
+        val apiVersion = versionsRepository.getApiVersion(versionName)
         Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
         val resultsCount = resultsDao.countGlobalResults()
@@ -73,7 +73,7 @@ class ResultsRepositoryImpl @Inject constructor(
                 Log.d(TAG, "API version is different. Fetching data from API.")
             }
 
-            val results = resultsServiceImpl.fetchGlobalResults().map { it.copy(isGlobal = true) }
+            val results = resultsService.fetchGlobalResults().map { it.copy(isGlobal = true) }
             Log.d(TAG, "Fetched global results from API: ${results.size} results")
 
             resultsDao.deleteGlobalResults()
@@ -82,10 +82,10 @@ class ResultsRepositoryImpl @Inject constructor(
             resultsDao.insertResults(results)
             Log.d(TAG, "Inserted fetched global results into local storage")
 
-            versionsRepositoryImpl.deleteLocalStoredVersion(versionName)
+            versionsRepository.deleteLocalStoredVersion(versionName)
             Log.d(TAG, "Deleted local version for '$versionName'")
 
-            versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
+            versionsRepository.insertLocalStoredVersion(versionName, apiVersion)
             Log.d(TAG, "Add local version to API version: $apiVersion")
 
             val endTime = System.currentTimeMillis()
@@ -105,7 +105,7 @@ class ResultsRepositoryImpl @Inject constructor(
         val versionName = "stage_results_$stageId"
         Log.d(TAG, "getStageResults() called for stageId: $stageId")
 
-        val localVersionCount = versionsRepositoryImpl.countLocalStoredVersionsByName(versionName)
+        val localVersionCount = versionsRepository.countLocalStoredVersionsByName(versionName)
         Log.d(TAG, "Local version count for '$versionName': $localVersionCount")
 
         // If there is no stable network connection, fetch from local storage
@@ -120,13 +120,13 @@ class ResultsRepositoryImpl @Inject constructor(
 
         if (localVersionCount == 0) {
             Log.d(TAG, "No local version found")
-            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName) ?: return emptyList()
+            val apiVersion = versionsRepository.getApiVersion(versionName) ?: return emptyList()
             Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
-            versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
+            versionsRepository.insertLocalStoredVersion(versionName, apiVersion)
             Log.d(TAG, "Inserted API version into local storage: $apiVersion")
 
-            val results = resultsServiceImpl.fetchStageResults(stageId).map { it.copy(stageId = stageId) }
+            val results = resultsService.fetchStageResults(stageId).map { it.copy(stageId = stageId) }
             Log.d(TAG, "Fetched stage results from API: ${results.size} results")
 
             resultsDao.insertResults(results)
@@ -135,10 +135,10 @@ class ResultsRepositoryImpl @Inject constructor(
             return results
         }
 
-        val localVersion = versionsRepositoryImpl.getLocalStoredVersion(versionName)
+        val localVersion = versionsRepository.getLocalStoredVersion(versionName)
         Log.d(TAG, "Fetched local version for '$versionName': $localVersion")
 
-        val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
+        val apiVersion = versionsRepository.getApiVersion(versionName)
         Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
         val resultsCount = resultsDao.countStageResults(stageId)
@@ -151,16 +151,16 @@ class ResultsRepositoryImpl @Inject constructor(
                 Log.d(TAG, "API version is different. Fetching data from API.")
             }
 
-            val results = resultsServiceImpl.fetchStageResults(stageId).map { it.copy(stageId = stageId) }
+            val results = resultsService.fetchStageResults(stageId).map { it.copy(stageId = stageId) }
             Log.d(TAG, "Fetched stage results from API: ${results.size} results")
 
             resultsDao.deleteStageResults(stageId)
             Log.d(TAG, "Deleted all local results for stageId: $stageId")
 
-            versionsRepositoryImpl.deleteLocalStoredVersion(versionName)
+            versionsRepository.deleteLocalStoredVersion(versionName)
             Log.d(TAG, "Deleted local version for '$versionName'")
 
-            versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
+            versionsRepository.insertLocalStoredVersion(versionName, apiVersion)
             Log.d(TAG, "Add local version to API version: $apiVersion")
 
             results

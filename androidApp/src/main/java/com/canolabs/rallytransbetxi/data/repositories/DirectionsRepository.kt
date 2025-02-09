@@ -2,7 +2,6 @@ package com.canolabs.rallytransbetxi.data.repositories
 
 import android.util.Log
 import com.canolabs.rallytransbetxi.data.sources.remote.DirectionsService
-import javax.inject.Inject
 
 interface DirectionsRepository {
     fun getDirections(
@@ -13,7 +12,7 @@ interface DirectionsRepository {
     ): List<List<Double>>
 }
 
-class DirectionsRepositoryImpl @Inject constructor(
+class DirectionsRepositoryImpl(
     private val service: DirectionsService
 ) : DirectionsRepository {
     override fun getDirections(

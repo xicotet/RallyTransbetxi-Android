@@ -4,14 +4,13 @@ import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.RaceWarning
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 interface RaceWarningsService {
     suspend fun fetchGlobalRaceWarning(): RaceWarning?
     suspend fun fetchStageRaceWarning(stageId: String): RaceWarning?
 }
 
-class RaceWarningsServiceImpl @Inject constructor(
+class RaceWarningsServiceImpl(
     private val firebaseFirestore: FirebaseFirestore
 ) : RaceWarningsService {
     override suspend fun fetchStageRaceWarning(stageId: String): RaceWarning? {

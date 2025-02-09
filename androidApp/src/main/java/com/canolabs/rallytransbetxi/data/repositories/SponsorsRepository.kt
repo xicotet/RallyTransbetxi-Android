@@ -1,15 +1,14 @@
 package com.canolabs.rallytransbetxi.data.repositories
 
 import android.util.Log
-import com.canolabs.rallytransbetxi.data.sources.remote.SponsorsServiceImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.sources.remote.SponsorsService
 
 interface SponsorsRepository {
     suspend fun getNumberOfSponsors(): Int
 }
 
-class SponsorsRepositoryImpl @Inject constructor(
-    private val sponsorsService: SponsorsServiceImpl
+class SponsorsRepositoryImpl(
+    private val sponsorsService: SponsorsService
 ) : SponsorsRepository {
 
     companion object {

@@ -4,13 +4,12 @@ import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Category
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 interface CategoriesService {
     suspend fun fetchCategories(): List<Category>
 }
 
-class CategoriesServiceImpl @Inject constructor(
+class CategoriesServiceImpl(
     private val firebaseFirestore: FirebaseFirestore
 ) : CategoriesService {
     override suspend fun fetchCategories(): List<Category> {

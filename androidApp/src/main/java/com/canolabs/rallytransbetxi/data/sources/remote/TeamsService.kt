@@ -9,13 +9,12 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 interface TeamsService {
     suspend fun fetchTeams(): List<Team>
 }
 
-class TeamsServiceImpl @Inject constructor(
+class TeamsServiceImpl(
     private val firebaseFirestore: FirebaseFirestore,
     private val categoriesRepositoryImpl: CategoriesRepositoryImpl,
 ) : TeamsService {

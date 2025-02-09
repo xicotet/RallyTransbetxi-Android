@@ -3,23 +3,22 @@ package com.canolabs.rallytransbetxi.data.repositories
 import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.RaceWarning
 import com.canolabs.rallytransbetxi.data.sources.local.dao.RaceWarningDao
-import com.canolabs.rallytransbetxi.data.sources.remote.RaceWarningsServiceImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.sources.remote.RaceWarningsService
 
 interface RaceWarningsRepository {
     suspend fun getGlobalRaceWarning(): RaceWarning?
     suspend fun getStageRaceWarning(stageId: String): RaceWarning?
 }
 
-class RaceWarningsRepositoryImpl @Inject constructor(
-    private val raceWarningsServiceImpl: RaceWarningsServiceImpl,
+class RaceWarningsRepositoryImpl(
+    private val raceWarningsService: RaceWarningsService,
     private val raceWarningDao: RaceWarningDao
 ) : RaceWarningsRepository {
 
     override suspend fun getGlobalRaceWarning(): RaceWarning? {
         Log.d("RaceWarningsRepo", "Fetching global race warning...")
 
-        val apiFetchedGlobalWarning = raceWarningsServiceImpl.fetchGlobalRaceWarning()
+        val apiFetchedGlobalWarning = raceWarningsService.fetchGlobalRaceWarning()
         Log.d("RaceWarningsRepo", "API fetched global warning: $apiFetchedGlobalWarning")
 
         val localStoredGlobalWarning = raceWarningDao.getGlobalRaceWarnings().firstOrNull()
@@ -59,7 +58,7 @@ class RaceWarningsRepositoryImpl @Inject constructor(
     override suspend fun getStageRaceWarning(stageId: String): RaceWarning? {
         Log.d("RaceWarningsRepo", "Fetching stage race warning for stage: $stageId...")
 
-        val apiFetchedStageWarning = raceWarningsServiceImpl.fetchStageRaceWarning(stageId)
+        val apiFetchedStageWarning = raceWarningsService.fetchStageRaceWarning(stageId)
         Log.d("RaceWarningsRepo", "API fetched stage warning: $apiFetchedStageWarning")
 
         val localStoredStageWarning = raceWarningDao.getStageRaceWarnings(stageId).firstOrNull()

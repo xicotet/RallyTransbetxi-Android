@@ -1,12 +1,11 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
-import com.canolabs.rallytransbetxi.data.repositories.AppSettingsRepositoryImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.repositories.AppSettingsRepository
 
-class GetAreNewsCollapsedUseCase @Inject constructor(
-    private val appSettingsRepositoryImpl: AppSettingsRepositoryImpl
+class GetAreNewsCollapsedUseCase(
+    private val appSettingsRepository: AppSettingsRepository
 ) {
     suspend operator fun invoke(): Boolean {
-        return appSettingsRepositoryImpl.getAreNewsCollapsed()
+        return appSettingsRepository.getAreNewsCollapsed()
     }
 }

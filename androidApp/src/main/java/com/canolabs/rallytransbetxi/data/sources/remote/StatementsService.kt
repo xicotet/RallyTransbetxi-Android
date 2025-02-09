@@ -4,14 +4,13 @@ import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Statement
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 
 interface StatementsService {
     suspend fun fetchStatements(): List<Statement>
 }
 
-class StatementsServiceImpl @Inject constructor(
+class StatementsServiceImpl(
     private val firebaseFirestore: FirebaseFirestore
 ) : StatementsService {
     override suspend fun fetchStatements(): List<Statement> {

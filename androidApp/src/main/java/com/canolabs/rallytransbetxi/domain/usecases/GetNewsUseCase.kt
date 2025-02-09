@@ -1,13 +1,12 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
 import com.canolabs.rallytransbetxi.data.models.responses.News
-import com.canolabs.rallytransbetxi.data.repositories.NewsRepositoryImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.repositories.NewsRepository
 
-class GetNewsUseCase @Inject constructor(
-    private val newsRepositoryImpl: NewsRepositoryImpl
+class GetNewsUseCase(
+    private val newsRepository: NewsRepository
 ) {
     suspend operator fun invoke(): List<News> {
-        return newsRepositoryImpl.getNews()
+        return newsRepository.getNews()
     }
 }

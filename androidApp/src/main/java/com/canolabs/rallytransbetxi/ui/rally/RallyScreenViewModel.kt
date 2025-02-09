@@ -24,47 +24,43 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetNewsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNotificationPermissionCounterUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetNumberOfSponsorsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
-import com.canolabs.rallytransbetxi.domain.usecases.GetRestaurantsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetThemeSettingsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStatementsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.InsertSettingsUseCase
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.PLACES_NEARBY_SEARCH_MANUAL_EXCLUDED_RESTAURANTS
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.koin.java.KoinJavaComponent.inject
 import java.util.Locale
-import javax.inject.Inject
 
-@HiltViewModel
-class RallyScreenViewModel @Inject constructor(
-    private val getNewsUseCase: GetNewsUseCase,
-    private val getStatementsUseCase: GetStatementsUseCase,
-    private val getRestaurantsUseCase: GetRestaurantsUseCase,
-    private val getHallOfFameUseCase: GetHallOfFameUseCase,
-    private val getActivitiesUseCase: GetActivitiesUseCase,
-    private val insertSettingsUseCase: InsertSettingsUseCase,
-    private val getThemeSettingsUseCase: GetThemeSettingsUseCase,
-    private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
-    private val getFontSizeFactorSettingsUseCase: GetFontSizeFactorSettingsUseCase,
-    private val getNotificationPermissionCounterUseCase: GetNotificationPermissionCounterUseCase,
-    private val getAreActivitiesCollapsed: GetAreActivitiesCollapsedUseCase,
-    private val getAreNewsCollapsedUseCase: GetAreNewsCollapsedUseCase,
-    private val getAreStatementsCollapsedUseCase: GetAreStatementsCollapsedUseCase,
-    private val canAccessToAppUseCase: CanAccessToAppUseCase,
-    private val getBetxiRestaurantsUseCase: GetBetxiRestaurantsUseCase,
-    private val getNumberOfSponsorsUseCase: GetNumberOfSponsorsUseCase
-) : ViewModel() {
+class RallyScreenViewModel : ViewModel() {
 
     private var _state = MutableStateFlow(RallyScreenUIState())
     val state: StateFlow<RallyScreenUIState> = _state.asStateFlow()
 
     private var _blockApp = MutableStateFlow(false)
     val blockApp: StateFlow<Boolean> = _blockApp.asStateFlow()
+
+    private val getNewsUseCase: GetNewsUseCase by inject(GetNewsUseCase::class.java)
+    private val getStatementsUseCase: GetStatementsUseCase by inject(GetStatementsUseCase::class.java)
+    private val getHallOfFameUseCase: GetHallOfFameUseCase by inject(GetHallOfFameUseCase::class.java)
+    private val getActivitiesUseCase: GetActivitiesUseCase by inject(GetActivitiesUseCase::class.java)
+    private val insertSettingsUseCase: InsertSettingsUseCase by inject(InsertSettingsUseCase::class.java)
+    private val getThemeSettingsUseCase: GetThemeSettingsUseCase by inject(GetThemeSettingsUseCase::class.java)
+    private val getProfileSettingsUseCase: GetProfileSettingsUseCase by inject(GetProfileSettingsUseCase::class.java)
+    private val getFontSizeFactorSettingsUseCase: GetFontSizeFactorSettingsUseCase by inject(GetFontSizeFactorSettingsUseCase::class.java)
+    private val getNotificationPermissionCounterUseCase: GetNotificationPermissionCounterUseCase by inject(GetNotificationPermissionCounterUseCase::class.java)
+    private val getAreActivitiesCollapsed: GetAreActivitiesCollapsedUseCase by inject(GetAreActivitiesCollapsedUseCase::class.java)
+    private val getAreNewsCollapsedUseCase: GetAreNewsCollapsedUseCase  by inject(GetAreNewsCollapsedUseCase::class.java)
+    private val getAreStatementsCollapsedUseCase: GetAreStatementsCollapsedUseCase by inject(GetAreStatementsCollapsedUseCase::class.java)
+    private val canAccessToAppUseCase: CanAccessToAppUseCase by inject(CanAccessToAppUseCase::class.java)
+    private val getBetxiRestaurantsUseCase: GetBetxiRestaurantsUseCase by inject(GetBetxiRestaurantsUseCase::class.java)
+    private val getNumberOfSponsorsUseCase: GetNumberOfSponsorsUseCase by inject(GetNumberOfSponsorsUseCase::class.java)
 
     fun checkAppVersion() {
         viewModelScope.launch {

@@ -7,14 +7,13 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 interface AppVersionRepository {
     suspend fun getCurrentVersion(): List<Int>
     suspend fun getMinAllowedVersion(): List<Int>
 }
 
-class AppVersionRepositoryImpl @Inject constructor(
+class AppVersionRepositoryImpl(
     private val context: Context,
 ) : AppVersionRepository {
     override suspend fun getCurrentVersion(): List<Int> {

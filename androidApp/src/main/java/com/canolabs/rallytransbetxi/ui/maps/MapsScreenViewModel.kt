@@ -18,24 +18,23 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.koin.java.KoinJavaComponent.inject
 import java.util.Locale
-import javax.inject.Inject
 
-@HiltViewModel
-class MapsScreenViewModel @Inject constructor(
-    private val getStageByAcronymUseCase: GetStageByAcronymUseCase,
-    private val getDirectionsUseCase: GetDirectionsUseCase,
-    private val getProfileSettingsUseCase: GetProfileSettingsUseCase,
+class MapsScreenViewModel(
     private val application: Application
 ): ViewModel() {
     private var _state = MutableStateFlow(MapsScreenUIState())
     val state: StateFlow<MapsScreenUIState> = _state.asStateFlow()
+
+    private val getStageByAcronymUseCase: GetStageByAcronymUseCase by inject(GetStageByAcronymUseCase::class.java)
+    private val getDirectionsUseCase: GetDirectionsUseCase by inject(GetDirectionsUseCase::class.java)
+    private val getProfileSettingsUseCase: GetProfileSettingsUseCase by inject(GetProfileSettingsUseCase::class.java)
 
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(application)

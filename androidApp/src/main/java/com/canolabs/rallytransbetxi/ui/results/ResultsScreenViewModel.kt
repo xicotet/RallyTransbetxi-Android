@@ -11,24 +11,22 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStageRaceWarningUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.koin.java.KoinJavaComponent.inject
 import java.util.Locale
-import javax.inject.Inject
 
-@HiltViewModel
-class ResultsScreenViewModel @Inject constructor(
-    private val getGlobalResultsUseCase: GetGlobalResultsUseCase,
-    private val getStagesResultsUseCase: GetStagesResultsUseCase,
-    private val getGlobalRaceWarningUseCase: GetGlobalRaceWarningUseCase,
-    private val getStageRaceWarningUseCase: GetStageRaceWarningUseCase,
-    private val getStagesUseCase: GetStagesUseCase
-): ViewModel() {
+class ResultsScreenViewModel : ViewModel() {
     private var _state = MutableStateFlow(ResultsScreenUIState())
     val state: StateFlow<ResultsScreenUIState> = _state.asStateFlow()
+
+    private val getGlobalResultsUseCase: GetGlobalResultsUseCase by inject(GetGlobalResultsUseCase::class.java)
+    private val getStagesResultsUseCase: GetStagesResultsUseCase by inject(GetStagesResultsUseCase::class.java)
+    private val getGlobalRaceWarningUseCase: GetGlobalRaceWarningUseCase by inject(GetGlobalRaceWarningUseCase::class.java)
+    private val getStageRaceWarningUseCase: GetStageRaceWarningUseCase by inject(GetStageRaceWarningUseCase::class.java)
+    private val getStagesUseCase: GetStagesUseCase by inject(GetStagesUseCase::class.java)
 
     fun fetchGlobalResults() {
         viewModelScope.launch {

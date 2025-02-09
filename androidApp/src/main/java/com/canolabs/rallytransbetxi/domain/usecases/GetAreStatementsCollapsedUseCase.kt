@@ -2,10 +2,10 @@ package com.canolabs.rallytransbetxi.domain.usecases
 
 import com.canolabs.rallytransbetxi.data.repositories.AppSettingsRepository
 
-class GetFontSizeFactorSettingsUseCase(
+class GetAreStatementsCollapsedUseCase(
     private val appSettingsRepository: AppSettingsRepository
 ) {
-    suspend operator fun invoke(): Float {
-        return appSettingsRepository.getFontSizeFactor()
+    suspend operator fun invoke(): Boolean {
+        return appSettingsRepository.getAreStatementsCollapsed()
     }
 }

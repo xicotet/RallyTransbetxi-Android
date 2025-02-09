@@ -1,12 +1,11 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
-import com.canolabs.rallytransbetxi.data.repositories.AppSettingsRepositoryImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.repositories.AppSettingsRepository
 
-class GetThemeSettingsUseCase @Inject constructor(
-    private val appSettingsRepositoryImpl: AppSettingsRepositoryImpl
+class GetThemeSettingsUseCase(
+    private val appSettingsRepository: AppSettingsRepository
 ) {
     suspend operator fun invoke(): String {
-        return appSettingsRepositoryImpl.getTheme()
+        return appSettingsRepository.getTheme()
     }
 }

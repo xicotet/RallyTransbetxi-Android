@@ -1,10 +1,9 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
-import com.canolabs.rallytransbetxi.data.repositories.RestaurantsRepositoryImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.repositories.RestaurantsRepository
 
-class GetRestaurantsUseCase @Inject constructor(
-    private val restaurantsRepositoryImpl: RestaurantsRepositoryImpl
+class GetRestaurantsUseCase(
+    private val restaurantsRepository: RestaurantsRepository
 ) {
-    suspend operator fun invoke() = restaurantsRepositoryImpl.getRestaurants()
+    suspend operator fun invoke() = restaurantsRepository.getRestaurants()
 }

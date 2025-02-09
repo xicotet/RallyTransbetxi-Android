@@ -2,9 +2,8 @@ package com.canolabs.rallytransbetxi.data.repositories
 
 import com.canolabs.rallytransbetxi.data.models.responses.Version
 import com.canolabs.rallytransbetxi.data.sources.local.dao.VersionsDao
-import com.canolabs.rallytransbetxi.data.sources.remote.VersionsServiceImpl
+import com.canolabs.rallytransbetxi.data.sources.remote.VersionsService
 import com.google.firebase.Timestamp
-import javax.inject.Inject
 
 interface VersionsRepository {
     suspend fun getLocalStoredVersion(name: String): Timestamp
@@ -14,9 +13,9 @@ interface VersionsRepository {
     suspend fun getApiVersion(name: String): Timestamp?
 }
 
-class VersionsRepositoryImpl @Inject constructor(
+class VersionsRepositoryImpl(
     private val versionsDao: VersionsDao,
-    private val versionsServiceImpl: VersionsServiceImpl
+    private val versionsService: VersionsService
 ) : VersionsRepository {
     override suspend fun getLocalStoredVersion(name: String): Timestamp {
         return versionsDao.getVersion(name)
@@ -35,7 +34,7 @@ class VersionsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getApiVersion(name: String): Timestamp? {
-        return versionsServiceImpl.fetchVersion(name)?.timestamp
+        return versionsService.fetchVersion(name)?.timestamp
     }
 
 }

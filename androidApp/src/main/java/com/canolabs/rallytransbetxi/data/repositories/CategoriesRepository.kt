@@ -3,17 +3,16 @@ package com.canolabs.rallytransbetxi.data.repositories
 import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Category
 import com.canolabs.rallytransbetxi.data.sources.local.dao.CategoryDao
-import com.canolabs.rallytransbetxi.data.sources.remote.CategoriesServiceImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.sources.remote.CategoriesService
 
 
 interface CategoriesRepository {
     suspend fun getCategories(): List<Category>
 }
 
-class CategoriesRepositoryImpl @Inject constructor(
-    private val categoriesServiceImpl: CategoriesServiceImpl,
-    private val versionsRepositoryImpl: VersionsRepositoryImpl,
+class CategoriesRepositoryImpl(
+    private val categoriesService: CategoriesService,
+    private val versionsRepository: VersionsRepository,
     private val categoriesDao: CategoryDao
 ) : CategoriesRepository {
 
@@ -25,19 +24,19 @@ class CategoriesRepositoryImpl @Inject constructor(
         val versionName = "categories"
         Log.d(TAG, "getCategories() called")
 
-        val localVersionCount = versionsRepositoryImpl.countLocalStoredVersionsByName(versionName)
+        val localVersionCount = versionsRepository.countLocalStoredVersionsByName(versionName)
         Log.d(TAG, "Local version count for '$versionName': $localVersionCount")
 
         // If there is no local version stored, fetch from API and store the version
         if (localVersionCount == 0) {
             Log.d(TAG, "No local version found")
-            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName) ?: return emptyList()
+            val apiVersion = versionsRepository.getApiVersion(versionName) ?: return emptyList()
             Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
-            versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
+            versionsRepository.insertLocalStoredVersion(versionName, apiVersion)
             Log.d(TAG, "Inserted API version into local storage: $apiVersion")
 
-            val categories = categoriesServiceImpl.fetchCategories()
+            val categories = categoriesService.fetchCategories()
             Log.d(TAG, "Fetched categories from API: ${categories.size} categories")
 
             categoriesDao.insertCategories(categories)
@@ -47,10 +46,10 @@ class CategoriesRepositoryImpl @Inject constructor(
         }
 
         // Get local and API versions
-        val localVersion = versionsRepositoryImpl.getLocalStoredVersion(versionName)
+        val localVersion = versionsRepository.getLocalStoredVersion(versionName)
         Log.d(TAG, "Fetched local version for '$versionName': $localVersion")
 
-        val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
+        val apiVersion = versionsRepository.getApiVersion(versionName)
         Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
         // Compare versions
@@ -61,16 +60,16 @@ class CategoriesRepositoryImpl @Inject constructor(
             categoriesDao.deleteAllCategories()
             Log.d(TAG, "Deleted all local categories")
 
-            val categories = categoriesServiceImpl.fetchCategories()
+            val categories = categoriesService.fetchCategories()
             Log.d(TAG, "Fetched categories from API: ${categories.size} categories")
 
             categoriesDao.insertCategories(categories)
             Log.d(TAG, "Inserted fetched categories into local storage")
 
-            versionsRepositoryImpl.deleteLocalStoredVersion(versionName)
+            versionsRepository.deleteLocalStoredVersion(versionName)
             Log.d(TAG, "Deleted old local version")
 
-            versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
+            versionsRepository.insertLocalStoredVersion(versionName, apiVersion)
             Log.d(TAG, "Add local version to API version: $apiVersion")
 
             categories

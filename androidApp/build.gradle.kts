@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.services)
-    alias(libs.plugins.google.dagger.hilt)
     alias(libs.plugins.maps.platform.secrets)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.jetbrains.compose)
@@ -119,9 +118,6 @@ dependencies {
     implementation(libs.revealswipe) // Reveal Swipe
     // Reveal Swipe
 
-    implementation(libs.hilt.android.v250) // Hilt
-    kapt(libs.hilt.android.compiler) // Hilt
-
     implementation(libs.androidx.room.ktx.v261) // Room
     implementation(libs.androidx.room.runtime.v261) // Room
     annotationProcessor(libs.androidx.room.compiler.v261)  // Room
@@ -142,6 +138,13 @@ dependencies {
     implementation(libs.logging.interceptor.v491) // OkHttp Logging Interceptor
 
     implementation(libs.androidx.appcompat.v170)
+
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    implementation(libs.koin.core)
+    implementation(libs.koin.compose)
+    implementation(libs.koin.compose.viewModel)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

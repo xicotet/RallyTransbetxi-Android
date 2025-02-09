@@ -4,13 +4,12 @@ import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.News
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 interface NewsService {
     suspend fun fetchNews(): List<News>
 }
 
-class NewsServiceImpl @Inject constructor(
+class NewsServiceImpl(
     private val firebaseFirestore: FirebaseFirestore
 ) : NewsService {
     override suspend fun fetchNews(): List<News> {

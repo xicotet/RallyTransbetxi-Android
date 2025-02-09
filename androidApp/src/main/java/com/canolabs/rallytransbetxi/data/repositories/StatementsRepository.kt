@@ -3,16 +3,15 @@ package com.canolabs.rallytransbetxi.data.repositories
 import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Statement
 import com.canolabs.rallytransbetxi.data.sources.local.dao.StatementDao
-import com.canolabs.rallytransbetxi.data.sources.remote.StatementsServiceImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.sources.remote.StatementsService
 
 interface StatementsRepository {
     suspend fun getStatements(): List<Statement>
 }
 
-class StatementsRepositoryImpl @Inject constructor(
-    private val statementsServiceImpl: StatementsServiceImpl,
-    private val versionsRepositoryImpl: VersionsRepositoryImpl,
+class StatementsRepositoryImpl(
+    private val statementsService: StatementsService,
+    private val versionsRepository: VersionsRepository,
     private val statementsDao: StatementDao,
 ) : StatementsRepository {
 
@@ -24,20 +23,20 @@ class StatementsRepositoryImpl @Inject constructor(
         val versionName = "statements"
         Log.d(TAG, "getStatements() called")
 
-        val localVersionCount = versionsRepositoryImpl.countLocalStoredVersionsByName(versionName)
+        val localVersionCount = versionsRepository.countLocalStoredVersionsByName(versionName)
         Log.d(TAG, "Local version count for '$versionName': $localVersionCount")
 
         // If there is no local version stored, fetch from API and store the version
         if (localVersionCount == 0) {
             Log.d(TAG, "No local version found")
-            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName) ?: return emptyList()
+            val apiVersion = versionsRepository.getApiVersion(versionName) ?: return emptyList()
 
             Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
-            versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
+            versionsRepository.insertLocalStoredVersion(versionName, apiVersion)
             Log.d(TAG, "Inserted API version into local storage: $apiVersion")
 
-            val statements = statementsServiceImpl.fetchStatements()
+            val statements = statementsService.fetchStatements()
             Log.d(TAG, "Fetched statements from API: ${statements.size} statements")
 
             // The latest non-seen statemeent needs to be prompted as a dialog
@@ -53,10 +52,10 @@ class StatementsRepositoryImpl @Inject constructor(
         }
 
         // Get local and API versions
-        val localVersion = versionsRepositoryImpl.getLocalStoredVersion(versionName)
+        val localVersion = versionsRepository.getLocalStoredVersion(versionName)
         Log.d(TAG, "Fetched local version for '$versionName': $localVersion")
 
-        val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
+        val apiVersion = versionsRepository.getApiVersion(versionName)
         Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
         // Compare versions
@@ -64,7 +63,7 @@ class StatementsRepositoryImpl @Inject constructor(
             Log.d(TAG, "API version is different. Fetching data from API.")
 
             // If API version is newer, fetch from API and update local version
-            val statements = statementsServiceImpl.fetchStatements()
+            val statements = statementsService.fetchStatements()
             Log.d(TAG, "Fetched statements from API: ${statements.size} statements")
 
             // The latest non-seen statement needs to be prompted as a dialog
@@ -79,10 +78,10 @@ class StatementsRepositoryImpl @Inject constructor(
             statementsDao.insertStatements(shortedStatementsByDate)
             Log.d(TAG, "Inserted fetched statements into local storage")
 
-            versionsRepositoryImpl.deleteLocalStoredVersion(versionName)
+            versionsRepository.deleteLocalStoredVersion(versionName)
             Log.d(TAG, "Deleted old local version")
 
-            versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
+            versionsRepository.insertLocalStoredVersion(versionName, apiVersion)
             Log.d(TAG, "Add local version to API version: $apiVersion")
 
             shortedStatementsByDate

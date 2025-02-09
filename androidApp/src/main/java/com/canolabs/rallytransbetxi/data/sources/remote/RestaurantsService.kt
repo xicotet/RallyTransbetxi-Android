@@ -4,13 +4,12 @@ import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Restaurant
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 interface RestaurantsService {
     suspend fun fetchRestaurants(): List<Restaurant>
 }
 
-class RestaurantsServiceImpl @Inject constructor(
+class RestaurantsServiceImpl(
     private val firebaseFirestore: FirebaseFirestore
 ) : RestaurantsService {
     override suspend fun fetchRestaurants(): List<Restaurant> {

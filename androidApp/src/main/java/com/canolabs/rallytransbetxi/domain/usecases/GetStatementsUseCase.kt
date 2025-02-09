@@ -1,10 +1,9 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
-import com.canolabs.rallytransbetxi.data.repositories.StatementsRepositoryImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.repositories.StatementsRepository
 
-class GetStatementsUseCase @Inject constructor(
-    private val statementsRepositoryImpl: StatementsRepositoryImpl
+class GetStatementsUseCase(
+    private val statementsRepository: StatementsRepository
 ) {
-    suspend operator fun invoke() = statementsRepositoryImpl.getStatements()
+    suspend operator fun invoke() = statementsRepository.getStatements()
 }

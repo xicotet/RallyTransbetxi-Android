@@ -1,10 +1,9 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
-import com.canolabs.rallytransbetxi.data.repositories.SponsorsRepositoryImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.repositories.SponsorsRepository
 
-class GetNumberOfSponsorsUseCase @Inject constructor(
-    private val sponsorsRepository: SponsorsRepositoryImpl
+class GetNumberOfSponsorsUseCase(
+    private val sponsorsRepository: SponsorsRepository
 ) {
     suspend fun invoke(): Int {
         return sponsorsRepository.getNumberOfSponsors()

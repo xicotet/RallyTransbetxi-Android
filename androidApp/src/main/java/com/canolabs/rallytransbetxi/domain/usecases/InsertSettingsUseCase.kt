@@ -1,10 +1,9 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
-import com.canolabs.rallytransbetxi.data.repositories.AppSettingsRepositoryImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.repositories.AppSettingsRepository
 
-class InsertSettingsUseCase @Inject constructor(
-    private val appSettingsRepositoryImpl: AppSettingsRepositoryImpl
+class InsertSettingsUseCase(
+    private val appSettingsRepository: AppSettingsRepository
 ) {
     suspend operator fun invoke(
         theme: String,
@@ -15,7 +14,7 @@ class InsertSettingsUseCase @Inject constructor(
         areNewsCollapsed: Boolean,
         areActivitiesCollapsed: Boolean
     ) {
-        appSettingsRepositoryImpl.insertSetting(
+        appSettingsRepository.insertSetting(
             theme,
             profile,
             fontSizeFactor,

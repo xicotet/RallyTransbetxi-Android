@@ -8,22 +8,20 @@ import com.canolabs.rallytransbetxi.domain.usecases.GetGlobalResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesResultsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetStagesUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetTeamsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.java.KoinJavaComponent.inject
 
-@HiltViewModel
-class TeamsScreenViewModel @Inject constructor(
-    private val getTeamsUseCase: GetTeamsUseCase,
-    private val getGlobalResultsUseCase: GetGlobalResultsUseCase,
-    private val getStagesUseCase: GetStagesUseCase,
-    private val getStagesResultsUseCase: GetStagesResultsUseCase
-): ViewModel() {
+class TeamsScreenViewModel : ViewModel() {
     private var _state = MutableStateFlow(TeamsScreenUIState())
     val state: StateFlow<TeamsScreenUIState> = _state.asStateFlow()
+
+    private val getTeamsUseCase: GetTeamsUseCase by inject(GetTeamsUseCase::class.java)
+    private val getGlobalResultsUseCase: GetGlobalResultsUseCase by inject(GetGlobalResultsUseCase::class.java)
+    private val getStagesUseCase: GetStagesUseCase by inject(GetStagesUseCase::class.java)
+    private val getStagesResultsUseCase: GetStagesResultsUseCase by inject(GetStagesResultsUseCase::class.java)
 
     fun fetchTeams() {
         viewModelScope.launch {

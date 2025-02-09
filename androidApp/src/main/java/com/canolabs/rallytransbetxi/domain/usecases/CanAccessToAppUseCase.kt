@@ -1,15 +1,14 @@
 package com.canolabs.rallytransbetxi.domain.usecases
 
 import android.util.Log
-import com.canolabs.rallytransbetxi.data.repositories.AppVersionRepositoryImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.repositories.AppVersionRepository
 
-class CanAccessToAppUseCase @Inject constructor(
-     private val appVersionRepositoryImpl: AppVersionRepositoryImpl
+class CanAccessToAppUseCase(
+     private val appVersionRepository: AppVersionRepository
 ) {
     suspend operator fun invoke(): Boolean {
-        val currentVersion = appVersionRepositoryImpl.getCurrentVersion()
-        val minAllowedVersion = appVersionRepositoryImpl.getMinAllowedVersion()
+        val currentVersion = appVersionRepository.getCurrentVersion()
+        val minAllowedVersion = appVersionRepository.getMinAllowedVersion()
 
         // Guarantee access if for some reason version fetch fails (i.e., returns [0, 0, 0])
         if (currentVersion == listOf(0, 0, 0) || minAllowedVersion == listOf(0, 0, 0)) {

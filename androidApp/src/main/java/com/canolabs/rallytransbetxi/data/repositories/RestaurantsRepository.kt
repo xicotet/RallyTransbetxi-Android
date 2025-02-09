@@ -3,17 +3,16 @@ package com.canolabs.rallytransbetxi.data.repositories
 import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Restaurant
 import com.canolabs.rallytransbetxi.data.sources.local.dao.RestaurantDao
-import com.canolabs.rallytransbetxi.data.sources.remote.RestaurantsServiceImpl
-import javax.inject.Inject
+import com.canolabs.rallytransbetxi.data.sources.remote.RestaurantsService
 
 interface RestaurantsRepository {
     suspend fun getRestaurants(): List<Restaurant>
 }
 
-class RestaurantsRepositoryImpl @Inject constructor(
-    private val restaurantsServiceImpl: RestaurantsServiceImpl,
+class RestaurantsRepositoryImpl(
+    private val restaurantsService: RestaurantsService,
     private val restaurantsDao: RestaurantDao,
-    private val versionsRepositoryImpl: VersionsRepositoryImpl
+    private val versionsRepository: VersionsRepository
 ): RestaurantsRepository {
 
     companion object {
@@ -24,19 +23,19 @@ class RestaurantsRepositoryImpl @Inject constructor(
         val versionName = "restaurants"
         Log.d(TAG, "getRestaurants() called")
 
-        val localVersionCount = versionsRepositoryImpl.countLocalStoredVersionsByName(versionName)
+        val localVersionCount = versionsRepository.countLocalStoredVersionsByName(versionName)
         Log.d(TAG, "Local version count for '$versionName': $localVersionCount")
 
         // If there is no local version stored, fetch from API and store the version
         if (localVersionCount == 0) {
             Log.d(TAG, "No local version found")
-            val apiVersion = versionsRepositoryImpl.getApiVersion(versionName) ?: return emptyList()
+            val apiVersion = versionsRepository.getApiVersion(versionName) ?: return emptyList()
             Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
-            versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
+            versionsRepository.insertLocalStoredVersion(versionName, apiVersion)
             Log.d(TAG, "Inserted API version into local storage: $apiVersion")
 
-            val restaurants = restaurantsServiceImpl.fetchRestaurants()
+            val restaurants = restaurantsService.fetchRestaurants()
             Log.d(TAG, "Fetched restaurants from API: ${restaurants.size} entries")
 
             restaurantsDao.insertAll(restaurants)
@@ -46,10 +45,10 @@ class RestaurantsRepositoryImpl @Inject constructor(
         }
 
         // Get local and API versions
-        val localVersion = versionsRepositoryImpl.getLocalStoredVersion(versionName)
+        val localVersion = versionsRepository.getLocalStoredVersion(versionName)
         Log.d(TAG, "Fetched local version for '$versionName': $localVersion")
 
-        val apiVersion = versionsRepositoryImpl.getApiVersion(versionName)
+        val apiVersion = versionsRepository.getApiVersion(versionName)
         Log.d(TAG, "Fetched API version for '$versionName': $apiVersion")
 
         // Compare versions
@@ -57,7 +56,7 @@ class RestaurantsRepositoryImpl @Inject constructor(
             Log.d(TAG, "API version is different. Fetching data from API.")
 
             // If API version is newer, fetch from API and update local version
-            val restaurants = restaurantsServiceImpl.fetchRestaurants()
+            val restaurants = restaurantsService.fetchRestaurants()
             Log.d(TAG, "Fetched restaurants from API: ${restaurants.size} entries")
 
             restaurantsDao.deleteAll()
@@ -66,10 +65,10 @@ class RestaurantsRepositoryImpl @Inject constructor(
             restaurantsDao.insertAll(restaurants)
             Log.d(TAG, "Inserted fetched restaurant entries into local storage")
 
-            versionsRepositoryImpl.deleteLocalStoredVersion(versionName)
+            versionsRepository.deleteLocalStoredVersion(versionName)
             Log.d(TAG, "Deleted old local version")
 
-            versionsRepositoryImpl.insertLocalStoredVersion(versionName, apiVersion)
+            versionsRepository.insertLocalStoredVersion(versionName, apiVersion)
             Log.d(TAG, "Add local version to API version: $apiVersion")
 
             restaurants

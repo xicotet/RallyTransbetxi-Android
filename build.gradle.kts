@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.google.services) apply false
-    alias(libs.plugins.google.dagger.hilt) apply false
     alias(libs.plugins.maps.platform.secrets) apply false
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.jetbrains.compose) apply false
