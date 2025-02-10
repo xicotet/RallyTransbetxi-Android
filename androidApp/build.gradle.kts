@@ -25,12 +25,12 @@ println("Keystore exists: ${file(keystoreProperties["storeFile"] as String).exis
 
 android {
     namespace = "com.canolabs.rallytransbetxi"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.canolabs.rallytransbetxi"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 4
         versionName = "0.4.0"
 

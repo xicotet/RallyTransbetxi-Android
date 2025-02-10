@@ -19,7 +19,7 @@ class AppVersionRepositoryImpl(
     override suspend fun getCurrentVersion(): List<Int> {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            val version = packageInfo.versionName.split(".").map { it.toInt() }
+            val version = packageInfo.versionName?.split(".")?.map { it.toInt() } ?: listOf(0, 0, 0)
             // If version doesn't have 3 parts, add 0s to the end
             if (version.size < 3) {
                 version + List(3 - version.size) { 0 }
