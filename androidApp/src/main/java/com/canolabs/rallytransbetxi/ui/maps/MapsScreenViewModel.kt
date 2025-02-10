@@ -9,7 +9,6 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.canolabs.rallytransbetxi.BuildConfig
 import com.canolabs.rallytransbetxi.domain.entities.Language
 import com.canolabs.rallytransbetxi.domain.usecases.GetDirectionsUseCase
 import com.canolabs.rallytransbetxi.domain.usecases.GetProfileSettingsUseCase
@@ -77,10 +76,9 @@ class MapsScreenViewModel(
 
             try{
                 val directions = getDirectionsUseCase.execute(
-                    _state.value.directionsProfile!!,
-                    BuildConfig.DIRECTIONS_API_KEY,
-                    "$startPointLongitude,$startPointLatitude",
-                    "$endPointLongitude,$endPointLatitude"
+                    profile = _state.value.directionsProfile!!,
+                    start = "$startPointLongitude,$startPointLatitude",
+                    end = "$endPointLongitude,$endPointLatitude"
                 )
                 _state.setDirections(directions)
             } catch (e: Exception) {

@@ -6,7 +6,7 @@ import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
 class GetDirectionsUseCase(
     private val repository: DirectionsRepository
 ) {
-    fun execute(profile: DirectionsProfile, apiKey: String, start: String, end: String): List<List<Double>> {
-        return repository.getDirections(profile.getDatabaseName(), apiKey, start, end)
+    suspend fun execute(profile: DirectionsProfile, start: String, end: String): List<List<Double>> {
+        return repository.getDirections(profile.getDatabaseName(), start, end)
     }
 }

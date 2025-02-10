@@ -1,68 +1,79 @@
 package com.canolabs.rallytransbetxi.data.models.responses
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Directions(
-    @SerializedName("type") val type: String,
-    @SerializedName("bbox") val bbox: List<Double>,
-    @SerializedName("features") val features: List<Feature>,
-    @SerializedName("metadata") val metadata: Metadata
+    val type: String,
+    val bbox: List<Double>,
+    val features: List<Feature>,
+    val metadata: Metadata
 )
 
+@Serializable
 data class Feature(
-    @SerializedName("bbox") val bbox: List<Double>,
-    @SerializedName("type") val type: String,
-    @SerializedName("properties") val properties: Properties,
-    @SerializedName("geometry") val geometry: Geometry
+    val bbox: List<Double>,
+    val type: String,
+    val properties: Properties,
+    val geometry: Geometry
 )
 
+@Serializable
 data class Properties(
-    @SerializedName("segments") val segments: List<Segment>,
-    @SerializedName("way_points") val wayPoints: List<Int>,
-    @SerializedName("summary") val summary: Summary
+    val segments: List<Segment>,
+    @SerialName("way_points") val wayPoints: List<Int>,
+    val summary: Summary
 )
 
+@Serializable
 data class Segment(
-    @SerializedName("distance") val distance: Double,
-    @SerializedName("duration") val duration: Double,
-    @SerializedName("steps") val steps: List<Step>
+    val distance: Double,
+    val duration: Double,
+    val steps: List<Step>
 )
 
+@Serializable
 data class Step(
-    @SerializedName("distance") val distance: Double,
-    @SerializedName("duration") val duration: Double,
-    @SerializedName("type") val type: Int,
-    @SerializedName("instruction") val instruction: String,
-    @SerializedName("name") val name: String,
-    @SerializedName("way_points") val wayPoints: List<Int>
+    val distance: Double,
+    val duration: Double,
+    val type: Int,
+    val instruction: String,
+    val name: String,
+    @SerialName("way_points") val wayPoints: List<Int>
 )
 
+@Serializable
 data class Summary(
-    @SerializedName("distance") val distance: Double,
-    @SerializedName("duration") val duration: Double
+    val distance: Double,
+    val duration: Double
 )
 
+@Serializable
 data class Geometry(
-    @SerializedName("coordinates") val coordinates: List<List<Double>>,
-    @SerializedName("type") val type: String
+    val coordinates: List<List<Double>>,
+    val type: String
 )
 
+@Serializable
 data class Metadata(
-    @SerializedName("attribution") val attribution: String,
-    @SerializedName("service") val service: String,
-    @SerializedName("timestamp") val timestamp: Long,
-    @SerializedName("query") val query: Query,
-    @SerializedName("engine") val engine: Engine
+    val attribution: String,
+    val service: String,
+    val timestamp: Long,
+    val query: Query,
+    val engine: Engine
 )
 
+@Serializable
 data class Query(
-    @SerializedName("coordinates") val coordinates: List<List<Double>>,
-    @SerializedName("profile") val profile: String,
-    @SerializedName("format") val format: String
+    val coordinates: List<List<Double>>,
+    val profile: String,
+    val format: String
 )
 
+@Serializable
 data class Engine(
-    @SerializedName("version") val version: String,
-    @SerializedName("build_date") val buildDate: String,
-    @SerializedName("graph_date") val graphDate: String
+    val version: String,
+    @SerialName("build_date") val buildDate: String,
+    @SerialName("graph_date") val graphDate: String
 )

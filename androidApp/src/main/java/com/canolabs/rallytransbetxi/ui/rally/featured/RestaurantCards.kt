@@ -2,6 +2,7 @@ package com.canolabs.rallytransbetxi.ui.rally.featured
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -145,6 +146,10 @@ fun RestaurantCards(
                             val images = restaurant.photos?.take(4) // Take up to 4 images
 
                             images?.forEach { photo ->
+                                if (photo.name == null) {
+                                    Log.e("RestaurantCards", "Photo name is null for image $photo of restaurant $restaurant")
+                                    return@forEach
+                                }
                                 val photoReference = photo.name.substringAfterLast("/")
                                 val photoUrl = getPhotoUrl(photoReference)
                                 val widthModifier = if (images.size == 4) Modifier
@@ -187,7 +192,7 @@ fun RestaurantCards(
                         }
 
                         Text(
-                            text = restaurant.displayName.text,
+                            text = restaurant.displayName!!.text!!,
                             style = MaterialTheme.typography.titleMedium,
                             fontSize = 18.sp,
                             maxLines = 2,

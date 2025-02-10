@@ -38,10 +38,10 @@ class Constants {
         const val DEFAULT_ACTIVITIES_COLLAPSED = false
 
         // OpenRouteService API
-        const val DIRECTIONS_BASE_URL = "https://api.openrouteservice.org/v2/"
+        const val DIRECTIONS_BASE_URL = "api.openrouteservice.org/v2"
 
         // Google Places API
-        const val PLACES_BASE_URL = "https://places.googleapis.com/v1/"
+        const val PLACES_BASE_URL = "places.googleapis.com/v1"
         const val PLACES_NEARBY_SEARCH_RADIUS = 3500.0 // 3.5 km
         const val PLACES_NEARBY_SEARCH_RANK_BY_POPULARITY = "POPULARITY"
         const val PLACES_NEARBY_SEARCH_RANK_BY_DISTANCE = "DISTANCE"
@@ -49,6 +49,12 @@ class Constants {
         const val PLACES_NEARBY_SEARCH_MANUAL_EXCLUDED_RESTAURANTS  = "TORRE LA MINA S.A." // This is not a restaurant in Betxi area. So we manually exclude it
         const val PHOTO_URL_TEMPLATE = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=%s&key=%s"
         const val PLACES_FIELD_MASK = "places.displayName,places.formattedAddress,places.rating,places.location,places.photos,places.googleMapsUri,places.websiteUri,places.currentOpeningHours,places.googleMapsLinks,places.priceRange,places.nationalPhoneNumber,places.internationalPhoneNumber"
+
+        // KOIN Qualifiers
+        const val DIRECTIONS_CLIENT_QUALIFIER = "Directions"
+        const val PLACES_CLIENT_QUALIFIER = "GooglePlaces"
+        const val DIRECTIONS_API_KEY_QUALIFIER = "DirectionsApiKey"
+        const val MAPS_API_KEY_QUALIFIER = "MapsApiKeyQualifier"
 
         // Firebase storage
         const val DRIVERS_FOLDER = "drivers/"

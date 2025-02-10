@@ -7,10 +7,9 @@ class GetBetxiRestaurantsUseCase(
     private val placesRepository: PlacesRepository
 ) {
     suspend operator fun invoke(
-        apiKey: String,
         rankPreference: String,
         languageCode: String?,
     ): List<PlaceResponse> {
-        return placesRepository.getBetxiRestaurants(apiKey, rankPreference, languageCode)
+        return placesRepository.getBetxiRestaurants(rankPreference, languageCode)
     }
 }

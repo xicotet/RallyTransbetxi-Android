@@ -98,8 +98,8 @@ fun EatScreen(
         if (state.value.restaurants.isNotEmpty() && pagerState.currentPage in state.value.restaurants.indices) {
             selectedRestaurant.value = state.value.restaurants[pagerState.currentPage]
             val restaurantPosition = LatLng(
-                state.value.restaurants[pagerState.currentPage].location.latitude,
-                state.value.restaurants[pagerState.currentPage].location.longitude
+                state.value.restaurants[pagerState.currentPage].location?.latitude!!,
+                state.value.restaurants[pagerState.currentPage].location?.longitude!!
             )
 
             val currentZoom = cameraPositionState.position.zoom
@@ -191,7 +191,7 @@ fun EatScreen(
                 ) {
                     state.value.restaurants.forEach { restaurant ->
                         val restaurantPosition =
-                            LatLng(restaurant.location.latitude, restaurant.location.longitude)
+                            LatLng(restaurant.location!!.latitude!!, restaurant.location.longitude!!)
                         MarkerInfoWindow(
                             state = MarkerState(position = restaurantPosition),
                             title = restaurant.name,

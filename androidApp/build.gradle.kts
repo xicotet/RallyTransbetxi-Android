@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.services)
     alias(libs.plugins.maps.platform.secrets)
+    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose.compiler)
@@ -134,6 +135,12 @@ dependencies {
     implementation(libs.retrofit.v2110) // Retrofit
     implementation(libs.gson) // Gson Converter
     implementation(libs.converter.gson.v2110) // Gson Converter
+
+    implementation(libs.ktor.client.core) // Ktor
+    implementation(libs.ktor.client.okhttp) // Ktor
+    implementation(libs.ktor.client.serialization) // Ktor
+    implementation(libs.ktor.client.content.negotiation) // Ktor
+    implementation(libs.ktor.client.logging) // Ktor
 
     implementation(libs.logging.interceptor.v491) // OkHttp Logging Interceptor
 

@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.canolabs.rallytransbetxi.BuildConfig
 import com.canolabs.rallytransbetxi.data.models.responses.PlaceResponse
 import com.canolabs.rallytransbetxi.data.models.responses.Statement
 import com.canolabs.rallytransbetxi.domain.entities.DirectionsProfile
@@ -141,8 +140,13 @@ class RallyScreenViewModel : ViewModel() {
                 popularityDeferred.await()
             ).flatten()
 
+            // Filter out restaurants with no displayName or no coordinates at all
+            val notNullRestaurants = allRestaurants.filter {
+                it.displayName != null &&
+                        it.location?.latitude != null && it.location.longitude != null
+            }
             // Filter out duplicates based on some unique identifier, e.g., place ID
-            val uniqueRestaurants = allRestaurants.distinctBy { it.displayName.text  }
+            val uniqueRestaurants = notNullRestaurants.distinctBy { it.displayName?.text  }
 
             // Filter restaurants without an image and no ratings
             val filteredRestaurants = uniqueRestaurants.filter {
@@ -152,7 +156,7 @@ class RallyScreenViewModel : ViewModel() {
             // Filter out manually excluded restaurants
             val manuallyExcludedRestaurants = PLACES_NEARBY_SEARCH_MANUAL_EXCLUDED_RESTAURANTS.split(",")
             val finalRestaurants = filteredRestaurants.filter {
-                it.displayName.text !in manuallyExcludedRestaurants
+                it.displayName?.text !in manuallyExcludedRestaurants
             }
 
             Log.w("RallyScreenViewModel", "Fetched ${finalRestaurants.size} unique restaurants after filtering")
@@ -164,9 +168,8 @@ class RallyScreenViewModel : ViewModel() {
 
     private suspend fun fetchRestaurantsByPopularity(): List<PlaceResponse>{
         return getBetxiRestaurantsUseCase.invoke(
-            BuildConfig.MAPS_API_KEY,
-            Constants.PLACES_NEARBY_SEARCH_RANK_BY_POPULARITY,
-            state.value.language?.getLanguageCode(),
+            rankPreference = Constants.PLACES_NEARBY_SEARCH_RANK_BY_POPULARITY,
+            languageCode = state.value.language?.getLanguageCode(),
         ).also {
             Log.w("RallyScreenViewModel", "Fetched ${it.size} restaurants by popularity")
         }
@@ -174,9 +177,8 @@ class RallyScreenViewModel : ViewModel() {
 
     private suspend fun fetchRestaurantsByDistance(): List<PlaceResponse> {
         return getBetxiRestaurantsUseCase.invoke(
-            BuildConfig.MAPS_API_KEY,
-            Constants.PLACES_NEARBY_SEARCH_RANK_BY_DISTANCE,
-            state.value.language?.getLanguageCode(),
+            rankPreference = Constants.PLACES_NEARBY_SEARCH_RANK_BY_DISTANCE,
+            languageCode = state.value.language?.getLanguageCode(),
         ).also {
             Log.w("RallyScreenViewModel", "Fetched ${it.size} restaurants by distance")
         }

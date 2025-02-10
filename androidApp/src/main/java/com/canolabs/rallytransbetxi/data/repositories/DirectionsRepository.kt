@@ -2,11 +2,12 @@ package com.canolabs.rallytransbetxi.data.repositories
 
 import android.util.Log
 import com.canolabs.rallytransbetxi.data.sources.remote.DirectionsService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 interface DirectionsRepository {
-    fun getDirections(
+    suspend fun getDirections(
         profile: String,
-        apiKey: String,
         start: String,
         end: String
     ): List<List<Double>>
@@ -15,22 +16,19 @@ interface DirectionsRepository {
 class DirectionsRepositoryImpl(
     private val service: DirectionsService
 ) : DirectionsRepository {
-    override fun getDirections(
+
+    override suspend fun getDirections(
         profile: String,
-        apiKey: String,
         start: String,
         end: String
-    ): List<List<Double>> {
-        Log.d("DirectionsRepositoryImpl", "Fetching directions")
-        Log.d("DirectionsRepositoryImpl", "Profile: $profile")
-        Log.d("DirectionsRepositoryImpl", "API Key: $apiKey")
-        Log.d("DirectionsRepositoryImpl", "Start: $start")
-        Log.d("DirectionsRepositoryImpl", "End: $end")
-        val directions = service.getDirections(profile, apiKey, start, end).execute().body()
-        if (directions == null) {
-            Log.e("DirectionsRepositoryImpl", "Failed to fetch directions")
-            return emptyList()
+    ): List<List<Double>> = withContext(Dispatchers.IO) { // Ensure network call is on IO thread
+        try {
+            Log.d("DirectionsRepositoryImpl", "Fetching directions")
+            val directions = service.getDirections(profile, start, end)
+            directions.features.firstOrNull()?.geometry?.coordinates ?: emptyList()
+        } catch (e: Exception) {
+            Log.e("DirectionsRepositoryImpl", "Failed to fetch directions: ${e.message}", e)
+            emptyList()
         }
-        return directions.features.first().geometry.coordinates
     }
 }

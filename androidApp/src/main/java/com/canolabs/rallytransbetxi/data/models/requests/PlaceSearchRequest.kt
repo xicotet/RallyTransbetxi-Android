@@ -1,7 +1,9 @@
 package com.canolabs.rallytransbetxi.data.models.requests
 
 import com.canolabs.rallytransbetxi.data.models.responses.LatLng
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PlaceSearchRequest(
     val includedTypes: List<String>? = null,
     val excludedTypes: List<String>? = null,
@@ -12,11 +14,13 @@ data class PlaceSearchRequest(
     val locationRestriction: LocationRestriction? = null
 )
 
+@Serializable
 data class Circle(
     val center: LatLng,
     val radius: Double // Radius in meters
 )
 
+@Serializable
 data class LocationRestriction(
     val circle: Circle
 )

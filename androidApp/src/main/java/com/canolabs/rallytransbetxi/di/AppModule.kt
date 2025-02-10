@@ -105,24 +105,33 @@ import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_NOTIFICATI
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_PROFILE
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_THEME
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_WARNINGS_COLLAPSED
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.DIRECTIONS_API_KEY_QUALIFIER
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.DIRECTIONS_CLIENT_QUALIFIER
+import com.canolabs.rallytransbetxi.utils.Constants.Companion.MAPS_API_KEY_QUALIFIER
 import com.google.firebase.firestore.FirebaseFirestore
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.ANDROID
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.http.ContentType
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.URLProtocol
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 val appModule = module {
-    single(named("directionsApiKey")) { BuildConfig.DIRECTIONS_API_KEY }
-    single(named("mapsApiKey")) { BuildConfig.MAPS_API_KEY }
+    single(named(DIRECTIONS_API_KEY_QUALIFIER)) { BuildConfig.DIRECTIONS_API_KEY }
+    single(named(MAPS_API_KEY_QUALIFIER)) { BuildConfig.MAPS_API_KEY }
 
     // ViewModels
     viewModelOf(::MapsScreenViewModel)
@@ -188,6 +197,8 @@ val appModule = module {
     singleOf(::StatementsServiceImpl) { bind<StatementsService>() }
     singleOf(::RaceWarningsServiceImpl) { bind<RaceWarningsService>() }
     singleOf(::SponsorsServiceImpl) { bind<SponsorsService>() }
+    single { DirectionsService() }
+    single { PlacesService() }
 }
 
 val firebaseModule = module {
@@ -242,29 +253,57 @@ val databaseModule = module {
 }
 
 val networkModule = module {
-    single(named("DirectionsRetrofit")) { provideRetrofit(Constants.DIRECTIONS_BASE_URL) }
-    single(named("PlacesRetrofit")) { provideRetrofit(Constants.PLACES_BASE_URL) }
+    // HTTP Client (Ktor)
+    single(named(DIRECTIONS_CLIENT_QUALIFIER)) {
+        HttpClient {
+            install(ContentNegotiation) {
+                json(
+                    json = Json {
+                        ignoreUnknownKeys = true
+                        isLenient = true
+                        prettyPrint = true
+                    }, contentType = ContentType.Any
+                )
+            }
+            install(Logging) {
+                logger = Logger.ANDROID
+                level = LogLevel.ALL
+            }
+            defaultRequest {
+                url {
+                    protocol = URLProtocol.HTTPS
+                    host = Constants.DIRECTIONS_BASE_URL
+                }
+            }
+        }
+    }
 
-    single { get<Retrofit>(named("DirectionsRetrofit")).create(DirectionsService::class.java) }
-    single { get<Retrofit>(named("PlacesRetrofit")).create(PlacesService::class.java) }
+    single(named(Constants.PLACES_CLIENT_QUALIFIER)) {
+        HttpClient {
+            install(ContentNegotiation) {
+                json(
+                    json = Json {
+                        ignoreUnknownKeys = true
+                        isLenient = true
+                        prettyPrint = true
+                    }, contentType = ContentType.Any
+                )
+            }
+            install(Logging) {
+                logger = Logger.ANDROID
+                level = LogLevel.ALL
+            }
+            defaultRequest {
+                url {
+                    protocol = URLProtocol.HTTPS
+                    host = Constants.PLACES_BASE_URL
+                }
+            }
+        }
+    }
 
-    single { provideNetworkChecker(get()) }
-}
-
-fun provideRetrofit(baseUrl: String): Retrofit {
-    val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
-    val client = OkHttpClient.Builder()
-        .addInterceptor(logging)
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .build()
-
-    return Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(client)
-        .build()
+    // NetworkChecker
+    singleOf(::provideNetworkChecker)
 }
 
 fun provideNetworkChecker(context: Context): NetworkChecker {

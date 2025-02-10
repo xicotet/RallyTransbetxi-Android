@@ -14,7 +14,6 @@ import com.canolabs.rallytransbetxi.utils.Constants.Companion.PLACES_NEARBY_SEAR
 
 interface PlacesRepository {
     suspend fun getBetxiRestaurants(
-        apiKey: String,
         rankPreference: String,
         languageCode: String?,
     ): List<PlaceResponse>
@@ -25,7 +24,6 @@ class PlacesRepositoryImpl(
 ) : PlacesRepository {
 
     override suspend fun getBetxiRestaurants(
-        apiKey: String,
         rankPreference: String,
         languageCode: String?,
     ): List<PlaceResponse> {
@@ -48,8 +46,8 @@ class PlacesRepositoryImpl(
         )
 
         return try {
-            val response = placesService.searchNearbyRestaurants(apiKey, fieldMask, requestBody)
-            response.places // Return the list of places
+            val response = placesService.searchNearbyRestaurants(fieldMask, requestBody)
+            response.places ?: emptyList() // Return the list of places
         } catch (e: Exception) {
             Log.e("PlacesRepositoryImpl", "Failed to fetch nearby restaurants", e)
             emptyList()
