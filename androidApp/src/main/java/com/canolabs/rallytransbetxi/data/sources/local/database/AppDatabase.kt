@@ -47,7 +47,7 @@ import com.canolabs.rallytransbetxi.data.sources.local.typeConverters.TimestampC
         Restaurant::class,
         Statement::class,
         RaceWarning::class
-    ], version = 2
+    ], version = 3
 )
 @TypeConverters(
     TimestampConverter::class,

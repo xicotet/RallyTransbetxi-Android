@@ -2,16 +2,15 @@ package com.canolabs.rallytransbetxi.data.sources.local.typeConverters
 
 import androidx.room.TypeConverter
 import com.google.firebase.Timestamp
-import java.util.Date
 
 class TimestampConverter {
     @TypeConverter
     fun fromTimestamp(value: Long?): Timestamp? {
-        return value?.let { Timestamp(Date(it)) }
+        return value?.let { Timestamp(it / 1000, (it % 1000).toInt() * 1000000) }
     }
 
     @TypeConverter
-    fun dateToTimestamp(timestamp: Timestamp?): Long? {
-        return timestamp?.toDate()?.time
+    fun toTimestamp(timestamp: Timestamp?): Long? {
+        return timestamp?.seconds?.times(1000)?.plus(timestamp.nanoseconds / 1000000)
     }
 }

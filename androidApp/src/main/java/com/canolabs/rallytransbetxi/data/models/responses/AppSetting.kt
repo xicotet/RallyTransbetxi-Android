@@ -2,8 +2,10 @@ package com.canolabs.rallytransbetxi.data.models.responses
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 @Entity
+@Serializable
 data class AppSetting(
     @PrimaryKey val id: Int = 1, // Because there is only one setting
     val theme: String,

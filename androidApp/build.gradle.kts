@@ -117,7 +117,6 @@ dependencies {
 
 
     implementation(libs.revealswipe) // Reveal Swipe
-    // Reveal Swipe
 
     implementation(libs.androidx.room.ktx.v261) // Room
     implementation(libs.androidx.room.runtime.v261) // Room
@@ -131,10 +130,6 @@ dependencies {
     implementation(libs.androidx.core.splashscreen) // Splash Screen
 
     implementation(libs.kotlin.reflect) // Kotlin Reflect
-
-    implementation(libs.retrofit.v2110) // Retrofit
-    implementation(libs.gson) // Gson Converter
-    implementation(libs.converter.gson.v2110) // Gson Converter
 
     implementation(libs.ktor.client.core) // Ktor
     implementation(libs.ktor.client.okhttp) // Ktor

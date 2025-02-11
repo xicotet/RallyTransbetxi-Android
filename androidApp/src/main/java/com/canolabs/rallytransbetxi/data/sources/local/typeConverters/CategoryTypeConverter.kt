@@ -2,19 +2,18 @@ package com.canolabs.rallytransbetxi.data.sources.local.typeConverters
 
 import androidx.room.TypeConverter
 import com.canolabs.rallytransbetxi.data.models.responses.Category
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class CategoryTypeConverter {
 
     @TypeConverter
     fun fromCategory(category: Category): String {
-        return Gson().toJson(category)
+        return Json.encodeToString(category)
     }
 
     @TypeConverter
     fun toCategory(categoryString: String): Category {
-        val type = object : TypeToken<Category>() {}.type
-        return Gson().fromJson(categoryString, type)
+        return Json.decodeFromString(categoryString)
     }
 }

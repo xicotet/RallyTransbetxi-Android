@@ -4,7 +4,6 @@ agp = "8.7.3"
 appcompat = "1.7.0"
 coilCompose = "2.6.0"
 composeBom = "2024.06.00"
-converterGson = "2.11.0"
 core-ktx = "1.13.1"
 coreSplashscreen = "1.0.1"
 espressoCore = "3.6.1"
@@ -23,8 +22,6 @@ play-services-location = "21.3.0"
 play-services-maps = "19.0.0"
 maps-platform-secrets = "2.0.1"
 google-services = "4.4.1"
-gson = "2.10.1"
-retrofit = "2.11.0"
 revealswipe = "2.0.0-beta01"
 room = "2.6.1"
 runtime = "1.7.7"
@@ -60,7 +57,6 @@ androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview
 androidx-vectordrawable = { module = "androidx.vectordrawable:vectordrawable", version.ref = "vectordrawable" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil-network-ktor = { module = "io.coil-kt:coil-network-ktor", version.ref = "coilCompose" }
-converter-gson-v2110 = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-appcheck-playintegrity = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
@@ -71,6 +67,7 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 firebase-storage-ktx = { module = "com.google.firebase:firebase-storage-ktx" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 junit = { module = "junit:junit", version.ref = "junit" }
+
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinReflect" }
 
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
@@ -91,8 +88,6 @@ maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = 
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
 
-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-retrofit-v2110 = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 revealswipe = { module = "de.charlex.compose:revealswipe", version.ref = "revealswipe" }
 
 [plugins]

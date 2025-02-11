@@ -2,8 +2,10 @@ package com.canolabs.rallytransbetxi.data.models.responses
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 @Entity
+@Serializable
 data class Activity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val date: String? = null, // In format dd.MM.yy
