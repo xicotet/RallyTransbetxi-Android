@@ -40,7 +40,7 @@ class StatementsRepositoryImpl(
             Log.d(TAG, "Fetched statements from API: ${statements.size} statements")
 
             // The latest non-seen statemeent needs to be prompted as a dialog
-            val shortedStatementsByDate = statements.sortedByDescending { it.date }
+            val shortedStatementsByDate = statements.sortedByDescending { it.date?.seconds ?: 0L }
             if (shortedStatementsByDate.isNotEmpty()) {
                 shortedStatementsByDate.first().needsToBePromptedAsDialog = true
             }
@@ -67,7 +67,7 @@ class StatementsRepositoryImpl(
             Log.d(TAG, "Fetched statements from API: ${statements.size} statements")
 
             // The latest non-seen statement needs to be prompted as a dialog
-            val shortedStatementsByDate = statements.sortedByDescending { it.date }
+            val shortedStatementsByDate = statements.sortedByDescending { it.date?.seconds ?: 0L }
             if (shortedStatementsByDate.isNotEmpty()) {
                 shortedStatementsByDate.first().needsToBePromptedAsDialog = true
             }

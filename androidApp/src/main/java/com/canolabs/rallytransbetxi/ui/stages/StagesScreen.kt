@@ -71,7 +71,7 @@ fun StageList(
     }
 
     // Sort and group the filtered stages by date
-    val sortedStagesByStartTime = filteredStagesBySearch.sortedBy { it.startTime }
+    val sortedStagesByStartTime = filteredStagesBySearch.sortedBy { it.startTime?.seconds ?: 0L }
     val groupedStagesByDate = sortedStagesByStartTime.groupBy {
         it.startTime?.let { timestamp ->
             DateTimeUtils.secondsToDate(

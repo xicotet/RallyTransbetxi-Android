@@ -1,7 +1,7 @@
 package com.canolabs.rallytransbetxi.data.sources.local.typeConverters
 
 import androidx.room.TypeConverter
-import com.google.firebase.Timestamp
+import dev.gitlive.firebase.firestore.Timestamp
 
 class TimestampConverter {
     @TypeConverter

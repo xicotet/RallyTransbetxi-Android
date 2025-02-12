@@ -54,7 +54,7 @@ fun StagesResultsTab(
             stages
         }
 
-        val sortedStagesByStartTime = filteredResultsBySearchBar.sortedBy { it.startTime }
+        val sortedStagesByStartTime = filteredResultsBySearchBar.sortedBy { it.startTime?.seconds ?: 0L }
         sortedStagesByStartTime.forEach { stage ->
             StagesResultsCard(stage, onClick = { stageSelected ->
                 coroutineScope.launch {

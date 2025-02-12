@@ -1,9 +1,7 @@
 package com.canolabs.rallytransbetxi.data.sources.remote
 
-import android.util.Log
+import dev.gitlive.firebase.firestore.FirebaseFirestore
 import com.canolabs.rallytransbetxi.data.models.responses.Version
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
 
 interface VersionsService {
     suspend fun fetchVersion(name: String): Version?
@@ -12,16 +10,16 @@ interface VersionsService {
 class VersionsServiceImpl(
     private val firebaseFirestore: FirebaseFirestore
 ) : VersionsService {
+
     override suspend fun fetchVersion(name: String): Version? {
         return try {
-            val documentSnapshot = firebaseFirestore.collection("versions").document(name).get().await()
-            val version = documentSnapshot.toObject(Version::class.java)
-            version?.let {
-                it.name = documentSnapshot.id
-            }
-            version
+            val documentSnapshot = firebaseFirestore.collection("versions")
+                .document(name)
+                .get()
+
+            documentSnapshot.data<Version>().copy(name = name)
         } catch (e: Exception) {
-            Log.e("VersionsServiceImpl", "Error fetching version: ${e.message}")
+            println("Error fetching version: ${e.message}")
             null
         }
     }

@@ -1,8 +1,7 @@
 package com.canolabs.rallytransbetxi.data.sources.remote
 
-import android.util.Log
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
+import dev.gitlive.firebase.firestore.FirebaseFirestore
+
 
 interface SponsorsService {
     suspend fun fetchNumberOfSponsors(): Int
@@ -14,15 +13,12 @@ class SponsorsServiceImpl(
 
     override suspend fun fetchNumberOfSponsors(): Int {
         return try {
-            val documentSnapshot = firebaseFirestore.collection("sponsors")
+            firebaseFirestore.collection("sponsors")
                 .document("quantity")
                 .get()
-                .await()
-
-            // Extract the "total" field as an integer
-            documentSnapshot.getLong("total")?.toInt() ?: 0
+                .data<Map<String, Any>>()["total"]?.toString()?.toIntOrNull() ?: 0
         } catch (e: Exception) {
-            Log.e("SponsorsServiceImpl", "Error fetching number of sponsors: ${e.message}")
+            println("Error fetching number of sponsors: ${e.message}")
             0 // Return 0 in case of any errors
         }
     }

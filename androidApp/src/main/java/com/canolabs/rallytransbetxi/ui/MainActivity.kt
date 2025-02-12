@@ -27,17 +27,12 @@ import com.canolabs.rallytransbetxi.ui.theme.RallyTransbetxiTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import android.util.Log
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.lifecycleScope
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.BottomSheetConnectivityLost
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.ConnectivityObserver
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkConnectivityObserver
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.SPLASH_SCREEN_DURATION
-import com.google.firebase.Firebase
-import com.google.firebase.appcheck.appCheck
-import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
-import com.google.firebase.initialize
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
@@ -50,19 +45,6 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        Log.d("MainActivity", "Proceeding to: Firebase initialization")
-        Firebase.initialize(context = this)
-        Log.d("MainActivity", "Proceeding to: Firebase initialized")
-        Firebase.appCheck.getAppCheckToken(false).addOnSuccessListener {
-            Log.d("MainActivity", "App Check token: ${it.token}")
-        }.addOnFailureListener {
-            Log.d("MainActivity", "App Check token error: ${it.message}")
-        }
-        Firebase.appCheck.installAppCheckProviderFactory(
-            PlayIntegrityAppCheckProviderFactory.getInstance(),
-        )
-        Log.d("MainActivity", "Proceeding to: App Check provider factory installed")
 
         val splashScreen = installSplashScreen()
 

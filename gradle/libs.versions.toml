@@ -8,6 +8,9 @@ core-ktx = "1.13.1"
 coreSplashscreen = "1.0.1"
 espressoCore = "3.6.1"
 firebase-bom = "33.1.1"
+firebaseFirestore = "2.1.0"
+firebaseMessaging = "2.1.0"
+firebaseConfig = "2.1.0"
 integrity = "1.4.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -57,6 +60,8 @@ androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview
 androidx-vectordrawable = { module = "androidx.vectordrawable:vectordrawable", version.ref = "vectordrawable" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil-network-ktor = { module = "io.coil-kt:coil-network-ktor", version.ref = "coilCompose" }
+
+# Old firebase
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-appcheck-playintegrity = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
@@ -65,6 +70,12 @@ firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 firebase-storage-ktx = { module = "com.google.firebase:firebase-storage-ktx" }
+
+# New firebase (kotlin-first) non-official
+gitlive-firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebaseFirestore" }
+gitlive-firebase-messaging = { module = "dev.gitlive:firebase-messaging", version.ref = "firebaseMessaging" }
+gitlive-firebase-config = { module = "dev.gitlive:firebase-config", version.ref = "firebaseConfig" }
+
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 junit = { module = "junit:junit", version.ref = "junit" }
 

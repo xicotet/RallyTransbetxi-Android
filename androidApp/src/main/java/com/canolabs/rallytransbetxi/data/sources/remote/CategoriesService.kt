@@ -1,9 +1,7 @@
 package com.canolabs.rallytransbetxi.data.sources.remote
 
-import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Category
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
+import dev.gitlive.firebase.firestore.FirebaseFirestore
 
 interface CategoriesService {
     suspend fun fetchCategories(): List<Category>
@@ -14,18 +12,13 @@ class CategoriesServiceImpl(
 ) : CategoriesService {
     override suspend fun fetchCategories(): List<Category> {
         return try {
-            val categoriesList = mutableListOf<Category>()
-            val querySnapshot = firebaseFirestore.collection("categories").get().await()
-            for (document in querySnapshot.documents) {
-                val category = document.toObject(Category::class.java)
-                    ?.copy(categoryId = document.id)
-                category?.let {
-                    categoriesList.add(it)
-                }
+            // TODO: Move the collectionPath to a constant or build config for security
+            val querySnapshot = firebaseFirestore.collection("categories").get()
+            querySnapshot.documents.map { document ->
+                document.data<Category>().copy(categoryId = document.id)
             }
-            categoriesList
         } catch (e: Exception) {
-            Log.e("CategoriesServiceImpl", "Error fetching categories: ${e.message}", e)
+            println("Error fetching categories: ${e.message}")
             emptyList()
         }
     }

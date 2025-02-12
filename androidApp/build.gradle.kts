@@ -57,6 +57,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            // TODO Add this isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -65,11 +66,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         buildConfig = true
@@ -101,11 +102,17 @@ dependencies {
     implementation(libs.maps.compose) // Maps Compose
     implementation(libs.play.services.maps) // Maps
 
+    // New firebase
+    implementation(libs.gitlive.firebase.firestore)  // Firebase Firestore
+    implementation(libs.gitlive.firebase.messaging)  // Firebase Cloud Messaging
+    implementation(libs.gitlive.firebase.config)     // Firebase Remote Config
+
+    // Old firebase
     implementation(platform(libs.firebase.bom)) // Firebase BoM
     implementation(libs.firebase.analytics) // Firebase Analytics
     implementation(libs.firebase.crashlytics) // Firebase Crashlytics
     implementation(libs.firebase.storage.ktx) // Firebase Storage
-    implementation(libs.firebase.firestore) // Cloud Firestore
+    // implementation(libs.firebase.firestore) // Cloud Firestore
     implementation(libs.firebase.messaging) // Firebase Messaging
     implementation(libs.firebase.appcheck.playintegrity) // Firebase App Check
     implementation(libs.integrity) // Play Integrity

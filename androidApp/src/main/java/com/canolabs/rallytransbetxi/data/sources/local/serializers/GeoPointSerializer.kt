@@ -1,16 +1,16 @@
 package com.canolabs.rallytransbetxi.data.sources.local.serializers
-
-import com.google.firebase.firestore.GeoPoint
+import dev.gitlive.firebase.firestore.GeoPoint
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.descriptors.element
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
 import kotlinx.serialization.encoding.encodeStructure
 
 object GeoPointSerializer : KSerializer<GeoPoint> {
+    private val regex = """latitude=(-?\d+\.\d+),\s*longitude=(-?\d+\.\d+)""".toRegex()
+
     override val descriptor: SerialDescriptor =
         buildClassSerialDescriptor("GeoPoint") {
             element<Double>("latitude")
@@ -25,20 +25,12 @@ object GeoPointSerializer : KSerializer<GeoPoint> {
     }
 
     override fun deserialize(decoder: Decoder): GeoPoint {
-        return decoder.decodeStructure(descriptor) {
-            var latitude = 0.0
-            var longitude = 0.0
+        val raw = decoder.decodeString()
 
-            loop@ while (true) {
-                when (val index = decodeElementIndex(descriptor)) {
-                    0 -> latitude = decodeDoubleElement(descriptor, 0)
-                    1 -> longitude = decodeDoubleElement(descriptor, 1)
-                    -1 -> break@loop
-                    else -> error("Unexpected index: $index")
-                }
-            }
+        val matchResult = regex.find(raw)
+            ?: throw IllegalArgumentException("Invalid GeoPoint format: $raw")
 
-            GeoPoint(latitude, longitude)
-        }
+        val (latitude, longitude) = matchResult.destructured
+        return GeoPoint(latitude.toDouble(), longitude.toDouble())
     }
 }

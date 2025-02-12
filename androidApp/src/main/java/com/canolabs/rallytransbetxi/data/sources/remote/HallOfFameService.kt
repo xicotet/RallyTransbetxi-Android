@@ -1,31 +1,25 @@
 package com.canolabs.rallytransbetxi.data.sources.remote
 
-import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.HallOfFame
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
+import dev.gitlive.firebase.firestore.FirebaseFirestore
+
 
 interface HallOfFameService {
     suspend fun fetchHallOfFame(): List<HallOfFame>
 }
 
+
 class HallOfFameServiceImpl(
     private val firebaseFirestore: FirebaseFirestore
-): HallOfFameService {
+) : HallOfFameService {
     override suspend fun fetchHallOfFame(): List<HallOfFame> {
-
         return try {
-            val winners = mutableListOf<HallOfFame>()
-            val querySnapshot = firebaseFirestore.collection("hall_of_fame").get().await()
-            for (document in querySnapshot.documents) {
-                val winner = document.toObject(HallOfFame::class.java)
-                winner?.let {
-                    winners.add(it)
-                }
+            val querySnapshot = firebaseFirestore.collection("hall_of_fame").get()
+            querySnapshot.documents.map { document ->
+                document.data<HallOfFame>()
             }
-            winners
         } catch (e: Exception) {
-            Log.d("HallOfFameServiceImpl", "Error fetching winners: ${e.message}")
+            println("Error fetching hall of fame: ${e.message}")
             emptyList()
         }
     }

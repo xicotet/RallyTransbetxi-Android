@@ -1,7 +1,7 @@
 package com.canolabs.rallytransbetxi.data.sources.local.typeConverters
 
 import androidx.room.TypeConverter
-import com.google.firebase.firestore.GeoPoint
+import dev.gitlive.firebase.firestore.GeoPoint
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

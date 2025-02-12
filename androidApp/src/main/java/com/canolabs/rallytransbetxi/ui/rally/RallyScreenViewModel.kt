@@ -72,7 +72,7 @@ class RallyScreenViewModel : ViewModel() {
             _state.setIsLoading(true)
 
             val news = getNewsUseCase.invoke()
-            val newsOrderedByDate = news.sortedByDescending { it.date }
+            val newsOrderedByDate = news.sortedByDescending { it.date?.seconds ?: 0L }
             _state.setNews(newsOrderedByDate)
 
             _state.setIsLoading(false)
@@ -360,15 +360,15 @@ class RallyScreenViewModel : ViewModel() {
 
     fun shouldShowNotificationPermissionSheet(): Boolean {
         val counter = state.value.notificationPermissionCounter!!
-        val nextInterval = getAlmostExponentialInterval(counter)
+        val nextInterval = getArbitraryInterval(counter)
 
         // Show bottom sheet only when counter matches the interval
         return counter == nextInterval
     }
 
-    // Almost exponential backoff with a cap at 256
-    private fun getAlmostExponentialInterval(counter: Int): Int {
-        val intervals = listOf(1, 2, 5, 10, 18, 32, 64, 128, 256) // This is arbitrary and can be changed
+    // Arbitrary with a cap at 256
+    private fun getArbitraryInterval(counter: Int): Int {
+        val intervals = listOf(1, 5, 10, 18, 32, 64, 128, 256)
         return intervals.find { it >= counter } ?: 256
     }
 }

@@ -3,7 +3,7 @@ package com.canolabs.rallytransbetxi.data.repositories
 import com.canolabs.rallytransbetxi.data.models.responses.Version
 import com.canolabs.rallytransbetxi.data.sources.local.dao.VersionsDao
 import com.canolabs.rallytransbetxi.data.sources.remote.VersionsService
-import com.google.firebase.Timestamp
+import dev.gitlive.firebase.firestore.Timestamp
 
 interface VersionsRepository {
     suspend fun getLocalStoredVersion(name: String): Timestamp
@@ -36,5 +36,4 @@ class VersionsRepositoryImpl(
     override suspend fun getApiVersion(name: String): Timestamp? {
         return versionsService.fetchVersion(name)?.timestamp
     }
-
 }

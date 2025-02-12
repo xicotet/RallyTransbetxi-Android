@@ -1,14 +1,12 @@
 package com.canolabs.rallytransbetxi.data.sources.remote
 
-import android.util.Log
 import com.canolabs.rallytransbetxi.data.models.responses.Result
 import com.canolabs.rallytransbetxi.data.models.responses.Team
 import com.canolabs.rallytransbetxi.data.repositories.TeamsRepositoryImpl
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import kotlinx.coroutines.tasks.await
+import dev.gitlive.firebase.firestore.DocumentReference
+import dev.gitlive.firebase.firestore.DocumentSnapshot
+import dev.gitlive.firebase.firestore.FirebaseFirestore
+import dev.gitlive.firebase.firestore.FirebaseFirestoreException
 
 interface ResultsService {
     suspend fun fetchGlobalResults(): List<Result>
@@ -17,72 +15,40 @@ interface ResultsService {
 
 class ResultsServiceImpl(
     private val firebaseFirestore: FirebaseFirestore,
-    private val teamsRepositoryImpl: TeamsRepositoryImpl
+    private val teamsRepositoryImpl: TeamsRepositoryImpl // TODO: Refactor this to avoid injecting a repository...
 ) : ResultsService {
 
     override suspend fun fetchGlobalResults(): List<Result> {
-        val startupTime = System.currentTimeMillis()
-
-        val teams = teamsRepositoryImpl.getTeams().associateBy { it.number }
-        val globalResults = mutableListOf<Result>()
-
-        try {
-            val documentSnapshot = firebaseFirestore.collection("results/global/ranking").get().await()
-            for (document in documentSnapshot.documents) {
-                try {
-                    val result = fetchResult(document, teams)
-                    globalResults.add(result)
-                } catch (e: Exception) {
-                    Log.d("ResultsServiceImpl", "Error processing result ${document.id}: ", e)
-                }
-            }
-        } catch (e: FirebaseFirestoreException) {
-            Log.e("ResultsServiceImpl", "Error fetching global results: ${e.message}", e)
-            if (e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED) {
-                Log.e("ResultsServiceImpl", "Permission denied for global results.")
-            }
-        }
-
-        val endTime = System.currentTimeMillis()
-        Log.d("ResultsServiceImpl", "Time fetching global results: ${endTime - startupTime} ms")
-        return globalResults
-    }
-
-    private fun fetchResult(
-        document: DocumentSnapshot,
-        teams: Map<String, Team>
-    ): Result {
-        val result = document.toObject(Result::class.java) ?: return Result()
-        val teamReference = document.get("teamReference") as DocumentReference
-        result.team = teams[teamReference.id]!!
-        return result
+        return fetchResults("results/global/ranking")
     }
 
     override suspend fun fetchStageResults(stageId: String): List<Result> {
-        val startupTime = System.currentTimeMillis()
+        return fetchResults("results/stage/$stageId")
+    }
 
-        val teams = teamsRepositoryImpl.getTeams().associateBy { it.number }
-        val stageResults = mutableListOf<Result>()
+    private suspend fun fetchResults(collectionPath: String): List<Result> {
+        return try {
+            val teams = teamsRepositoryImpl.getTeams().associateBy { it.number }
+            val querySnapshot = firebaseFirestore.collection(collectionPath).get()
 
-        try {
-            val documentSnapshot = firebaseFirestore.collection("results/stage/$stageId").get().await()
-            for (document in documentSnapshot.documents) {
+            querySnapshot.documents.mapNotNull { document ->
                 try {
-                    val result = fetchResult(document, teams)
-                    stageResults.add(result)
+                    fetchResult(document, teams)
                 } catch (e: Exception) {
-                    Log.d("ResultsServiceImpl", "Error processing result ${document.id}: ", e)
+                    println("Error processing result ${document.id}: ${e.message}")
+                    null
                 }
             }
         } catch (e: FirebaseFirestoreException) {
-            Log.e("ResultsServiceImpl", "Error fetching stage results: ${e.message}", e)
-            if (e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED) {
-                Log.e("ResultsServiceImpl", "Permission denied for stage results.")
-            }
+            println("Error fetching results from $collectionPath: ${e.message}")
+            emptyList()
         }
+    }
 
-        val endTime = System.currentTimeMillis()
-        Log.d("ResultsServiceImpl", "Time fetching stage results: ${endTime - startupTime} ms")
-        return stageResults
+    private fun fetchResult(document: DocumentSnapshot, teams: Map<String, Team>): Result {
+        val result = document.data<Result>()
+        val teamId = document.get<DocumentReference>("teamReference")
+        result.team = teams[teamId.id] ?: Team()
+        return result
     }
 }

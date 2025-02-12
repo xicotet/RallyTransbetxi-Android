@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.canolabs.rallytransbetxi.data.models.responses.Version
-import com.google.firebase.Timestamp
+import dev.gitlive.firebase.firestore.Timestamp
 
 @Dao
 interface VersionsDao {

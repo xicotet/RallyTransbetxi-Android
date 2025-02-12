@@ -108,7 +108,8 @@ import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_WARNINGS_C
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DIRECTIONS_API_KEY_QUALIFIER
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DIRECTIONS_CLIENT_QUALIFIER
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.MAPS_API_KEY_QUALIFIER
-import com.google.firebase.firestore.FirebaseFirestore
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.firestore.firestore
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -202,7 +203,7 @@ val appModule = module {
 }
 
 val firebaseModule = module {
-    single { FirebaseFirestore.getInstance() }
+    single { Firebase.firestore }
 }
 
 val databaseModule = module {

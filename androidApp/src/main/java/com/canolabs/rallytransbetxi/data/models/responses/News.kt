@@ -4,7 +4,7 @@ package com.canolabs.rallytransbetxi.data.models.responses
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.canolabs.rallytransbetxi.data.sources.local.serializers.TimestampSerializer
-import com.google.firebase.Timestamp
+import dev.gitlive.firebase.firestore.Timestamp
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 

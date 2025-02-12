@@ -5,8 +5,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.canolabs.rallytransbetxi.data.sources.local.serializers.GeoPointSerializer
 import com.canolabs.rallytransbetxi.data.sources.local.serializers.TimestampSerializer
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.GeoPoint
+import dev.gitlive.firebase.firestore.Timestamp
+import dev.gitlive.firebase.firestore.GeoPoint
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 
