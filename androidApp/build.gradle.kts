@@ -11,7 +11,7 @@ plugins {
     // alias(libs.plugins.gitlive.firebase.crashlytics)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose.compiler)
-    kotlin("kapt")
+    alias(libs.plugins.ksp)
 }
 
 // Create a variable called keystorePropertiesFile
@@ -57,7 +57,7 @@ android {
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = false // TODO Change to true when everything is ready
             // TODO Add this isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -137,8 +137,7 @@ dependencies {
     implementation(libs.androidx.room.runtime.v261) // Room
     annotationProcessor(libs.androidx.room.compiler.v261)  // Room
 
-    //noinspection KaptUsageInsteadOfKsp
-    kapt(libs.androidx.room.compiler.v261) // Kotlin annotation processing tool (kapt)
+    ksp(libs.androidx.room.compiler.v261) // Kotlin annotation processing tool (kapt)
 
     implementation(libs.coil.compose) // Coil
 
@@ -170,8 +169,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-}
-
-kapt {
-    correctErrorTypes = true
 }

@@ -8,5 +8,6 @@ plugins {
     alias(libs.plugins.maps.platform.secrets) apply false
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.jetbrains.compose) apply false
+    alias(libs.plugins.ksp) apply false
     alias(libs.plugins.compose.compiler) apply false
 }

@@ -26,6 +26,8 @@ val antaFamily = FontFamily(
     Font(R.font.anta_regular, FontWeight.Normal),
 )
 
+// TODO: Establish a default font family
+
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,

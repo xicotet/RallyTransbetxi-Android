@@ -7,7 +7,6 @@ composeBom = "2024.06.00"
 core-ktx = "1.13.1"
 coreSplashscreen = "1.0.1"
 espressoCore = "3.6.1"
-firebase-bom = "33.1.1"
 firebaseGitLive = "2.1.0"
 integrity = "1.4.0"
 junit = "4.13.2"
@@ -32,6 +31,7 @@ jetbrains-compose = "1.7.3"
 compose-compiler = "1.5.14"
 koin-bom = "4.1.0-Beta1"
 ktor = "3.0.3"
+ksp = "2.0.10-1.0.24"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -60,10 +60,10 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose"
 coil-network-ktor = { module = "io.coil-kt:coil-network-ktor", version.ref = "coilCompose" }
 
 # Old firebase
-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
-firebase-appcheck-playintegrity = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
-firebase-config-ktx = { module = "com.google.firebase:firebase-config-ktx" }
+# firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+# firebase-appcheck-playintegrity = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
+# firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
+# firebase-config-ktx = { module = "com.google.firebase:firebase-config-ktx" }
 # firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 # firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
@@ -114,3 +114,4 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "jetbrains-compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose-runtime = { id = "org.jetbrains.compose.runtime", version.ref = "runtime" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
