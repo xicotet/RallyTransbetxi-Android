@@ -1,7 +1,6 @@
 package com.canolabs.rallytransbetxi.ui.results
 
 import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -40,11 +39,9 @@ import com.canolabs.rallytransbetxi.utils.Constants.Companion.CODRIVER_IMAGE_PRE
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DRIVERS_FOLDER
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DRIVER_IMAGE_EXTENSION
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DRIVER_IMAGE_PREFIX
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.tasks.await
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.storage.storage
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DriverImagesPager(result: Result) {
 
@@ -53,15 +50,15 @@ fun DriverImagesPager(result: Result) {
     val codriverImagePath = "${CODRIVER_IMAGE_PREFIX}${teamNumber}${DRIVER_IMAGE_EXTENSION}"
 
     val storage = Firebase.storage
-    val driverStorageRef = storage.reference.child("${DRIVERS_FOLDER}${driverImagePath}")
-    val codriverStorageRef = storage.reference.child("${DRIVERS_FOLDER}${codriverImagePath}")
+    val driverStorageRef = storage.reference("${DRIVERS_FOLDER}${driverImagePath}")
+    val codriverStorageRef = storage.reference("${DRIVERS_FOLDER}${codriverImagePath}")
 
     val driverImageUrl = remember { mutableStateOf<String?>(null) }
     val codriverImageUrl = remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(teamNumber) {
         driverImageUrl.value = try {
-            driverStorageRef.downloadUrl.await().toString()
+            driverStorageRef.getDownloadUrl()
         } catch (e: Exception) {
             Log.w("DriverImagesPager", "Error when loading driver image of team $teamNumber: $e")
             ""
@@ -70,7 +67,7 @@ fun DriverImagesPager(result: Result) {
 
     LaunchedEffect(teamNumber) {
         codriverImageUrl.value = try {
-            codriverStorageRef.downloadUrl.await().toString()
+            codriverStorageRef.getDownloadUrl()
         } catch (e: Exception) {
             Log.w("DriverImagesPager", "Error when loading codriver image of team $teamNumber: $e")
             ""

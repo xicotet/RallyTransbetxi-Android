@@ -105,13 +105,14 @@ dependencies {
     // New firebase
     implementation(libs.gitlive.firebase.firestore)  // Firebase Firestore
     implementation(libs.gitlive.firebase.messaging)  // Firebase Cloud Messaging
-    implementation(libs.gitlive.firebase.config)     // Firebase Remote Config
+    //implementation(libs.gitlive.firebase.config)     // Firebase Remote Config
+    implementation(libs.gitlive.firebase.storage)   // Firebase Storage
 
     // Old firebase
     implementation(platform(libs.firebase.bom)) // Firebase BoM
     implementation(libs.firebase.analytics) // Firebase Analytics
     implementation(libs.firebase.crashlytics) // Firebase Crashlytics
-    implementation(libs.firebase.storage.ktx) // Firebase Storage
+    // implementation(libs.firebase.storage.ktx) // Firebase Storage
     // implementation(libs.firebase.firestore) // Cloud Firestore
     implementation(libs.firebase.messaging) // Firebase Messaging
     implementation(libs.firebase.appcheck.playintegrity) // Firebase App Check

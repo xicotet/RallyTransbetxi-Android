@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -52,9 +53,8 @@ import com.canolabs.rallytransbetxi.ui.rally.RallyScreenViewModel
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.tasks.await
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.storage.storage
 
 @Composable
 fun NewsDetailScreen(
@@ -69,26 +69,6 @@ fun NewsDetailScreen(
     }!!
 
     val scrollState = rememberScrollState()
-
-    fun getNewsTitleByLanguage(news: News, language: Language?): String {
-        return when (language) {
-            Language.SPANISH -> news.titleEs
-            Language.CATALAN -> news.titleCa
-            Language.ENGLISH -> news.titleEn
-            Language.GERMAN -> news.titleDe
-            null -> news.titleEs
-        }
-    }
-
-    fun getNewsContentByLanguage(news: News, language: Language?): String {
-        return when (language) {
-            Language.SPANISH -> news.contentEs
-            Language.CATALAN -> news.contentCa
-            Language.ENGLISH -> news.contentEn
-            Language.GERMAN -> news.contentDe
-            null -> news.contentEs
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -107,16 +87,13 @@ fun NewsDetailScreen(
                 .verticalScroll(scrollState)
         ) {
             val newsImagePath = news.imageName
-
             val storage = Firebase.storage
-            val newsStorageRef =
-                storage.reference.child("${Constants.NEWS_FOLDER}${newsImagePath}")
-
+            val newsStorageRef = storage.reference("${Constants.NEWS_FOLDER}${newsImagePath}")
             val newsImageUrl = remember { mutableStateOf<String?>(null) }
 
             LaunchedEffect(Unit) {
                 newsImageUrl.value = try {
-                    newsStorageRef.downloadUrl.await().toString()
+                    newsStorageRef.getDownloadUrl()
                 } catch (e: Exception) {
                     Log.d("NewsDetail", "Error: $e")
                     ""
@@ -249,6 +226,7 @@ fun NewsDetailTopBar(
                 Icon(
                     imageVector = Icons.Filled.Close,
                     tint = Color.White,
+                    modifier = Modifier.size(32.dp),
                     contentDescription = null
                 )
             }
@@ -258,4 +236,24 @@ fun NewsDetailTopBar(
             titleContentColor = Color.White,
         ),
     )
+}
+
+private fun getNewsTitleByLanguage(news: News, language: Language?): String {
+    return when (language) {
+        Language.SPANISH -> news.titleEs
+        Language.CATALAN -> news.titleCa
+        Language.ENGLISH -> news.titleEn
+        Language.GERMAN -> news.titleDe
+        null -> news.titleEs
+    }
+}
+
+private fun getNewsContentByLanguage(news: News, language: Language?): String {
+    return when (language) {
+        Language.SPANISH -> news.contentEs
+        Language.CATALAN -> news.contentCa
+        Language.ENGLISH -> news.contentEn
+        Language.GERMAN -> news.contentDe
+        null -> news.contentEs
+    }
 }

@@ -64,10 +64,9 @@ import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.DEFAULT_NEWS
 import com.canolabs.rallytransbetxi.utils.DateTimeUtils.secondsToDate
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.storage.storage
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.tasks.await
 import java.util.Locale
 
 @Composable
@@ -174,13 +173,12 @@ fun BreakingNewsSection(
 
                                     val storage = Firebase.storage
                                     val newsStorageRef =
-                                        storage.reference.child("${Constants.NEWS_FOLDER}${newsImagePath}")
-
+                                        storage.reference("${Constants.NEWS_FOLDER}${newsImagePath}")
                                     val newsImageUrl = remember { mutableStateOf<String?>(null) }
 
                                     LaunchedEffect(Unit) {
                                         newsImageUrl.value = try {
-                                            newsStorageRef.downloadUrl.await().toString()
+                                            newsStorageRef.getDownloadUrl()
                                         } catch (e: Exception) {
                                             Log.d("News", "Error: $e")
                                             ""

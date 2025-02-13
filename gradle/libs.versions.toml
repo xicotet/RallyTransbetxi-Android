@@ -8,9 +8,7 @@ core-ktx = "1.13.1"
 coreSplashscreen = "1.0.1"
 espressoCore = "3.6.1"
 firebase-bom = "33.1.1"
-firebaseFirestore = "2.1.0"
-firebaseMessaging = "2.1.0"
-firebaseConfig = "2.1.0"
+firebaseGitLive = "2.1.0"
 integrity = "1.4.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -67,14 +65,15 @@ firebase-appcheck-playintegrity = { module = "com.google.firebase:firebase-appch
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-config-ktx = { module = "com.google.firebase:firebase-config-ktx" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
-firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+# firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
-firebase-storage-ktx = { module = "com.google.firebase:firebase-storage-ktx" }
+# firebase-storage-ktx = { module = "com.google.firebase:firebase-storage-ktx" }
 
-# New firebase (kotlin-first) non-official
-gitlive-firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebaseFirestore" }
-gitlive-firebase-messaging = { module = "dev.gitlive:firebase-messaging", version.ref = "firebaseMessaging" }
-gitlive-firebase-config = { module = "dev.gitlive:firebase-config", version.ref = "firebaseConfig" }
+# New firebase (kotlin-first) non-official for KMP
+gitlive-firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebaseGitLive" }
+gitlive-firebase-messaging = { module = "dev.gitlive:firebase-messaging", version.ref = "firebaseGitLive" }
+# gitlive-firebase-config = { module = "dev.gitlive:firebase-config", version.ref = "firebaseGitLive" }
+gitlive-firebase-storage = { module = "dev.gitlive:firebase-storage", version.ref = "firebaseGitLive" }
 
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -107,6 +106,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 maps-platform-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "maps-platform-secrets" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
+gitlive-firebase-crashlytics = { id = "dev.gitlive.firebase-crashlytics", version.ref = "firebaseGitLive" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }

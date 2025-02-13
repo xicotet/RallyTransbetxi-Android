@@ -13,10 +13,12 @@ class SponsorsServiceImpl(
 
     override suspend fun fetchNumberOfSponsors(): Int {
         return try {
-            firebaseFirestore.collection("sponsors")
+            val document = firebaseFirestore.collection("sponsors")
                 .document("quantity")
                 .get()
-                .data<Map<String, Any>>()["total"]?.toString()?.toIntOrNull() ?: 0
+
+            // Get the 'total' field value directly
+            document.get<Int>("total")
         } catch (e: Exception) {
             println("Error fetching number of sponsors: ${e.message}")
             0 // Return 0 in case of any errors

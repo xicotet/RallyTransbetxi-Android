@@ -67,11 +67,10 @@ import com.canolabs.rallytransbetxi.ui.theme.antaFamily
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.tasks.await
 import android.icu.text.MessageFormat
 import com.canolabs.rallytransbetxi.domain.entities.Language
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.storage.storage
 import java.util.*
 
 fun toOrdinal(position: Int, language: Language): String {
@@ -125,13 +124,13 @@ fun TeamDetailScreen(
         "${Constants.TEAM_IMAGE_PREFIX}${teamNumber}${Constants.TEAM_IMAGE_EXTENSION}"
 
     val storage = Firebase.storage
-    val teamStorageRef = storage.reference.child("${Constants.TEAMS_FOLDER}/$teamImagePath")
+    val teamStorageRef = storage.reference("${Constants.TEAMS_FOLDER}/$teamImagePath")
 
     val teamImageUrl = remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(teamNumber) {
         teamImageUrl.value = try {
-            teamStorageRef.downloadUrl.await().toString()
+            teamStorageRef.getDownloadUrl()
         } catch (e: Exception) {
             Log.w("TeamDetailScreen", "Error: $e")
             ""
@@ -161,6 +160,7 @@ fun TeamDetailScreen(
                             team?.name ?: "",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
+                            fontWeight = FontWeight.Bold,
                             fontSize = topAppBarFontSize,
                             fontFamily = ezraFamily
                         )
@@ -188,16 +188,16 @@ fun TeamDetailScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-    ) { innerPadding ->
+    ) { it // TODO: Check if this is correct (not consuming the innerpadding)
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.secondaryContainer)
-                .padding(innerPadding)
                 .padding(bottom = 16.dp)
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             val placeholderModifier = Modifier
                 .clip(RectangleShape)
                 .height(400.dp)
@@ -546,15 +546,15 @@ fun TeamDetailScreen(
             val codriverImagePath = "${Constants.CODRIVER_IMAGE_PREFIX}${teamNumber}${Constants.DRIVER_IMAGE_EXTENSION}"
 
             val storage = Firebase.storage
-            val driverStorageRef = storage.reference.child("${Constants.DRIVERS_FOLDER}${driverImagePath}")
-            val codriverStorageRef = storage.reference.child("${Constants.DRIVERS_FOLDER}${codriverImagePath}")
+            val driverStorageRef = storage.reference("${Constants.DRIVERS_FOLDER}${driverImagePath}")
+            val codriverStorageRef = storage.reference("${Constants.DRIVERS_FOLDER}${codriverImagePath}")
 
             val driverImageUrl = remember { mutableStateOf<String?>(null) }
             val codriverImageUrl = remember { mutableStateOf<String?>(null) }
 
             LaunchedEffect(teamNumber) {
                 driverImageUrl.value = try {
-                    driverStorageRef.downloadUrl.await().toString()
+                    driverStorageRef.getDownloadUrl()
                 } catch (e: Exception) {
                     Log.w("TeamDetailScreen", "Error: $e")
                     ""
@@ -563,7 +563,7 @@ fun TeamDetailScreen(
 
             LaunchedEffect(teamNumber) {
                 codriverImageUrl.value = try {
-                    codriverStorageRef.downloadUrl.await().toString()
+                    codriverStorageRef.getDownloadUrl()
                 } catch (e: Exception) {
                     Log.w("TeamDetailScreen", "Error: $e")
                     ""

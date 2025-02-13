@@ -1,41 +1,19 @@
 package com.canolabs.rallytransbetxi.ui.rally.featured
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,9 +28,8 @@ import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.utils.Constants
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.SPONSORS_IMAGE_EXTENSION
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.SPONSORS_IMAGE_PREFIX
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.tasks.await
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.storage.storage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,139 +52,132 @@ fun SponsorsScreen(
             if (totalSponsors > 0) {
                 for (i in 1..totalSponsors) {
                     val sponsorImagePath = "${SPONSORS_IMAGE_PREFIX}$i${SPONSORS_IMAGE_EXTENSION}"
-                    val sponsorStorageRef = storage.reference.child("${Constants.SPONSORS_FOLDER}$sponsorImagePath")
+                    val sponsorStorageRef =
+                        storage.reference("${Constants.SPONSORS_FOLDER}$sponsorImagePath")
 
-                    val sponsorUrl = sponsorStorageRef.downloadUrl.await()
-                    sponsorImageUrls.add(sponsorUrl.toString())
-                    Log.d("SponsorsScreen", "Sponsor Image URL: $sponsorUrl")
+                    val sponsorUrl = sponsorStorageRef.getDownloadUrl()
+                    sponsorImageUrls.add(sponsorUrl)
+                    println("SponsorsScreen: Sponsor Image URL: $sponsorUrl")
                 }
             }
         } catch (e: Exception) {
             errorDuringInitialization.value = true
-            Log.d("SponsorsScreen", "Error: $e")
+            println("SponsorsScreen: Error: $e")
         }
     }
-
-    val sponsorPainters = sponsorImageUrls.map { url ->
-        rememberAsyncImagePainter(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(url ?: "")
-                .size(Size.ORIGINAL)
-                .build(),
-        )
-    }
-
-    val isLoading = sponsorImageUrls.isEmpty()
 
     Scaffold(
         topBar = {
             TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.sponsors),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        fontFamily = ezraFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.close),
+                            modifier = Modifier.size(32.dp),
+                            contentDescription = "Back"
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
                     titleContentColor = MaterialTheme.colorScheme.onBackground,
                     scrolledContainerColor = MaterialTheme.colorScheme.surface,
                 ),
-                title = {
-                    Text(
-                        stringResource(id = R.string.sponsors),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = ezraFamily
-                    )
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = onBackClick,
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.close),
-                            modifier = Modifier.size(32.dp),
-                            contentDescription = "Localized description"
-                        )
-                    }
-                },
             )
-        },
-    ) {
-        if (errorDuringInitialization.value) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(id = R.string.sponsors_not_available),
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            if (sponsorImageUrls.isNotEmpty()) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(sponsorImageUrls) { imageUrl ->
+                        SponsorImage(imageUrl = imageUrl)
+                    }
+                }
+            } else if (errorDuringInitialization.value) {
+                // Show error state
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.sponsors_not_available),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            } else {
+                // Show loading state
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
             }
-        } else {
+        }
+    }
+}
 
-            if (isLoading) {
-                Column {
-                    LinearProgressIndicator(
-                        // dynamic progress value
-                        modifier = Modifier
-                            .fillMaxWidth() // fill the width of the parent
-                            .padding(it), // add some padding
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                    )
-                }
+@Composable
+fun SponsorImage(imageUrl: String?) {
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(imageUrl)
+            .size(Size.ORIGINAL)
+            .build()
+    )
+
+    when (painter.state) {
+        is AsyncImagePainter.State.Loading,
+        is AsyncImagePainter.State.Empty -> {
+            Shimmer {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .padding(16.dp)
+                        .background(brush = it)
+                )
             }
+        }
 
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 128.dp),
-                contentPadding = PaddingValues(16.dp),
+        is AsyncImagePainter.State.Error -> {
+            // TODO: Introduce fallback sponsor image
+            /*Icon(
+                painter = painterResource(id = R.drawable.spo),
+                contentDescription = "Error",
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(sponsorPainters) { painter ->
-                    when (painter.state) {
-                        is AsyncImagePainter.State.Loading,
-                        is AsyncImagePainter.State.Empty -> {
-                            Shimmer { brush ->
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(56.dp)
-                                        .padding(16.dp)
-                                        .background(brush = brush)
-                                )
-                            }
-                        }
+                    .size(48.dp)
+                    .align(androidx.compose.ui.Alignment.Center),
+                tint = MaterialTheme.colorScheme.error
+            )*/
+        }
 
-                        is AsyncImagePainter.State.Success -> {
-                            Image(
-                                painter = painter,
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-
-                        else -> {
-                            // TODO: Probar si este bloque funciona cuando cambiamos el numero del for de arriba
-                            Text(
-                                text = stringResource(id = R.string.sponsors_not_available),
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            )
-                        }
-                    }
-                }
-            }
+        else -> {
+            Image(
+                painter = painter,
+                contentDescription = "Sponsor Image",
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }

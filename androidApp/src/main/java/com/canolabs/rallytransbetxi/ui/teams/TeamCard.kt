@@ -57,10 +57,9 @@ import com.canolabs.rallytransbetxi.ui.theme.cardsElevation
 import com.canolabs.rallytransbetxi.ui.theme.ezraFamily
 import com.canolabs.rallytransbetxi.ui.theme.robotoFamily
 import com.canolabs.rallytransbetxi.utils.Constants
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.storage.storage
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.tasks.await
 
 @Composable
 fun TeamCard(
@@ -82,16 +81,16 @@ fun TeamCard(
 
         val storage = Firebase.storage
         val driverStorageRef =
-            storage.reference.child("${Constants.DRIVERS_FOLDER}${driverImagePath}")
+            storage.reference("${Constants.DRIVERS_FOLDER}${driverImagePath}")
         val codriverStorageRef =
-            storage.reference.child("${Constants.DRIVERS_FOLDER}${codriverImagePath}")
+            storage.reference("${Constants.DRIVERS_FOLDER}${codriverImagePath}")
 
         val driverImageUrl = remember { mutableStateOf<String?>(null) }
         val codriverImageUrl = remember { mutableStateOf<String?>(null) }
 
         LaunchedEffect(teamNumber) {
             driverImageUrl.value = try {
-                driverStorageRef.downloadUrl.await().toString()
+                driverStorageRef.getDownloadUrl()
             } catch (e: Exception) {
                 Log.w("TeamCard", "Error loading driver image for team $teamNumber: $e")
                 ""
@@ -100,7 +99,7 @@ fun TeamCard(
 
         LaunchedEffect(teamNumber) {
             codriverImageUrl.value = try {
-                codriverStorageRef.downloadUrl.await().toString()
+                codriverStorageRef.getDownloadUrl()
             } catch (e: Exception) {
                 Log.w("TeamCard", "Error loading codriver image for team $teamNumber: $e")
                 ""
