@@ -2,6 +2,7 @@ package com.canolabs.rallytransbetxi.data.repositories
 
 import android.content.Context
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.MIN_VERSION_KEY
+import kotlin.time.Duration.Companion.seconds
 import dev.gitlive.firebase.remoteconfig.FirebaseRemoteConfig
 import dev.gitlive.firebase.remoteconfig.get
 
@@ -31,8 +32,14 @@ class AppVersionRepositoryImpl(
 
     override suspend fun getMinAllowedVersion(): List<Int> {
         return try {
+            firebaseConfig.settings {
+                minimumFetchInterval = 3600.seconds // Immediate fetch, no throttling
+                fetchTimeout = 60.seconds // Optional: Set a timeout for fetching
+            }
+
             firebaseConfig.fetchAndActivate()
             val minVersion: String = firebaseConfig[MIN_VERSION_KEY]
+            println("AppVersionRepositoryImpl. Min version: $minVersion")
             if (minVersion.isNotEmpty()) {
                 minVersion.split(".").map { it.toInt() }
             } else {

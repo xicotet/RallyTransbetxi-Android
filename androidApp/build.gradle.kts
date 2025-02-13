@@ -116,22 +116,22 @@ dependencies {
 
 
     // Old firebase
-    implementation(platform(libs.firebase.bom)) // Firebase BoM
+    // implementation(platform(libs.firebase.bom)) // Firebase BoM
     // implementation(libs.firebase.analytics) // Firebase Analytics
     // implementation(libs.firebase.crashlytics) // Firebase Crashlytics
     // implementation(libs.firebase.storage.ktx) // Firebase Storage
     // implementation(libs.firebase.firestore) // Cloud Firestore
     // implementation(libs.firebase.messaging) // Firebase Messaging
-    implementation(libs.firebase.appcheck.playintegrity) // Firebase App Check
-    implementation(libs.integrity) // Play Integrity
-    //implementation(libs.firebase.config.ktx) // Remote config
+    // implementation(libs.firebase.appcheck.playintegrity) // Firebase App Check
+    // implementation(libs.integrity) // Play Integrity
+    // implementation(libs.firebase.config.ktx) // Remote config
 
     implementation(libs.play.services.location) // Location services
 
     implementation(libs.androidx.vectordrawable) // Vector Drawable
 
 
-    implementation(libs.revealswipe) // Reveal Swipe
+    // implementation(libs.revealswipe) // Reveal Swipe
 
     implementation(libs.androidx.room.ktx.v261) // Room
     implementation(libs.androidx.room.runtime.v261) // Room
