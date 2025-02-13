@@ -1,12 +1,9 @@
 package com.canolabs.rallytransbetxi.data.repositories
 
 import android.content.Context
-import android.util.Log
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.MIN_VERSION_KEY
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
-import kotlinx.coroutines.tasks.await
+import dev.gitlive.firebase.remoteconfig.FirebaseRemoteConfig
+import dev.gitlive.firebase.remoteconfig.get
 
 interface AppVersionRepository {
     suspend fun getCurrentVersion(): List<Int>
@@ -15,48 +12,35 @@ interface AppVersionRepository {
 
 class AppVersionRepositoryImpl(
     private val context: Context,
+    private val firebaseConfig: FirebaseRemoteConfig
 ) : AppVersionRepository {
     override suspend fun getCurrentVersion(): List<Int> {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
             val version = packageInfo.versionName?.split(".")?.map { it.toInt() } ?: listOf(0, 0, 0)
-            // If version doesn't have 3 parts, add 0s to the end
             if (version.size < 3) {
                 version + List(3 - version.size) { 0 }
             } else {
                 version
             }
         } catch (e: Exception) {
-            Log.e("AppVersionRepositoryImpl", "Error fetching current version: ${e.message}")
+            println("AppVersionRepositoryImpl. Error getting current version: ${e.message}")
             listOf(0, 0, 0)
         }
     }
 
     override suspend fun getMinAllowedVersion(): List<Int> {
-        val remoteConfig = Firebase.remoteConfig.apply {
-            setConfigSettingsAsync(remoteConfigSettings {
-                minimumFetchIntervalInSeconds = 3600
-            })
-        }
-
         return try {
-            // Fetch and activate with explicit success and failure listeners for better logging
-            remoteConfig.fetchAndActivate().addOnSuccessListener {
-                Log.d("AppVersionRepositoryImpl", "Remote config fetched and activated")
-            }.addOnFailureListener { e ->
-                Log.e("AppVersionRepositoryImpl", "Error fetching remote config: ${e.message}", e)
-            }.await()
-
-            // Get the min version as usual
-            val minVersion = remoteConfig.getString(MIN_VERSION_KEY)
+            firebaseConfig.fetchAndActivate()
+            val minVersion: String = firebaseConfig[MIN_VERSION_KEY]
             if (minVersion.isNotEmpty()) {
                 minVersion.split(".").map { it.toInt() }
             } else {
-                Log.e("AppVersionRepositoryImpl", "MIN_VERSION_KEY not found in remote config.")
+                println("AppVersionRepositoryImpl. Error getting min version: $minVersion")
                 listOf(0, 0, 0)
             }
         } catch (e: Exception) {
-            Log.e("AppVersionRepositoryImpl", "Error fetching remote config: ${e.message}", e)
+            println("AppVersionRepositoryImpl. Error getting min version: ${e.message}")
             listOf(0, 0, 0)
         }
     }

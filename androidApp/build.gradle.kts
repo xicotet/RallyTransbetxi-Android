@@ -7,7 +7,8 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.maps.platform.secrets)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.firebase.crashlytics)
+    // alias(libs.plugins.firebase.crashlytics)
+    // alias(libs.plugins.gitlive.firebase.crashlytics)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose.compiler)
     kotlin("kapt")
@@ -68,6 +69,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -87,6 +89,8 @@ android {
 }
 
 dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+
     implementation(project(":shared"))
     implementation(libs.androidx.core.ktx.v1131)
     implementation(libs.androidx.lifecycle.runtime.ktx.v283)
@@ -105,19 +109,22 @@ dependencies {
     // New firebase
     implementation(libs.gitlive.firebase.firestore)  // Firebase Firestore
     implementation(libs.gitlive.firebase.messaging)  // Firebase Cloud Messaging
-    //implementation(libs.gitlive.firebase.config)     // Firebase Remote Config
     implementation(libs.gitlive.firebase.storage)   // Firebase Storage
+    implementation(libs.gitlive.firebase.config)     // Firebase Remote Config
+    //implementation(libs.gitlive.firebase.analytics) // Firebase Analytics
+    //implementation(libs.gitlive.firebase.crashlytics)      // Firebase Crashlytics
+
 
     // Old firebase
     implementation(platform(libs.firebase.bom)) // Firebase BoM
-    implementation(libs.firebase.analytics) // Firebase Analytics
-    implementation(libs.firebase.crashlytics) // Firebase Crashlytics
+    // implementation(libs.firebase.analytics) // Firebase Analytics
+    // implementation(libs.firebase.crashlytics) // Firebase Crashlytics
     // implementation(libs.firebase.storage.ktx) // Firebase Storage
     // implementation(libs.firebase.firestore) // Cloud Firestore
-    implementation(libs.firebase.messaging) // Firebase Messaging
+    // implementation(libs.firebase.messaging) // Firebase Messaging
     implementation(libs.firebase.appcheck.playintegrity) // Firebase App Check
     implementation(libs.integrity) // Play Integrity
-    implementation(libs.firebase.config.ktx) // Remote config
+    //implementation(libs.firebase.config.ktx) // Remote config
 
     implementation(libs.play.services.location) // Location services
 

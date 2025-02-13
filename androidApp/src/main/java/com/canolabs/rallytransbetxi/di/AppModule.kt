@@ -110,6 +110,7 @@ import com.canolabs.rallytransbetxi.utils.Constants.Companion.DIRECTIONS_CLIENT_
 import com.canolabs.rallytransbetxi.utils.Constants.Companion.MAPS_API_KEY_QUALIFIER
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
+import dev.gitlive.firebase.remoteconfig.remoteConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -204,6 +205,8 @@ val appModule = module {
 
 val firebaseModule = module {
     single { Firebase.firestore }
+    single { Firebase.remoteConfig }
+    // TODO: Add storage here
 }
 
 val databaseModule = module {

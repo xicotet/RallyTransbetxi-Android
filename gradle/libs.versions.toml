@@ -64,7 +64,7 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-appcheck-playintegrity = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-config-ktx = { module = "com.google.firebase:firebase-config-ktx" }
-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+# firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 # firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 # firebase-storage-ktx = { module = "com.google.firebase:firebase-storage-ktx" }
@@ -72,8 +72,9 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 # New firebase (kotlin-first) non-official for KMP
 gitlive-firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebaseGitLive" }
 gitlive-firebase-messaging = { module = "dev.gitlive:firebase-messaging", version.ref = "firebaseGitLive" }
-# gitlive-firebase-config = { module = "dev.gitlive:firebase-config", version.ref = "firebaseGitLive" }
+gitlive-firebase-config = { module = "dev.gitlive:firebase-config", version.ref = "firebaseGitLive" }
 gitlive-firebase-storage = { module = "dev.gitlive:firebase-storage", version.ref = "firebaseGitLive" }
+gitlive-firebase-crashlytics = { module = "dev.gitlive:firebase-crashlytics", version.ref = "firebaseGitLive" }
 
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 junit = { module = "junit:junit", version.ref = "junit" }

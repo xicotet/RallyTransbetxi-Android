@@ -1,11 +1,12 @@
 package com.canolabs.rallytransbetxi.di
 
 import android.app.Application
-import android.util.Log
-import com.google.firebase.Firebase
-import com.google.firebase.FirebaseApp
-import com.google.firebase.appcheck.appCheck
-import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.initialize
+//import dev.gitlive.firebase.crashlytics.crashlytics
+//import com.google.firebase.FirebaseApp
+//import com.google.firebase.appcheck.appCheck
+//import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -13,10 +14,11 @@ import org.koin.core.context.startKoin
 class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        Log.d("MainApplication", "Proceeding to: Firebase initialization")
-        FirebaseApp.initializeApp(this)
-        Log.d("MainApplication", "Proceeding to: Firebase initialized")
+        Firebase.initialize(this)
 
+        // TODO Set up crashlytics in the KMP project by uncommenting the gradle plugin and the following line
+        // Firebase.crashlytics.setCrashlyticsCollectionEnabled(true)
+        /*
         Firebase.appCheck.getAppCheckToken(false).addOnSuccessListener {
             Log.d("MainApplication", "App Check token: ${it.token}")
         }.addOnFailureListener {
@@ -26,6 +28,7 @@ class MainApplication : Application() {
             PlayIntegrityAppCheckProviderFactory.getInstance(),
         )
         Log.d("MainApplication", "Proceeding to: App Check provider factory installed")
+        */
 
         startKoin {
             androidLogger()

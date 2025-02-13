@@ -10,14 +10,20 @@ class CanAccessToAppUseCase(
         val currentVersion = appVersionRepository.getCurrentVersion()
         val minAllowedVersion = appVersionRepository.getMinAllowedVersion()
 
+        Log.d("CanAccessToAppUseCase", "Current version: $currentVersion")
+        Log.d("CanAccessToAppUseCase", "Min allowed version: $minAllowedVersion")
+
         // Guarantee access if for some reason version fetch fails (i.e., returns [0, 0, 0])
         if (currentVersion == listOf(0, 0, 0) || minAllowedVersion == listOf(0, 0, 0)) {
             Log.w("CanAccessToAppUseCase", "Version fetch failed. Allowing access.")
             return true
         }
 
-        return currentVersion.zip(minAllowedVersion).any { (currentPart, minPart) ->
-            currentPart != minPart && currentPart > minPart
+        for (i in currentVersion.indices) {
+            if (currentVersion[i] != minAllowedVersion[i]) {
+                return currentVersion[i] > minAllowedVersion[i]
+            }
         }
+        return true // If all parts are equal, allow access
     }
 }
