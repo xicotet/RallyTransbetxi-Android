@@ -5,12 +5,14 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,7 +30,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
+import com.canolabs.rallytransbetxi.shared.App
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.BottomSheetConnectivityLost
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.ConnectivityObserver
 import com.canolabs.rallytransbetxi.ui.miscellaneous.network.NetworkConnectivityObserver
@@ -46,7 +53,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val splashScreen = installSplashScreen()
+        /*val splashScreen = installSplashScreen()
 
         // Add a delay before dismissing the splash screen so the local data can be loaded
         lifecycleScope.launch {
@@ -63,13 +70,24 @@ class MainActivity : ComponentActivity() {
             changeAppLocale(this, selectedLanguage)
         }
 
-        connectivityObserver = NetworkConnectivityObserver(applicationContext)
+        connectivityObserver = NetworkConnectivityObserver(applicationContext)*/
+
         setContent {
+            //EnableTransparentStatusBar()
+
+
             val darkThemeState = remember { mutableStateOf(false) }
             val fontScaleState = remember { mutableFloatStateOf(1f) }
             val recomposeNavbar = remember { mutableStateOf(false) }
 
             RallyTransbetxiTheme(
+                darkTheme = darkThemeState,
+                fontScale = fontScaleState
+            ) {
+                App()
+            }
+
+            /*RallyTransbetxiTheme(
                 darkTheme = darkThemeState,
                 fontScale = fontScaleState
             ) {
@@ -139,11 +157,22 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     }
-                }
-            }
+                }*/
         }
     }
 }
+
+/*@Composable
+fun EnableTransparentStatusBar() {
+    val view = LocalView.current
+    val darkMode = isSystemInDarkTheme()
+    if (!view.isInEditMode) {
+        val window = (view.context as ComponentActivity).window
+        window.statusBarColor = Color.Transparent.toArgb()
+        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkMode
+    }
+}*/
+
 
 private fun changeAppLocale(
     context: Context,

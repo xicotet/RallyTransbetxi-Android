@@ -133,11 +133,11 @@ dependencies {
 
     // implementation(libs.revealswipe) // Reveal Swipe
 
-    implementation(libs.androidx.room.ktx.v261) // Room
-    implementation(libs.androidx.room.runtime.v261) // Room
-    annotationProcessor(libs.androidx.room.compiler.v261)  // Room
+    implementation(libs.androidx.room.ktx) // Room
+    implementation(libs.androidx.room.runtime) // Room
+    annotationProcessor(libs.androidx.room.compiler)  // Room
 
-    ksp(libs.androidx.room.compiler.v261) // Kotlin annotation processing tool (kapt)
+    ksp(libs.androidx.room.compiler) // KSP Room
 
     implementation(libs.coil.compose) // Coil
 

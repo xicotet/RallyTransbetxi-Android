@@ -1,6 +1,8 @@
 package com.canolabs.rallytransbetxi.di
 
 import android.app.Application
+import android.util.Log
+import com.canolabs.rallytransbetxi.shared.di.initKoin
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.initialize
 //import dev.gitlive.firebase.crashlytics.crashlytics
@@ -10,11 +12,17 @@ import dev.gitlive.firebase.initialize
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 
 class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        Firebase.initialize(this)
+        // Firebase.initialize(this)
+        Log.d("MainApplication", "Proceeding to initkoin")
+        initKoin {
+            androidLogger(level = Level.DEBUG)
+            androidContext(this@MainApplication)
+        }
 
         // TODO Set up crashlytics in the KMP project by uncommenting the gradle plugin and the following line
         // Firebase.crashlytics.setCrashlyticsCollectionEnabled(true)
@@ -30,13 +38,13 @@ class MainApplication : Application() {
         Log.d("MainApplication", "Proceeding to: App Check provider factory installed")
         */
 
-        startKoin {
+        /*startKoin {
             androidLogger()
             androidContext(this@MainApplication)
             modules(appModule)
             modules(databaseModule)
             modules(networkModule)
             modules(firebaseModule)
-        }
+        }*/
     }
 }
